@@ -40,3 +40,10 @@ https://github.com/commitizen/cz-cli/raw/master/meta/screenshots/add-commit.png
 >git cz 替换 git commit命令
 
 ### 注意事项
+
+* 安装方式可选择全局安装
+```
+npm install -g commitizen cz-conventional-changelog
+echo '{ "path": "cz-conventional-changelog" }' > ~/.czrc
+
+```
