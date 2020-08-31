@@ -17,5 +17,5 @@ jobs:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
-        source: "*"
+        source: "_config.yml,db.json,node_modules,package-lock.json,package.json,public,scaffolds,source,themes"
         target: ${{ secrets.TARGET }}
