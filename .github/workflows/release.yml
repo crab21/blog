@@ -19,3 +19,13 @@ jobs:
         port: ${{ secrets.PORT }}
         source: "_config.yml,db.json,node_modules,package-lock.json,package.json,public,scaffolds,source,themes"
         target: ${{ secrets.TARGET }}
+    
+    - name: executing remote ssh commands using password
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        port: ${{ secrets.PORT }}
+        script: |
+          ${{ secrets.EXEC_BASH }}
