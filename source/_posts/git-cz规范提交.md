@@ -2,10 +2,9 @@
 title: git cz规范提交
 date: 2020-08-31 11:14:33
 tags:
-    - git
+    - Git
 ---
-        git commit提交一键规范化...
-<!-- more -->
+
 ### 定义
 
 [官方 specification](https://github.com/commitizen/cz-cli)
