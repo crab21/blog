@@ -16,7 +16,7 @@ tags:
 * Indent Rainbo
 * Bracket Pair Colorizer # 括号颜色
 * Chinese Language       # 汉化
-
+<!-- more -->
 
 #### 功能方面
 

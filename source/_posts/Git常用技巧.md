@@ -15,7 +15,7 @@ tags:
 git version 2.28.0
 ```
 ### 先说说Git的常用命令：(可跳过)
-
+<!-- more -->
 ```
 2081 ◯  git 
 用法：git [--version] [--help] [-C <path>] [-c <name>=<value>]

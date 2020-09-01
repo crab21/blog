@@ -17,6 +17,7 @@ https://github.com/commitizen/cz-cli/raw/master/meta/screenshots/add-commit.png
 ### 使用步骤
 * 安装nodejs，版本建议最新.[官网](https://nodejs.org/zh-cn/) 
 * 打开你的命令行：
+<!-- more -->
 ```
         输入：npm install -g commitizen
         windows应该是cmd吧。
