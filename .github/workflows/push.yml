@@ -20,15 +20,6 @@ jobs:
         source: "source"
         target: ${{ secrets.TARGET }}
 
-    - name: Clean
-      uses: heowc/action-hexo@master
-      with:
-        args: clean
-    - name: Generate
-      uses: heowc/action-hexo@master
-      with:
-        args: generate
-
     - name: executing remote ssh commands using password
       uses: appleboy/ssh-action@master
       with:
