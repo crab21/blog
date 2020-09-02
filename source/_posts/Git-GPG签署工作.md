@@ -18,6 +18,7 @@ tags:
 windows安装地址： [点击下载](https://www.gnupg.org/)
 
 mac os为例：
+<!-- more -->
 #### 安装GPG
 ```
 brew install gpg

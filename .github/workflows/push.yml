@@ -1,0 +1,40 @@
+name: RELEASE
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: copy file via ssh password
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        port: ${{ secrets.PORT }}
+        source: "source"
+        target: ${{ secrets.TARGET }}
+
+    - name: Clean
+      uses: heowc/action-hexo@master
+      with:
+        args: clean
+    - name: Generate
+      uses: heowc/action-hexo@master
+      with:
+        args: generate
+
+    - name: executing remote ssh commands using password
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        port: ${{ secrets.PORT }}
+        script: |
+          ${{ secrets.EXEC_BASH_PUSH }}
