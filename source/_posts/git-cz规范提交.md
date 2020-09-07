@@ -1,7 +1,6 @@
 ---
 title: git cz规范提交
 date: 2020-08-31 20:14:33
-description: git commit规范
 keywords: git,git commit,git提交规范
 tags:
     - Git

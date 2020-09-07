@@ -1,7 +1,6 @@
 ---
 title: Git GPG签署工作
 date: 2020-09-02 22:29:40
-description: git GPG签署证书
 keywords: git,git签署证书,git常用
 tags:
     - Git
