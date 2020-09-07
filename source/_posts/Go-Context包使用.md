@@ -23,6 +23,7 @@ WithValue
 要用下面的方法，先了解下部分结构和逻辑：
 
 >既然context全部都是和取消相关的，最起码Go在设计时会有这么一个结构。
+<!-- more -->
 
 >具体的取消设计结构
 ```
@@ -100,8 +101,8 @@ Deadline/WithTimeout区别：
 >Withvalue和value是成对出现的:
 
 ```
-给ctx设置k,v：withvalue(ctx,k,v)
-获取ctx中k的值value(ctx,k)
+1、给ctx设置k,v：withvalue(ctx,k,v)
+2、获取ctx中k的值value(ctx,k)
 ```
 ### TODO
 #### timerCtx详细的设计思路和结构文档
