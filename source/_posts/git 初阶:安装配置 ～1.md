@@ -1,6 +1,8 @@
 ---
 title: git 初阶:安装配置 ～1
 date: 2020-09-02 22:38:44
+description: git安装配置
+keywords: git,git使用,git常用
 tags:
     - Git
 ---
