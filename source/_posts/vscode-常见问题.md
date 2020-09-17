@@ -1,7 +1,7 @@
 ---
 title: vscode 常见插件及其使用
-date: 2020-08-31 13:09:17
-updated: 2020-08-31 13:09:17
+date: 2020/08/31 13:09:17
+updated: 2020/08/31 13:09:17
 keywords: vscode,vscode插件。
 tags:
     - vscode

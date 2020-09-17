@@ -1,6 +1,7 @@
 ---
 title: go rwmutex解读
-date: 2020-09-17 01:24:32
+date: 2020/09/17 01:24:32
+updated: 2020/09/17 01:24:32
 keywords: golang,go 源码,go 读写锁, rwmutex 解读
 tags:
     - Go
@@ -22,4 +23,3 @@ tags:
     ### 加锁的粒度
 
     ### 解锁释放
-    
