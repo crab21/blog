@@ -1,7 +1,7 @@
 ---
 title: Go reflect ~ DeepEqual
 date: 2020/09/18 12:35:03
-updated: 2020/09/19 20:35:52
+updated: 2020/09/20 16:16:52
 tags:
     - Go
     - Go reflect
@@ -58,11 +58,13 @@ func main() {
 
 ```go
 func DeepEqual(x, y interface{}) bool {
+  //同nil
 	if x == nil || y == nil {
 		return x == y
 	}
 	v1 := ValueOf(x)
-	v2 := ValueOf(y)
+  v2 := ValueOf(y)
+  //属于同一类型
 	if v1.Type() != v2.Type() {
 		return false
 	}
@@ -132,5 +134,143 @@ func DeepEqual(x, y interface{}) bool {
 ```
 
 再看看详细的deepValueEqual,大致的过程：
+![](https://raw.githubusercontent.com/crab21/Images/master/blog/20200920-103516@2x.png)
 
+
+>大致分为三个过程：
+```
+1、判断类型和值
+2、hard回调
+3、按照kind分类处理
+```
+
+#### 数组：
+比较每一个元素
+```go
+    for i := 0; i < v1.Len(); i++ {
+			if !deepValueEqual(v1.Index(i), v2.Index(i), visited, depth+1) {
+				return false
+			}
+		}
+		return true
+```
+#### Slice
+* 比较为nil
+* 比较长度
+* 比较地址
+* 比较每一个元素
+```go
+    if v1.IsNil() != v2.IsNil() {
+			return false
+		}
+		if v1.Len() != v2.Len() {
+			return false
+		}
+		if v1.Pointer() == v2.Pointer() {
+			return true
+		}
+		for i := 0; i < v1.Len(); i++ {
+			if !deepValueEqual(v1.Index(i), v2.Index(i), visited, depth+1) {
+				return false
+			}
+		}
+		return true
+```
+
+#### Interface
+* 比较nil
+* 递归比较
+```go
+    if v1.IsNil() || v2.IsNil() {
+			return v1.IsNil() == v2.IsNil()
+		}
+		return deepValueEqual(v1.Elem(), v2.Elem(), visited, depth+1)
+```
+#### Ptr
+* 地址
+* 递归比较
+```go
+    if v1.Pointer() == v2.Pointer() {
+			return true
+		}
+		return deepValueEqual(v1.Elem(), v2.Elem(), visited, depth+1)
+```
+
+#### struct
+* 比较每一个元素
+```go
+    for i, n := 0, v1.NumField(); i < n; i++ {
+			if !deepValueEqual(v1.Field(i), v2.Field(i), visited, depth+1) {
+				return false
+			}
+		}
+		return true
+```
+
+#### Map
+* 比较Nil
+* 比较长度
+* 地址比较
+* 每一个key对应的value
+
+```go
+    if v1.IsNil() != v2.IsNil() {
+			return false
+		}
+		if v1.Len() != v2.Len() {
+			return false
+		}
+		if v1.Pointer() == v2.Pointer() {
+			return true
+		}
+		for _, k := range v1.MapKeys() {
+			val1 := v1.MapIndex(k)
+			val2 := v2.MapIndex(k)
+			if !val1.IsValid() || !val2.IsValid() || !deepValueEqual(val1, val2, visited, depth+1) {
+				return false
+			}
+		}
+		return true
+```
+
+#### Func
+* 非nil，为不等。
+```go
+    if v1.IsNil() && v2.IsNil() {
+			return true
+		}
+		// Can't do better than this:
+		return false
+```
+
+### painc注意点：
+ deepValueEqual函数：
+```go
+    .....
+    ....
+    ...
+    ..
+    .
+    递归次数超过10次则会painc....
+    // if depth > 10 { panic("deepValueEqual") }	// for debugging
+
+	// We want to avoid putting more in the visited map than we need to.
+	// For any possible reference cycle that might be encountered,
+	// hard(v1, v2) needs to return true for at least one of the types in the cycle,
+	// and it's safe and valid to get Value's internal pointer.
+	hard := func(v1, v2 Value) bool {
+		switch v1.Kind() {
+		case Map, Slice, Ptr, Interface:
+			// Nil pointers cannot be cyclic. Avoid putting them in the visited map.
+			return !v1.IsNil() && !v2.IsNil()
+		}
+		return false
+  }
+  .
+  ..
+  ...
+  ....
+  .....
+  ......
+```
 ### END
