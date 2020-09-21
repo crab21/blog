@@ -36,7 +36,7 @@ const rwmutexMaxReaders = 1 << 30   //最大读锁的个数
 ```
 RLock
 RUnLock
-Locl
+Lock
 UnLock
 ```
 ### 加锁过程
