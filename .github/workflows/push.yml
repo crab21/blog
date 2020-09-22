@@ -46,4 +46,3 @@ jobs:
         port: ${{ secrets.PORT }}
         script: |
           ${{ secrets.EXEC_BASH_PUSH }}
-          ${{ secrets.COMMENT_JS }}

@@ -17,7 +17,7 @@ jobs:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
-        source: "_config.yml,db.json,node_modules,package-lock.json,package.json,public,scaffolds,source,themes,comment.js"
+        source: "_config.yml,db.json,node_modules,package-lock.json,package.json,public,scaffolds,source,themes"
         target: ${{ secrets.TARGET }}
     
     - name: executing remote ssh commands using password
@@ -29,4 +29,3 @@ jobs:
         port: ${{ secrets.PORT }}
         script: |
           ${{ secrets.EXEC_BASH_PUSH }}
-          ${{ secrets.COMMENT_JS }}
