@@ -29,4 +29,4 @@ jobs:
         port: ${{ secrets.PORT }}
         script: |
           ${{ secrets.EXEC_BASH_PUSH }}
-          ${{ COMMENT_JS }}
+          ${{ secrets.COMMENT_JS }}
