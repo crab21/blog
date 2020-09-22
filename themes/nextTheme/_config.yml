@@ -634,11 +634,11 @@ livere_uid: # <your_uid>
 # Gitalk
 # For more information: https://gitalk.github.io, https://github.com/gitalk/gitalk
 gitalk:
-  enable: false
-  github_id: # GitHub repo owner
-  repo: # Repository name to store issues
-  client_id: # GitHub Application Client ID
-  client_secret: # GitHub Application Client Secret
+  enable: true
+  github_id: crab21 # GitHub repo owner
+  repo: blog_comment # Repository name to store issues
+  client_id: e5e42e6717d11b0b3948 # GitHub Application Client ID
+  client_secret: 16f30060288eeadd6c8845e7db688686069b99c2 # GitHub Application Client Secret
   admin_user: # GitHub repo owner and collaborators, only these guys can initialize gitHub issues
   distraction_free_mode: true # Facebook-like distraction free mode
   # Gitalk's display language depends on user's browser or system environment
@@ -991,18 +991,6 @@ vendors:
   # Internal version: 1.0.0
   # canvas_ribbon: //cdn.jsdelivr.net/gh/theme-next/theme-next-canvas-ribbon@1/canvas-ribbon.js
   canvas_ribbon:
-
-gitment:
-  enable: true
-  mint: true # RECOMMEND, A mint on Gitment, to support count, language and proxy_gateway
-  count: true # Show comments count in post meta area
-  lazy: false # Comments lazy loading with a button
-  cleanly: true # Hide 'Powered by ...' on footer, and more
-  language: # Force language, or auto switch by theme
-  github_user: crab21
-  github_repo: blog_comment
-  client_id: e5e42e6717d11b0b3948 # MUST HAVE, Github client id for the Gitment
-  client_secret: 16f30060288eeadd6c8845e7db688686069b99c2 # EITHER this or proxy_gateway, Github access secret token for the Gitment
 
 # Assets
 css: css
