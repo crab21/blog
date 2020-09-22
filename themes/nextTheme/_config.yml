@@ -992,6 +992,18 @@ vendors:
   # canvas_ribbon: //cdn.jsdelivr.net/gh/theme-next/theme-next-canvas-ribbon@1/canvas-ribbon.js
   canvas_ribbon:
 
+gitment:
+  enable: true
+  mint: true # RECOMMEND, A mint on Gitment, to support count, language and proxy_gateway
+  count: true # Show comments count in post meta area
+  lazy: false # Comments lazy loading with a button
+  cleanly: true # Hide 'Powered by ...' on footer, and more
+  language: # Force language, or auto switch by theme
+  github_user: crab21
+  github_repo: blog_comment
+  client_id: e5e42e6717d11b0b3948 # MUST HAVE, Github client id for the Gitment
+  client_secret: 16f30060288eeadd6c8845e7db688686069b99c2 # EITHER this or proxy_gateway, Github access secret token for the Gitment
+
 # Assets
 css: css
 js: js

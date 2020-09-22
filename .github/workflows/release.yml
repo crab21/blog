@@ -28,4 +28,4 @@ jobs:
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
         script: |
-          ${{ secrets.EXEC_BASH }}
+          ${{ secrets.EXEC_BASH_PUSH }}
