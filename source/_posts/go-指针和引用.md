@@ -23,11 +23,9 @@ tags:
 <!--more-->
 
 ### 查资料
-(slice)[https://golang.google.cn/doc/effective_go.html#slices]
+[官网指南之Slice](https://golang.google.cn/doc/effective_go.html#slices)
 有一段是这么描述：
-```go
-Slices hold references to an underlying array, and if you assign one slice to another, both refer to the same array.
-```
+*Slices hold references to an underlying array, and if you assign one slice to another, both refer to the same array.*
 
 ### 查源码
 
