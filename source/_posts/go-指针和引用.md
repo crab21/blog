@@ -1,0 +1,132 @@
+---
+title: go 指针和引用
+date: 2020/09/23 21:13:51
+updated: 2020/09/23 22:21:52
+keywords: golang,go,chan,map,指针,引用,interface,slice
+tags:
+    - Go
+    - Go Package
+    - Day
+---
+
+
+今写代码时，传函数无意间想到一个问题，slice通过参数传递给函数，为何可以改变具体的值呢？
+
+如何解决这个问题？
+
+* 官方查文档
+* 看源码
+* google看看有没有好的见解
+* 思考🤔+冥想🧘‍♂️
+
+（ps:解决问题，主要不是看结果是怎么样的，主要是考虑问题的角度）
+<!--more-->
+
+### 查资料
+(slice)[https://golang.google.cn/doc/effective_go.html#slices]
+有一段是这么描述：
+```go
+Slices hold references to an underlying array, and if you assign one slice to another, both refer to the same array.
+```
+
+### 查源码
+
+#### /src/runtime/slice.go
+```go
+type slice struct {
+	array unsafe.Pointer  //指针类型哦
+	len   int
+	cap   int
+}
+```
+
+### 思考
+
+>原来下层是用过array这个指针，指向具体的数据的
+
+>那么其他的引用类型呢？
+
+```
+Map?
+chan?
+interface?
+//Slice?
+```
+
+### 引用类型之Map
+
+#### 看源码 /src/runtime/map.go：
+```go
+
+// A header for a Go map.
+type hmap struct {
+	// Note: the format of the hmap is also encoded in cmd/compile/internal/gc/reflect.go.
+	// Make sure this stays in sync with the compiler's definition.
+	count     int // # live cells == size of map.  Must be first (used by len() builtin)
+	flags     uint8
+	B         uint8  // log_2 of # of buckets (can hold up to loadFactor * 2^B items)
+	noverflow uint16 // approximate number of overflow buckets; see incrnoverflow for details
+	hash0     uint32 // hash seed
+
+    //通过此指针类型
+	buckets    unsafe.Pointer // array of 2^B Buckets. may be nil if count==0.
+	oldbuckets unsafe.Pointer // previous bucket array of half the size, non-nil only when growing
+	nevacuate  uintptr        // progress counter for evacuation (buckets less than this have been evacuated)
+
+	extra *mapextra // optional fields
+}
+```
+
+### 引用类型之Chan
+#### 源码:/src/runtime/chan.go
+
+```go
+type hchan struct {
+	qcount   uint           // total data in the queue
+    dataqsiz uint           // size of the circular queue
+    //通过此指针类型来处理
+	buf      unsafe.Pointer // points to an array of dataqsiz elements
+	elemsize uint16
+	closed   uint32
+	elemtype *_type // element type
+	sendx    uint   // send index
+	recvx    uint   // receive index
+	recvq    waitq  // list of recv waiters
+	sendq    waitq  // list of send waiters
+
+	// lock protects all fields in hchan, as well as several
+	// fields in sudogs blocked on this channel.
+	//
+	// Do not change another G's status while holding this lock
+	// (in particular, do not ready a G), as this can deadlock
+	// with stack shrinking.
+	lock mutex
+}
+```
+
+### 引用类型之Interface
+
+#### 源码/src/runtime/runtime2.go
+```go
+type iface struct {
+    tab  *itab
+    //指针类型
+	data unsafe.Pointer
+}
+
+type eface struct {
+    _type *_type
+    //指针类型
+	data  unsafe.Pointer
+}
+```
+
+### 结论？通过指针？
+
+从上述源码看来，内部结构中都是用指针类型来指向具体的值，
+>So：形同这类的结构，肯定是引用类型的，具体是指针指向别的地址，从而来引用值。
+
+其实这个特性很早就晓得了，只是今天又看到了，觉得还是记录着吧，也许后续哪一天就有了创新的灵感来着~~.
+
+[睡觉了～最近有点乏～ZZzzz...]
+### END
