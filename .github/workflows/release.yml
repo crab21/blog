@@ -1,4 +1,4 @@
-name: RELEASE
+name: RELEASE DEV
 on:
   push:
     tags:
