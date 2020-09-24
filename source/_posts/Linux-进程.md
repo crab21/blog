@@ -48,7 +48,22 @@ ps:[线程：程序执行的最小单位。]
 * 运行
 * 阻塞
 
-TODO 状态转换过程待更......
+##### 3态图：
+
+![](https://raw.githubusercontent.com/crab21/Images/master/blog/linux_process_3.1.png)
+
+##### 5态图：
+
+![](https://raw.githubusercontent.com/crab21/Images/master/blog/linux_p3.png)
+
+##### 7态图：
+
+新增两种状态：
+* 挂起就绪状态：表明进程具备了运行的条件，目前在二级存储器里面。
+* 挂起等待状态：表明进程正在等待某一个事件的结束且目前在二级存储器里面。
+
+
+![](https://raw.githubusercontent.com/crab21/Images/master/blog/linux_process_7.png)
 
 ### 进程间通信
 
