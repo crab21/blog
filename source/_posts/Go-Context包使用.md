@@ -8,6 +8,11 @@ tags:
     - Go Package
 ---
 
+### 版本
+```
+◯  go version
+go version go1.14.9 darwin/amd64
+```
 
 ### 用Go的都离不开Context，引用官网的一句话来描述Context包：
 

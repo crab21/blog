@@ -20,6 +20,11 @@ tags:
 ### 前序
 >开始看代码或者分析之前，先看下文档说明及其相关的资料。
 
+```
+◯  go version
+go version go1.14.9 darwin/amd64
+```
+
 ### src/sync/mutex.go
 ```go
 const (
