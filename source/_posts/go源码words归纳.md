@@ -30,7 +30,7 @@ pretending  v 假装、伪装                                --> /proc.go
 contended  v 竞争                                      --> /proc.go
 procresize  v 扩大                                     --> /proc.go 
 ```
-
+<!--more-->
 
 #### 简写
 
