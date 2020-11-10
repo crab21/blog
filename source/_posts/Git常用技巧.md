@@ -1,7 +1,7 @@
 ---
 title: Git常用技巧
 date: 2020/09/01 19:22:02
-updated: 2020/09/01 19:22:02
+updated: 2020/11/10 19:22:02
 keywords: git,git技巧,git常用技巧
 tags:
     - Git
@@ -258,6 +258,14 @@ git branch -d iss53
     --format <格式>       输出格式
     --color[=<何时>]      遵照格式中的颜色输出
     -i, --ignore-case     排序和过滤属于大小写不敏感
+```
+
+```
+git tag按照version排序：
+git tag -n
+
+git tag按照时间排序
+git tag -n --sort=taggerdate
 ```
 
 ##### 打Tag
