@@ -1,5 +1,5 @@
 ---
-title: 6-git 初阶:安装配置 ～1
+title: 「6」git 初阶:安装配置 ～1
 date: 2020/09/02 22:38:44
 updated: 2020/09/02 22:38:44
 keywords: git,git使用,git常用
