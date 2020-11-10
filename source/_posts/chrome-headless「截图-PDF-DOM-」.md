@@ -134,6 +134,7 @@ docker load < chrome.tar
 
 #### 7自己搞Dockerfile,预留「RUN」接口
 
+Dockerfile文件：
 ```
 #这个是上一步导入的images
 FROM gogoowang/chrome:v1
@@ -141,7 +142,10 @@ RUN mkdir -p /home
 WORKDIR /home
 ENTRYPOINT ["chrome","--headless","--disable-gpu"]
 ```
-「/home」的含义就是这个images的工作目录是/home文件夹下面
+
+>构建成镜像：docker build -t gogoo/chrome:v2 . 
+
+PS:「/home」的含义就是这个images的工作目录是/home文件夹下面
 
 #### 8跑一把，收工
 
