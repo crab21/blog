@@ -20,6 +20,7 @@ tags:
 ### Words
 
 #### 全称
+<!--more-->
 ```go
 「11/3」
 Preempt  v 抢占、掠夺                                   --> /proc.go
@@ -29,8 +30,13 @@ decrement v 递减                                       --> /proc.go
 pretending  v 假装、伪装                                --> /proc.go
 contended  v 竞争                                      --> /proc.go
 procresize  v 扩大                                     --> /proc.go 
+corruption  n 腐败，译：损坏
+
+「11/5」
+assembly  n  装配                                      --> /proc.go
+amortizes  v  缓冲                                     --> /proc.go
 ```
-<!--more-->
+
 
 #### 简写
 
