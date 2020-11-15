@@ -29,6 +29,9 @@ hexo安装及其第三方插件包下载总结，以便后续CI一次到位。
  npm uninstall hexo-generator-index --save
  npm install hexo-generator-index-pin-top --save
  npm audit fix
+ 
+npm install hexo-neat --save
+ npm audit fix
 ```
 
 >未完待续......
