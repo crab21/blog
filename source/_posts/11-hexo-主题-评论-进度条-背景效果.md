@@ -1,11 +1,12 @@
 ---
 title: 「11」hexo 主题&评论&进度条&背景效果
-date: 2020/09/23 01:10:02
-updated: 2020/09/23 01:10:02
-keywords: hexo,hexo主题,hexo评论,next主题评论,hexo阅读进度条
+date: '2020/09/23 01:10:02'
+updated: '2020/09/23 01:10:02'
+keywords: 'hexo,hexo主题,hexo评论,next主题评论,hexo阅读进度条'
 tags:
-    - hexo
-    - hexo插件
+  - hexo
+  - hexo插件
+abbrlink: e18c94ab
 ---
 
 晚上折腾了下博客，稍微装饰了下，主要还是加了个评论吧，其它非常秀的插件就没有接入了，懒得折腾，好好写博客，内容才是精华。

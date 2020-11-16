@@ -1,12 +1,13 @@
 ---
 title: 「9」Go reflect ~ DeepEqual
-date: 2020/09/18 12:35:03
-updated: 2020/09/20 16:16:52
+date: '2020/09/18 12:35:03'
+updated: '2020/09/20 16:16:52'
 tags:
-    - Go
-    - Go reflect
-    - Go Package
-    - Day
+  - Go
+  - Go reflect
+  - Go Package
+  - Day
+abbrlink: e2e7cc4e
 ---
 
 今天无意中看到Go101发了一个推特:

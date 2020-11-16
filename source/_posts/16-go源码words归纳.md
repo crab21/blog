@@ -1,11 +1,12 @@
 ---
 title: 「16」go源码words归纳
-date: 2020/11/03 10:45:07
-updated: 2020/11/03 10:45:07
-keywords: 汇编,Go,Plan9
+date: '2020/11/03 10:45:07'
+updated: '2020/11/03 10:45:07'
+keywords: '汇编,Go,Plan9'
 tags:
-    - Go
-    - Day
+  - Go
+  - Day
+abbrlink: 425d5e80
 ---
 ### 前序
 

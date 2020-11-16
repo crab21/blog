@@ -601,13 +601,6 @@ disqusjs:
   apikey: # Register new application from https://disqus.com/api/applications/
   shortname: # See: https://disqus.com/admin/settings/general/
 
-# Changyan
-changyan:
-  enable: false
-  appid:
-  appkey:
-  #post_meta_order: 0
-
 # Valine
 # For more information: https://valine.js.org, https://github.com/xCss/Valine
 valine:

@@ -1,11 +1,14 @@
 ---
 title: 「7」Go Context包使用
-date: 2020/09/07 22:21:52
-updated: 2020/09/07 22:21:52
-keywords: golang,go context包,golang context WithCancel,golang context WithDeadline,go WithTimeout.
+date: '2020/09/07 22:21:52'
+updated: '2020/09/07 22:21:52'
+keywords: >-
+  golang,go context包,golang context WithCancel,golang context WithDeadline,go
+  WithTimeout.
 tags:
-    - Go
-    - Go Package
+  - Go
+  - Go Package
+abbrlink: 410dfaec
 ---
 
 ### 版本

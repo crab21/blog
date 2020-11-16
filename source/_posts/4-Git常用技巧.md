@@ -1,10 +1,11 @@
 ---
 title: 「4」Git常用技巧
-date: 2020/09/01 19:22:02
-updated: 2020/11/10 19:22:02
-keywords: git,git技巧,git常用技巧
+date: '2020/09/01 19:22:02'
+updated: '2020/11/10 19:22:02'
+keywords: 'git,git技巧,git常用技巧'
 tags:
-    - Git
+  - Git
+abbrlink: 3c1dd822
 ---
 ### 学习方式
 多练多得，直接学习[官网](https://git-scm.com/book/zh/v2/%E8%B5%B7%E6%AD%A5-%E5%85%B3%E4%BA%8E%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6)理解。
