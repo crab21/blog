@@ -9,15 +9,6 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
-    - name: executing remote ssh commands using password
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        password: ${{ secrets.PASSWORD }}
-        port: ${{ secrets.PORT }}
-        script: |
-          ${{ secrets.EXEC_BASH_RELEASE_BEFORE }}
     - uses: actions/checkout@master
     - name: copy file via ssh password
       uses: appleboy/scp-action@master
@@ -26,7 +17,7 @@ jobs:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
-        source: "_config.yml,package-lock.json,package.json,scaffolds,source,themes"
+        source: "*"
         target: ${{ secrets.TARGET }}
     
     - name: executing remote ssh commands using password
