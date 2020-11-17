@@ -233,7 +233,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>690</span>
+              <span>628</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -254,7 +254,7 @@
       
         <p>hexo安装及其第三方插件包下载总结，以便后续CI一次到位。</p>
 <a id="more"></a>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">npm install -g hexo-cli</span><br><span class="line">npm install hexo-renderer-sass --save</span><br><span class="line">npm install hexo-generator-searchdb --save</span><br><span class="line">npm install hexo-generator-sitemap --save</span><br><span class="line">npm install hexo-generator-baidu-sitemap --save</span><br><span class="line">npm install request --save</span><br><span class="line">npm install xml-parser --save</span><br><span class="line">npm install yamljs --save</span><br><span class="line">npm install md5 --save</span><br><span class="line">npm install request --save</span><br><span class="line">npm install xml-parser --save</span><br><span class="line">npm install yamljs --save</span><br><span class="line">npm install cheerio --save</span><br><span class="line">npm install blueimp-md5 --save</span><br><span class="line">npm install hexo-abbrlink --save</span><br><span class="line">npm audit fix</span><br><span class="line"></span><br><span class="line">npm uninstall hexo-generator-index --save</span><br><span class="line">npm install hexo-generator-index-pin-top --save</span><br><span class="line">npm audit fix</span><br><span class="line"></span><br><span class="line">npm install hexo-neat --save</span><br><span class="line">npm audit fix</span><br><span class="line">npm install hexo-leancloud-counter-security --save</span><br><span class="line">npm audit fix</span><br></pre></td></tr></table></figure>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"> npm install -g hexo-cli</span><br><span class="line"> npm install hexo-renderer-sass --save</span><br><span class="line"> npm install hexo-generator-searchdb --save</span><br><span class="line"> npm install hexo-generator-sitemap --save</span><br><span class="line"> npm install hexo-generator-baidu-sitemap --save</span><br><span class="line"> npm install request --save</span><br><span class="line"> npm install xml-parser --save</span><br><span class="line"> npm install yamljs --save</span><br><span class="line"> npm install md5 --save</span><br><span class="line"> npm install request --save</span><br><span class="line"> npm install xml-parser --save</span><br><span class="line"> npm install yamljs --save</span><br><span class="line"> npm install cheerio --save</span><br><span class="line"> npm install blueimp-md5 --save</span><br><span class="line"> npm install hexo-abbrlink --save</span><br><span class="line"> npm audit fix</span><br><span class="line"></span><br><span class="line"> npm uninstall hexo-generator-index --save</span><br><span class="line"> npm install hexo-generator-index-pin-top --save</span><br><span class="line"> npm audit fix</span><br><span class="line"> </span><br><span class="line">npm install hexo-neat --save</span><br><span class="line"> npm audit fix</span><br></pre></td></tr></table></figure>
 
 <blockquote>
 <p>未完待续……</p>
@@ -476,9 +476,14 @@
                 console.error('Failed to save visitor count', error);
               });
           } else {
-              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
-              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
-            
+              Counter('post', '/classes/Counter', { title, url, time: 1 })
+                .then(response => response.json())
+                .then(() => {
+                  leancloudSelector(url).innerText = 1;
+                })
+                .catch(error => {
+                  console.error('Failed to create', error);
+                });
           }
         })
         .catch(error => {
@@ -505,7 +510,7 @@
         });
     }
 
-    let { app_id, app_key, server_url } = {"enable":true,"app_id":"rSgtfmim6nG8DA8i3gVctzC2-gzGzoHsz","app_key":"9VTNtVhOTowLUAHYs2PJDms4","server_url":null,"enable_sync":true,"security":true};
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"rSgtfmim6nG8DA8i3gVctzC2-gzGzoHsz","app_key":"9VTNtVhOTowLUAHYs2PJDms4","server_url":null,"enable_sync":true,"security":false};
     function fetchData(api_server) {
       var Counter = (method, url, data) => {
         return fetch(`${api_server}/1.1${url}`, {
