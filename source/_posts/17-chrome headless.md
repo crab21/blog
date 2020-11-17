@@ -168,3 +168,21 @@ docker container run -i --rm -v /tmp:/home gogoowang/chrome:v1 --no-sandbox --sc
 1、关于这个-v的问题,后面就固定了，具体见Dockerfile中
 2、--screenshot路径问题，既然是docker镜像，那就得填个docker镜像中的地址，那就是/home下面了
 ```
+
+
+### 优化后一键脚本
+Dockerfile文件：
+```
+FROM debian
+RUN apt-get update 
+RUN apt-get install -y wget 
+RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb 
+RUN dpkg -i google-chrome-stable_current_amd64.deb || true
+RUN apt-get -f -y install
+RUN apt-get install -y ttf-wqy-microhei ttf-wqy-zenhei xfonts-wqy
+RUN mkdir -p /home
+WORKDIR /home
+ENTRYPOINT ["/opt/google/chrome/chrome","--headless","--disable-gpu"]
+```
+构建：
+>docker build -t google-chrome:latest .
