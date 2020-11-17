@@ -1,13 +1,14 @@
 ---
 title: 「10」go mutex解读
-date: 2020/09/21 23:06:32
-updated: 2020/09/22 13:20:32
-keywords: golang,go 源码,go 锁, mutex 解读
+date: '2020/09/21 23:06:32'
+updated: '2020/09/22 13:20:32'
+keywords: 'golang,go 源码,go 锁, mutex 解读'
 tags:
-    - Go
-    - Go源码
-    - Go Package
-    - 锁
+  - Go
+  - Go源码
+  - Go Package
+  - 锁
+abbrlink: ff0d6c2b
 ---
 
 上次说到rwmutex读写锁，其实就是加强了锁的粒度，区分读和写时不同的情况，核心思想：写优先于读。

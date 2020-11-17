@@ -1,14 +1,14 @@
 ---
 title: 「13」Linux 进程
-date: 2020/09/24 19:09:49
-updated: 2020/09/24 20:00:00
-keywords: Linux,Linux 进程
+date: '2020/09/24 19:09:49'
+updated: '2020/09/24 20:00:00'
+keywords: 'Linux,Linux 进程'
 top: true
 sticky: 4
 tags:
-    - Linux
-    - 进程
-
+  - Linux
+  - 进程
+abbrlink: ba455c1d
 ---
 
 进程这是个老生常谈的问题，当然我不是那个老生，我只是个loser。

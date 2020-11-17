@@ -1,14 +1,15 @@
 ---
 title: 「15」Plan9 汇编小记
-date: 2020/10/09 13:47:39
-updated: 2020/10/09 13:47:39
-keywords: 汇编,Go,Plan9
+date: '2020/10/09 13:47:39'
+updated: '2020/10/09 13:47:39'
+keywords: '汇编,Go,Plan9'
 top: true
 sticky: 3
 tags:
-    - Plan9
-    - Go
-    - Day
+  - Plan9
+  - Go
+  - Day
+abbrlink: 2ce846ed
 ---
 #### 前序
 >平常coding时，偶尔会查看计算机的具体执行过程，那最基本的就是汇编了，了解汇编是调试过程中必不可少的，尤其是一些细节的处理方面.Go的汇编是Plan 9(贝尔实验室的产物)，和汇编很类似。

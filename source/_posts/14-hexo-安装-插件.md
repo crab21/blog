@@ -1,9 +1,10 @@
 ---
 title: 「14」hexo-安装&插件
-date: 2020/09/30 19:24:32
-updated: 2020/09/30 19:24:32
+date: '2020/09/30 19:24:32'
+updated: '2020/09/30 19:24:32'
 tags:
-    - hexo
+  - hexo
+abbrlink: ae4aba0d
 ---
 
 hexo安装及其第三方插件包下载总结，以便后续CI一次到位。
@@ -28,6 +29,9 @@ hexo安装及其第三方插件包下载总结，以便后续CI一次到位。
 
  npm uninstall hexo-generator-index --save
  npm install hexo-generator-index-pin-top --save
+ npm audit fix
+ 
+npm install hexo-neat --save
  npm audit fix
 ```
 

@@ -1,11 +1,12 @@
 ---
 title: 「17」chrome headless「截图/PDF/DOM...」
+keywords: 'chrome,chrome headless'
+tags:
+  - chrome
+  - Day
+abbrlink: 5544baea
 date: 2020-11-10 19:25:32
 updated: 2020-11-10 19:25:32
-keywords: chrome,chrome headless
-tags:
-    - chrome
-    - Day
 ---
 
 >最近在搞一个需求：html「文件」渲染成png/jpg；chrome不能装在服务器中，可以打成docker镜像。

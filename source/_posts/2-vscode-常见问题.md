@@ -1,11 +1,12 @@
 ---
 title: 「2」vscode 常见插件及其使用
-date: 2020/08/31 13:09:17
-updated: 2020/08/31 13:09:17
-keywords: vscode,vscode插件。
+date: '2020/08/31 13:09:17'
+updated: '2020/08/31 13:09:17'
+keywords: 'vscode,vscode插件。'
 tags:
-    - vscode
-    - 工具
+  - vscode
+  - 工具
+abbrlink: 8cf3cbca
 ---
 
 >vscode中一些常见的坑点...
