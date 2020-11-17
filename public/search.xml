@@ -159,6 +159,38 @@
       </tags>
   </entry>
   <entry>
+    <title>「20」博客诡异事件</title>
+    <url>/archives/5ce14ff5.html</url>
+    <content><![CDATA[<h3 id="博客CI-CD崩了"><a href="#博客CI-CD崩了" class="headerlink" title="博客CI CD崩了"></a>博客CI CD崩了</h3><blockquote>
+<p>就在刚才修改了部分的config配置，后打了tag push了上去,</p>
+</blockquote>
+<blockquote>
+<p>oh……GG了</p>
+</blockquote>
+<a id="more"></a>
+
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">err: FATAL Something&#39;s wrong. Maybe you can find the solution here: https:&#x2F;&#x2F;hexo.io&#x2F;docs&#x2F;troubleshooting.html</span><br><span class="line">err: TypeError: Cannot read property &#39;enable&#39; of undefined</span><br><span class="line">err:     at ***&#x2F;themes&#x2F;nextTheme&#x2F;scripts&#x2F;filters&#x2F;comment&#x2F;disqus.js:11:21</span><br><span class="line">err:     at Filter.execSync (&#x2F;***&#x2F;node_modules&#x2F;hexo&#x2F;lib&#x2F;extend&#x2F;filter.js:74:28)</span><br><span class="line">err:     at Hexo.execFilterSync (&#x2F;***&#x2F;node_modules&#x2F;hexo&#x2F;lib&#x2F;hexo&#x2F;index.js:432:29)</span><br><span class="line">err:     at module.exports (***&#x2F;themes&#x2F;nextTheme&#x2F;scripts&#x2F;events&#x2F;lib&#x2F;injects.js:58:8)</span><br><span class="line">err:     at Hexo.&lt;anonymous&gt; (***&#x2F;themes&#x2F;nextTheme&#x2F;scripts&#x2F;events&#x2F;index.js:9:27)</span><br><span class="line">err:     at Hexo.emit (events.js:314:20)</span><br><span class="line">err:     at Hexo._generate (&#x2F;***&#x2F;node_modules&#x2F;hexo&#x2F;lib&#x2F;hexo&#x2F;index.js:399:8)</span><br><span class="line">err:     at &#x2F;***&#x2F;node_modules&#x2F;hexo&#x2F;lib&#x2F;hexo&#x2F;index.js:249:***</span><br><span class="line">err:     at tryCatcher (&#x2F;***&#x2F;node_modules&#x2F;bluebird&#x2F;js&#x2F;release&#x2F;util.js:16:23)</span><br><span class="line">err:     at Promise._settlePromiseFromHandler (&#x2F;***&#x2F;node_modules&#x2F;bluebird&#x2F;js&#x2F;release&#x2F;promise.js:547:31)</span><br><span class="line">err:     at Promise._settlePromise (&#x2F;***&#x2F;node_modules&#x2F;bluebird&#x2F;js&#x2F;release&#x2F;promise.js:604:18)</span><br><span class="line">err:     at Promise._settlePromise0 (&#x2F;***&#x2F;node_modules&#x2F;bluebird&#x2F;js&#x2F;release&#x2F;promise.js:649:10)</span><br><span class="line">err:     at Promise._settlePromises (&#x2F;***&#x2F;node_modules&#x2F;bluebird&#x2F;js&#x2F;release&#x2F;promise.js:729:18)</span><br><span class="line">err:     at Promise._fulfill (&#x2F;***&#x2F;node_modules&#x2F;bluebird&#x2F;js&#x2F;release&#x2F;promise.js:673:18)</span><br><span class="line">err:     at PromiseArray._resolve (&#x2F;***&#x2F;node_modules&#x2F;bluebird&#x2F;js&#x2F;release&#x2F;promise_array.js:127:19)</span><br><span class="line">err:     at PromiseArray._promiseFulfilled (&#x2F;***&#x2F;node_modules&#x2F;bluebird&#x2F;js&#x2F;release&#x2F;promise_array.js:145:14)</span><br><span class="line">err:     at Promise._settlePromise (&#x2F;***&#x2F;node_modules&#x2F;bluebird&#x2F;js&#x2F;release&#x2F;promise.js:609:26)</span><br><span class="line">err:     at Promise._settlePromise0 (&#x2F;***&#x2F;node_modules&#x2F;bluebird&#x2F;js&#x2F;release&#x2F;promise.js:649:10)</span><br><span class="line">err:     at Promise._settlePromises (&#x2F;***&#x2F;node_modules&#x2F;bluebird&#x2F;js&#x2F;release&#x2F;promise.js:729:18)</span><br><span class="line">err:     at Promise._fulfill (&#x2F;***&#x2F;node_modules&#x2F;bluebird&#x2F;js&#x2F;release&#x2F;promise.js:673:18)</span><br><span class="line">err:     at Promise._resolveCallback (&#x2F;***&#x2F;node_modules&#x2F;bluebird&#x2F;js&#x2F;release&#x2F;promise.js:466:57)</span><br><span class="line">err:     at Promise._settlePromiseFromHandler (&#x2F;***&#x2F;node_modules&#x2F;bluebird&#x2F;js&#x2F;release&#x2F;promise.js:559:17)</span><br><span class="line">out: INFO  Start processing</span><br><span class="line">err: FATAL Something&#39;s wrong. Maybe you can find the solution here: https:&#x2F;&#x2F;hexo.io&#x2F;docs&#x2F;troubleshooting.html</span><br><span class="line">err: TypeError: Cannot read property &#39;enable&#39; of undefined</span><br><span class="line">err:     at ***&#x2F;themes&#x2F;nextTheme&#x2F;scripts&#x2F;filters&#x2F;comment&#x2F;disqus.js:11:21</span><br><span class="line">err:     at Filter.execSync (&#x2F;***&#x2F;node_modules&#x2F;hexo&#x2F;lib&#x2F;extend&#x2F;filter.js:74:28)</span><br><span class="line">err:     at Hexo.execFilterSync (&#x2F;***&#x2F;node_modules&#x2F;hexo&#x2F;lib&#x2F;hexo&#x2F;index.js:432:29)</span><br><span class="line">err:     at module.exports (***&#x2F;themes&#x2F;nextTheme&#x2F;scripts&#x2F;events&#x2F;lib&#x2F;injects.js:58:8)</span><br><span class="line">err:     at Hexo.&lt;anonymous&gt; (***&#x2F;themes&#x2F;nextTheme&#x2F;scripts&#x2F;events&#x2F;index.js:9:27)</span><br><span class="line">err:     at Hexo.emit (events.js:314:20)</span><br><span class="line">err:     at Hexo._generate (&#x2F;***&#x2F;node_modules&#x2F;hexo&#x2F;lib&#x2F;hexo&#x2F;index.js:399:8)</span><br><span class="line">err:     at &#x2F;***&#x2F;node_modules&#x2F;hexo&#x2F;lib&#x2F;hexo&#x2F;index.js:249:***</span><br><span class="line">err:     at tryCatcher (&#x2F;***&#x2F;node_modules&#x2F;bluebird&#x2F;js&#x2F;release&#x2F;util.js:16:23)</span><br><span class="line">err:     at Promise._settlePromiseFromHandler (&#x2F;***&#x2F;node_modules&#x2F;bluebird&#x2F;js&#x2F;release&#x2F;promise.js:547:31)</span><br><span class="line">err:     at Promise._settlePromise (&#x2F;***&#x2F;node_modules&#x2F;bluebird&#x2F;js&#x2F;release&#x2F;promise.js:604:18)</span><br><span class="line">err:     at Promise._settlePromise0 (&#x2F;***&#x2F;node_modules&#x2F;bluebird&#x2F;js&#x2F;release&#x2F;promise.js:649:10)</span><br><span class="line">err:     at Promise._settlePromises (&#x2F;***&#x2F;node_modules&#x2F;bluebird&#x2F;js&#x2F;release&#x2F;promise.js:729:18)</span><br><span class="line">err:     at Promise._fulfill (&#x2F;***&#x2F;node_modules&#x2F;bluebird&#x2F;js&#x2F;release&#x2F;promise.js:673:18)</span><br><span class="line">err:     at PromiseArray._resolve (&#x2F;***&#x2F;node_modules&#x2F;bluebird&#x2F;js&#x2F;release&#x2F;promise_array.js:127:19)</span><br><span class="line">err:     at PromiseArray._promiseFulfilled (&#x2F;***&#x2F;node_modules&#x2F;bluebird&#x2F;js&#x2F;release&#x2F;promise_array.js:145:14)</span><br><span class="line">err:     at Promise._settlePromise (&#x2F;***&#x2F;node_modules&#x2F;bluebird&#x2F;js&#x2F;release&#x2F;promise.js:609:26)</span><br><span class="line">err:     at Promise._settlePromise0 (&#x2F;***&#x2F;node_modules&#x2F;bluebird&#x2F;js&#x2F;release&#x2F;promise.js:649:10)</span><br><span class="line">err:     at Promise._settlePromises (&#x2F;***&#x2F;node_modules&#x2F;bluebird&#x2F;js&#x2F;release&#x2F;promise.js:729:18)</span><br><span class="line">err:     at Promise._fulfill (&#x2F;***&#x2F;node_modules&#x2F;bluebird&#x2F;js&#x2F;release&#x2F;promise.js:673:18)</span><br><span class="line">err:     at Promise._resolveCallback (&#x2F;***&#x2F;node_modules&#x2F;bluebird&#x2F;js&#x2F;release&#x2F;promise.js:466:57)</span><br><span class="line">err:     at Promise._settlePromiseFromHandler (&#x2F;***&#x2F;node_modules&#x2F;bluebird&#x2F;js&#x2F;release&#x2F;promise.js:559:17)</span><br></pre></td></tr></table></figure>
+
+<p>简单点，显示没有enable这个属性，，，，我懵了，这部署了多少次了，没有出现这么个错误啊。</p>
+<p>先删了js，本地跑ok了，远端挂了，又提示另一个js错误。<br>再删一个错误的js,再跑….又挂了!</p>
+<h3 id="排查…"><a href="#排查…" class="headerlink" title="排查…"></a>排查…</h3><blockquote>
+<p>初步定位为文件没有更到最新</p>
+</blockquote>
+<p>本地ok,服务器部署不起来…..</p>
+<p>查下文件scp copy的工作流</p>
+<p><img src="https://raw.githubusercontent.com/crab21/Images/master/blog/%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A120201117-000817@2x.png"></p>
+<p>看起来很简单，也很好用，但是呢，大坑来了……….<br>当时没有选择是否选择覆盖文件：</p>
+<p><img src="https://raw.githubusercontent.com/crab21/Images/master/blog/%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A120201117-001054@2x.png"></p>
+<h3 id="问题点"><a href="#问题点" class="headerlink" title="问题点"></a>问题点</h3><p>没有覆盖配置文件，导致残留或者修改不彻底，同名的始终不修改，导致的问题。</p>
+<p>PS：花了半个小时定位这么个rewrite的问题！ 记着吧，提醒自己….</p>
+<h3 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h3><p><a href="https://github.com/appleboy/scp-action/blob/master/action.yml#L44">copy workflow Github</a><br><a href="https://github.com/marketplace/actions/scp-files">scp copy workflow</a></p>
+]]></content>
+      <tags>
+        <tag>Day</tag>
+        <tag>博客</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>「19」GPM-2.1-调度流程</title>
     <url>/archives/5c6a362f.html</url>
     <content><![CDATA[<p>工欲善其事，必先知其所以然……<br>学习GPM调度之前，先看下源码部分的准备工作吧，不然一脸茫然的看源码，基本不会有太多的收获.</p>
@@ -506,8 +538,8 @@
 <h3 id="END"><a href="#END" class="headerlink" title="END"></a>END</h3>]]></content>
       <tags>
         <tag>Go</tag>
-        <tag>Go Package</tag>
         <tag>Go源码</tag>
+        <tag>Go Package</tag>
         <tag>锁</tag>
       </tags>
   </entry>
@@ -585,9 +617,9 @@
 <h3 id="END"><a href="#END" class="headerlink" title="END"></a>END</h3>]]></content>
       <tags>
         <tag>Go</tag>
-        <tag>Go reflect</tag>
         <tag>Go Package</tag>
         <tag>Day</tag>
+        <tag>Go reflect</tag>
       </tags>
   </entry>
   <entry>
@@ -633,8 +665,8 @@
 <h3 id="END"><a href="#END" class="headerlink" title="END"></a>END</h3>]]></content>
       <tags>
         <tag>Go</tag>
-        <tag>Go Package</tag>
         <tag>Go源码</tag>
+        <tag>Go Package</tag>
         <tag>锁</tag>
       </tags>
   </entry>
