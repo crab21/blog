@@ -72,27 +72,6 @@
   </url>
   
   <url>
-    <loc>http://blog.imrcrab.com/lib/reading_progress/renovate.json</loc>
-    
-    <lastmod>2020-09-23</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://blog.imrcrab.com/lib/reading_progress/README.html</loc>
-    
-    <lastmod>2020-09-23</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://blog.imrcrab.com/lib/reading_progress/package.json</loc>
-    
-    <lastmod>2020-09-23</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://blog.imrcrab.com/archives/e18c94ab.html</loc>
     
     <lastmod>2020-09-22</lastmod>
@@ -142,14 +121,14 @@
   </url>
   
   <url>
-    <loc>http://blog.imrcrab.com/tags/index.html</loc>
+    <loc>http://blog.imrcrab.com/categories/index.html</loc>
     
     <lastmod>2020-09-01</lastmod>
     
   </url>
   
   <url>
-    <loc>http://blog.imrcrab.com/categories/index.html</loc>
+    <loc>http://blog.imrcrab.com/tags/index.html</loc>
     
     <lastmod>2020-09-01</lastmod>
     
@@ -263,14 +242,14 @@
   </url>
   
   <url>
-    <loc>http://blog.imrcrab.com/tags/chrome/</loc>
+    <loc>http://blog.imrcrab.com/tags/Plan9/</loc>
     <lastmod>2020-11-17</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>http://blog.imrcrab.com/tags/Plan9/</loc>
+    <loc>http://blog.imrcrab.com/tags/chrome/</loc>
     <lastmod>2020-11-17</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>

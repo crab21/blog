@@ -225,13 +225,20 @@
               <time title="创建时间：2020-11-10 19:25:32" itemprop="dateCreated datePublished" datetime="2020-11-10T19:25:32+08:00">2020-11-10</time>
             </span>
 
-          <br>
+          
+            <span id="/archives/5544baea.html" class="post-meta-item leancloud_visitors" data-flag-title="「17」chrome headless「截图/PDF/DOM...」" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span><br>
             <span class="post-meta-item" title="本文字数">
               <span class="post-meta-item-icon">
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>2.9k</span>
+              <span>3.4k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -327,6 +334,14 @@
 <h4 id="8跑一把，收工"><a href="#8跑一把，收工" class="headerlink" title="8跑一把，收工"></a>8跑一把，收工</h4><h3 id="注意点："><a href="#注意点：" class="headerlink" title="注意点："></a>注意点：</h3><h4 id="PS-1"><a href="#PS-1" class="headerlink" title="PS-1"></a>PS-1</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">1、错误❌</span><br><span class="line">docker container run -it --rm -v &#x2F;tmp:&#x2F;home gogoowang&#x2F;chrome:v1 --no-sandbox --screenshot --hide-scrollbars &#x2F;XXXX&#x2F;XXXX.html</span><br><span class="line">2、正确</span><br><span class="line">docker container run -i --rm -v &#x2F;tmp:&#x2F;home gogoowang&#x2F;chrome:v1 --no-sandbox --screenshot&#x3D;&#x2F;home&#x2F;xx.png --hide-scrollbars &#x2F;XXXX&#x2F;XXXX.html</span><br><span class="line"></span><br><span class="line">少一个 -t，这个 -t：再搞一个临时的TTy来跑程序，既然是后台跑的，那就没必要了</span><br></pre></td></tr></table></figure>
 
 <h4 id="PS-2"><a href="#PS-2" class="headerlink" title="PS-2"></a>PS-2</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">docker container run -i --rm -v &#x2F;tmp:&#x2F;home gogoowang&#x2F;chrome:v1 --no-sandbox --screenshot&#x3D;&#x2F;home&#x2F;xx.png --hide-scrollbars &#x2F;XXXX&#x2F;XXXX.html</span><br><span class="line"></span><br><span class="line">1、关于这个-v的问题,后面就固定了，具体见Dockerfile中</span><br><span class="line">2、--screenshot路径问题，既然是docker镜像，那就得填个docker镜像中的地址，那就是&#x2F;home下面了</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="优化后一键脚本"><a href="#优化后一键脚本" class="headerlink" title="优化后一键脚本"></a>优化后一键脚本</h3><p>Dockerfile文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">FROM debian</span><br><span class="line">RUN apt-get update </span><br><span class="line">RUN apt-get install -y wget </span><br><span class="line">RUN wget https:&#x2F;&#x2F;dl.google.com&#x2F;linux&#x2F;direct&#x2F;google-chrome-stable_current_amd64.deb </span><br><span class="line">RUN dpkg -i google-chrome-stable_current_amd64.deb || true</span><br><span class="line">RUN apt-get -f -y install</span><br><span class="line">RUN apt-get install -y ttf-wqy-microhei ttf-wqy-zenhei xfonts-wqy</span><br><span class="line">RUN mkdir -p &#x2F;home</span><br><span class="line">WORKDIR &#x2F;home</span><br><span class="line">ENTRYPOINT [&quot;&#x2F;opt&#x2F;google&#x2F;chrome&#x2F;chrome&quot;,&quot;--headless&quot;,&quot;--disable-gpu&quot;]</span><br></pre></td></tr></table></figure>
+<p>构建：</p>
+<blockquote>
+<p>docker build -t google-chrome:latest .</p>
+</blockquote>
 
     </div>
 
@@ -430,7 +445,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9A%BE%E7%82%B9%EF%BC%9A"><span class="nav-number">1.</span> <span class="nav-text">难点：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%87%E5%85%A5%E7%82%B9%EF%BC%9A"><span class="nav-number">2.</span> <span class="nav-text">切入点：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Zenika-alpine-chrome"><span class="nav-number">3.</span> <span class="nav-text">Zenika&#x2F;alpine-chrome</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%8D%E5%B0%9D%E8%AF%95%E3%80%8C%E8%87%AA%E5%B7%B1%E6%90%9E%E4%B8%AAdocker-images%E3%80%8D"><span class="nav-number">4.</span> <span class="nav-text">再尝试「自己搞个docker images」</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%9E%90%EF%BC%9A"><span class="nav-number">5.</span> <span class="nav-text">分析：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF%EF%BC%9A"><span class="nav-number">6.</span> <span class="nav-text">思路：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4%EF%BC%9A"><span class="nav-number">7.</span> <span class="nav-text">步骤：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1"><span class="nav-number">7.1.</span> <span class="nav-text">1</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-4-5"><span class="nav-number">7.2.</span> <span class="nav-text">2&#x2F;3&#x2F;4&#x2F;5</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6%E5%AF%BC%E5%87%BAcontainer"><span class="nav-number">7.3.</span> <span class="nav-text">6导出container</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7%E8%87%AA%E5%B7%B1%E6%90%9EDockerfile-%E9%A2%84%E7%95%99%E3%80%8CRUN%E3%80%8D%E6%8E%A5%E5%8F%A3"><span class="nav-number">7.4.</span> <span class="nav-text">7自己搞Dockerfile,预留「RUN」接口</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#8%E8%B7%91%E4%B8%80%E6%8A%8A%EF%BC%8C%E6%94%B6%E5%B7%A5"><span class="nav-number">7.5.</span> <span class="nav-text">8跑一把，收工</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B3%A8%E6%84%8F%E7%82%B9%EF%BC%9A"><span class="nav-number">8.</span> <span class="nav-text">注意点：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#PS-1"><span class="nav-number">8.1.</span> <span class="nav-text">PS-1</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#PS-2"><span class="nav-number">8.2.</span> <span class="nav-text">PS-2</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9A%BE%E7%82%B9%EF%BC%9A"><span class="nav-number">1.</span> <span class="nav-text">难点：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%87%E5%85%A5%E7%82%B9%EF%BC%9A"><span class="nav-number">2.</span> <span class="nav-text">切入点：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Zenika-alpine-chrome"><span class="nav-number">3.</span> <span class="nav-text">Zenika&#x2F;alpine-chrome</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%8D%E5%B0%9D%E8%AF%95%E3%80%8C%E8%87%AA%E5%B7%B1%E6%90%9E%E4%B8%AAdocker-images%E3%80%8D"><span class="nav-number">4.</span> <span class="nav-text">再尝试「自己搞个docker images」</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E6%9E%90%EF%BC%9A"><span class="nav-number">5.</span> <span class="nav-text">分析：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF%EF%BC%9A"><span class="nav-number">6.</span> <span class="nav-text">思路：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4%EF%BC%9A"><span class="nav-number">7.</span> <span class="nav-text">步骤：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1"><span class="nav-number">7.1.</span> <span class="nav-text">1</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-4-5"><span class="nav-number">7.2.</span> <span class="nav-text">2&#x2F;3&#x2F;4&#x2F;5</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6%E5%AF%BC%E5%87%BAcontainer"><span class="nav-number">7.3.</span> <span class="nav-text">6导出container</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7%E8%87%AA%E5%B7%B1%E6%90%9EDockerfile-%E9%A2%84%E7%95%99%E3%80%8CRUN%E3%80%8D%E6%8E%A5%E5%8F%A3"><span class="nav-number">7.4.</span> <span class="nav-text">7自己搞Dockerfile,预留「RUN」接口</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#8%E8%B7%91%E4%B8%80%E6%8A%8A%EF%BC%8C%E6%94%B6%E5%B7%A5"><span class="nav-number">7.5.</span> <span class="nav-text">8跑一把，收工</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B3%A8%E6%84%8F%E7%82%B9%EF%BC%9A"><span class="nav-number">8.</span> <span class="nav-text">注意点：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#PS-1"><span class="nav-number">8.1.</span> <span class="nav-text">PS-1</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#PS-2"><span class="nav-number">8.2.</span> <span class="nav-text">PS-2</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%98%E5%8C%96%E5%90%8E%E4%B8%80%E9%94%AE%E8%84%9A%E6%9C%AC"><span class="nav-number">9.</span> <span class="nav-text">优化后一键脚本</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -506,7 +521,7 @@
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">43 分钟</span>
+    <span title="站点阅读时长">44 分钟</span>
 </div>
 
 
@@ -523,6 +538,92 @@
 
 
 
+<script>
+  (function() {
+    function leancloudSelector(url) {
+      url = encodeURI(url);
+      return document.getElementById(url).querySelector('.leancloud-visitors-count');
+    }
+
+    function addCount(Counter) {
+      var visitors = document.querySelector('.leancloud_visitors');
+      var url = decodeURI(visitors.id);
+      var title = visitors.dataset.flagTitle;
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          if (results.length > 0) {
+            var counter = results[0];
+            leancloudSelector(url).innerText = counter.time + 1;
+            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
+              .catch(error => {
+                console.error('Failed to save visitor count', error);
+              });
+          } else {
+              leancloudSelector(url).innerText = 'Counter not initialized! More info at console err msg.';
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    function showTime(Counter) {
+      var visitors = document.querySelectorAll('.leancloud_visitors');
+      var entries = [...visitors].map(element => {
+        return decodeURI(element.id);
+      });
+
+      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
+        .then(response => response.json())
+        .then(({ results }) => {
+          for (let url of entries) {
+            let target = results.find(item => item.url === url);
+            leancloudSelector(url).innerText = target ? target.time : 0;
+          }
+        })
+        .catch(error => {
+          console.error('LeanCloud Counter Error', error);
+        });
+    }
+
+    let { app_id, app_key, server_url } = {"enable":true,"app_id":"rSgtfmim6nG8DA8i3gVctzC2-gzGzoHsz","app_key":"9VTNtVhOTowLUAHYs2PJDms4","server_url":null,"enable_sync":true,"security":true};
+    function fetchData(api_server) {
+      var Counter = (method, url, data) => {
+        return fetch(`${api_server}/1.1${url}`, {
+          method,
+          headers: {
+            'X-LC-Id'     : app_id,
+            'X-LC-Key'    : app_key,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+      };
+      if (CONFIG.page.isPost) {
+        if (CONFIG.hostname !== location.hostname) return;
+        addCount(Counter);
+      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
+        showTime(Counter);
+      }
+    }
+
+    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
+
+    if (api_server) {
+      fetchData(api_server);
+    } else {
+      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
+        .then(response => response.json())
+        .then(({ api_server }) => {
+          fetchData('https://' + api_server);
+        });
+    }
+  })();
+</script>
 
 
       </div>
