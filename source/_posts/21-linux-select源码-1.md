@@ -1,11 +1,12 @@
 ---
 title: 「21」-linux select源码-1
 date: '2020/11/17 19:09:17'
-updated: '2020/11/17 19:09:17'
-keywords: 
+updated: '2020/11/18 19:09:17'
 tags:
   - Linux
   - Day
+abbrlink: ba7b70bf
+keywords:
 ---
 
 
@@ -25,6 +26,8 @@ select属于linux系列的文件系统「fs」的范畴，每次的系统调用�
 * 异步I/O与Unix Signal事件机制
 
 先来学习下linux源码是怎么处理select机制的：
+
+>linux version: 5.10-r5
 
 ### 概览图
 

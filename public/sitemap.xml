@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://blog.imrcrab.com/archives/392d66f0.html</loc>
+    
+    <lastmod>2020-11-18</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.imrcrab.com/archives/ba7b70bf.html</loc>
+    
+    <lastmod>2020-11-18</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://blog.imrcrab.com/archives/5ce14ff5.html</loc>
     
     <lastmod>2020-11-16</lastmod>
@@ -72,6 +86,27 @@
   </url>
   
   <url>
+    <loc>http://blog.imrcrab.com/lib/reading_progress/renovate.json</loc>
+    
+    <lastmod>2020-09-23</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.imrcrab.com/lib/reading_progress/README.html</loc>
+    
+    <lastmod>2020-09-23</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://blog.imrcrab.com/lib/reading_progress/package.json</loc>
+    
+    <lastmod>2020-09-23</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://blog.imrcrab.com/archives/e18c94ab.html</loc>
     
     <lastmod>2020-09-22</lastmod>
@@ -121,14 +156,14 @@
   </url>
   
   <url>
-    <loc>http://blog.imrcrab.com/categories/index.html</loc>
+    <loc>http://blog.imrcrab.com/tags/index.html</loc>
     
     <lastmod>2020-09-01</lastmod>
     
   </url>
   
   <url>
-    <loc>http://blog.imrcrab.com/tags/index.html</loc>
+    <loc>http://blog.imrcrab.com/categories/index.html</loc>
     
     <lastmod>2020-09-01</lastmod>
     
@@ -158,7 +193,7 @@
 
   <url>
     <loc>http://blog.imrcrab.com/</loc>
-    <lastmod>2020-11-17</lastmod>
+    <lastmod>2020-11-18</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -166,126 +201,126 @@
   
   <url>
     <loc>http://blog.imrcrab.com/tags/Git/</loc>
-    <lastmod>2020-11-17</lastmod>
+    <lastmod>2020-11-18</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://blog.imrcrab.com/tags/life/</loc>
-    <lastmod>2020-11-17</lastmod>
+    <lastmod>2020-11-18</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://blog.imrcrab.com/tags/Go/</loc>
-    <lastmod>2020-11-17</lastmod>
+    <lastmod>2020-11-18</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://blog.imrcrab.com/tags/Go%E6%BA%90%E7%A0%81/</loc>
-    <lastmod>2020-11-17</lastmod>
+    <lastmod>2020-11-18</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://blog.imrcrab.com/tags/Go-Package/</loc>
-    <lastmod>2020-11-17</lastmod>
+    <lastmod>2020-11-18</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://blog.imrcrab.com/tags/%E9%94%81/</loc>
-    <lastmod>2020-11-17</lastmod>
+    <lastmod>2020-11-18</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://blog.imrcrab.com/tags/hexo/</loc>
-    <lastmod>2020-11-17</lastmod>
+    <lastmod>2020-11-18</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://blog.imrcrab.com/tags/hexo%E6%8F%92%E4%BB%B6/</loc>
-    <lastmod>2020-11-17</lastmod>
+    <lastmod>2020-11-18</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://blog.imrcrab.com/tags/Day/</loc>
-    <lastmod>2020-11-17</lastmod>
+    <lastmod>2020-11-18</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://blog.imrcrab.com/tags/Linux/</loc>
-    <lastmod>2020-11-17</lastmod>
+    <lastmod>2020-11-18</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://blog.imrcrab.com/tags/%E8%BF%9B%E7%A8%8B/</loc>
-    <lastmod>2020-11-17</lastmod>
+    <lastmod>2020-11-18</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://blog.imrcrab.com/tags/Plan9/</loc>
-    <lastmod>2020-11-17</lastmod>
+    <lastmod>2020-11-18</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://blog.imrcrab.com/tags/chrome/</loc>
-    <lastmod>2020-11-17</lastmod>
+    <lastmod>2020-11-18</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://blog.imrcrab.com/tags/GPM/</loc>
-    <lastmod>2020-11-17</lastmod>
+    <lastmod>2020-11-18</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://blog.imrcrab.com/tags/vscode/</loc>
-    <lastmod>2020-11-17</lastmod>
+    <lastmod>2020-11-18</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://blog.imrcrab.com/tags/%E5%B7%A5%E5%85%B7/</loc>
-    <lastmod>2020-11-17</lastmod>
+    <lastmod>2020-11-18</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://blog.imrcrab.com/tags/%E5%8D%9A%E5%AE%A2/</loc>
-    <lastmod>2020-11-17</lastmod>
+    <lastmod>2020-11-18</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://blog.imrcrab.com/tags/Go-reflect/</loc>
-    <lastmod>2020-11-17</lastmod>
+    <lastmod>2020-11-18</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
