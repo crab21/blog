@@ -26,6 +26,13 @@ select属于linux系列的文件系统「fs」的范畴，每次的系统调用�
 
 先来学习下linux源码是怎么处理select机制的：
 
+### 概览图
+
+梳理了下，大概整理成了流程图：
+
+![](https://raw.githubusercontent.com/crab21/Images/master/blog/linux源码-select-1.png)
+
+
 ### select切入点
 
 既然知道了select属于fs系列的，那就很容易找到:[fs/select.c]
@@ -308,12 +315,6 @@ struct pollfd {
 	short revents; // return
 };
 ```
-
-### 重新梳理逻辑
-
-梳理了下，大概整理成了流程图：
-
-![](https://raw.githubusercontent.com/crab21/Images/master/blog/linux源码-select-1.png)
 
 具体见后续更新「poll源码」
 
