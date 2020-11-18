@@ -62,6 +62,15 @@ SYSCALL_DEFINE5(select, int, n, fd_set __user *, inp, fd_set __user *, outp,
 
 ### do_select
 
+关键性的结构体
+```c++
+typedef struct {
+	unsigned long *in, *out, *ex; //输出 、输入、异常
+	unsigned long *res_in, *res_out, *res_ex;
+} fd_set_bits;
+```
+
+
 ```c++
 
 static int do_select(int n, fd_set_bits *fds, struct timespec64 *end_time)
@@ -75,6 +84,7 @@ static int do_select(int n, fd_set_bits *fds, struct timespec64 *end_time)
 	unsigned long busy_start = 0;
 
 	rcu_read_lock();
+    //找出文件的最大描述符
 	retval = max_select_fd(n, fds);
 	rcu_read_unlock();
 
@@ -82,7 +92,7 @@ static int do_select(int n, fd_set_bits *fds, struct timespec64 *end_time)
 		return retval;
 	n = retval;
 
-  //初始化
+    //初始化
 	poll_initwait(&table);
 	wait = &table.pt;
 	if (end_time && !end_time->tv_sec && !end_time->tv_nsec) {
@@ -101,7 +111,7 @@ static int do_select(int n, fd_set_bits *fds, struct timespec64 *end_time)
 		inp = fds->in; outp = fds->out; exp = fds->ex;
 		rinp = fds->res_in; routp = fds->res_out; rexp = fds->res_ex;
 
-    //遍历所有的fd.......同步等.....
+        //遍历所有的fd.......同步等.....
 		for (i = 0; i < n; ++rinp, ++routp, ++rexp) {
 			unsigned long in, out, ex, all_bits, bit = 1, j;
 			unsigned long res_in = 0, res_out = 0, res_ex = 0;
@@ -109,6 +119,7 @@ static int do_select(int n, fd_set_bits *fds, struct timespec64 *end_time)
 
 			in = *inp++; out = *outp++; ex = *exp++;
 			all_bits = in | out | ex;
+            //没有任何注册事件
 			if (all_bits == 0) {
 				i += BITS_PER_LONG;
 				continue;
@@ -118,6 +129,7 @@ static int do_select(int n, fd_set_bits *fds, struct timespec64 *end_time)
 				struct fd f;
 				if (i >= n)
 					break;
+                //跳过未注册的
 				if (!(bit & all_bits))
 					continue;
 				f = fdget(i);
@@ -125,7 +137,7 @@ static int do_select(int n, fd_set_bits *fds, struct timespec64 *end_time)
 					wait_key_set(wait, in, out, bit,
 						     busy_flag);
 
-          //对每一个fd进行检测
+                    //对每一个fd进行检测
 					mask = vfs_poll(f.file, wait);
 
 					fdput(f);
@@ -168,7 +180,7 @@ static int do_select(int n, fd_set_bits *fds, struct timespec64 *end_time)
 		}
 		wait->_qproc = NULL;
 
-    //退出循环
+        //退出循环，条件： 事件就绪/超时/收到信号
 		if (retval || timed_out || signal_pending(current))
 			break;
 		if (table.error) {
@@ -197,7 +209,7 @@ static int do_select(int n, fd_set_bits *fds, struct timespec64 *end_time)
 			to = &expire;
 		}
 
-    //超时就休眠一会儿「中断会儿」
+        //超时就休眠一会儿「中断会儿」
 		if (!poll_schedule_timeout(&table, TASK_INTERRUPTIBLE,
 					   to, slack))
 			timed_out = 1;
@@ -238,7 +250,7 @@ static int poll_schedule_timeout(struct poll_wqueues *pwq, int state,
 	return rc;
 }
 ```
-
+#### 
 ### poll_wait
 
 ```c++
@@ -296,6 +308,12 @@ struct pollfd {
 	short revents; // return
 };
 ```
+
+### 重新梳理逻辑
+
+梳理了下，大概整理成了流程图：
+
+![](https://raw.githubusercontent.com/crab21/Images/master/blog/linux源码-select-1.png)
 
 具体见后续更新「poll源码」
 
