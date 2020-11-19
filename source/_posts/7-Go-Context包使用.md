@@ -2,8 +2,7 @@
 title: 「7」Go Context包使用
 date: '2020/09/07 22:21:52'
 updated: '2020/09/07 22:21:52'
-keywords: >-
-  golang,go context包,golang context WithCancel,golang context WithDeadline,go
+keywords: golang,go context包,golang context WithCancel,golang context WithDeadline,go
   WithTimeout.
 tags:
   - Go

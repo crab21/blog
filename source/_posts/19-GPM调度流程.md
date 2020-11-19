@@ -1,5 +1,5 @@
 ---
-title: 「19」GPM-2.1-调度流程
+title: 「19」GPM 调度流程
 date: '2020/11/16 21:09:17'
 updated: '2020/11/16 21:09:17'
 keywords: 'GPM,Go,Go调度器,Go资源调度器'
@@ -17,6 +17,8 @@ abbrlink: 5c6a362f
 >[challenge]: 以下多少是一看就知道在GPM中作用的?
 
 <!--more-->
+
+>go version: 1.14.3
 
 #### 函数
 
