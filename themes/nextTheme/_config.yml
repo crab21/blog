@@ -1004,8 +1004,8 @@ vendors:
   # Internal version: 1.0.0
   # canvas_ribbon: //cdn.jsdelivr.net/gh/theme-next/theme-next-canvas-ribbon@1/canvas-ribbon.js
   canvas_ribbon:
-  pace: https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js
-  pace_css: https://cdn.jsdelivr.net/npm/pace-js@1.0.2/themes/black/pace-theme-loading-bar.css
+  #pace: https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js
+  #pace_css: https://cdn.jsdelivr.net/npm/pace-js@1.0.2/themes/black/pace-theme-loading-bar.css
 
 # Assets
 css: css
