@@ -36,7 +36,7 @@ post:
     license_title: 著作権表示
     license_content: "このブログ内のすべての記事は、特別な記載がない限り %s の下のライセンスで保護されています。"
 footer:
-  powered: "Powered by %s"
+  powered: " "
   total_views: 閲覧合計数
   total_visitors: 合計閲覧者数
 counter:
