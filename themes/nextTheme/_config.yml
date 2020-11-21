@@ -634,7 +634,7 @@ livere_uid: # <your_uid>
 # Gitalk
 # For more information: https://gitalk.github.io, https://github.com/gitalk/gitalk
 gitalk:
-  enable: true
+  enable: false
   github_id: crab21 # GitHub repo owner
   repo: blog # Repository name to store issues
   client_id: e5e42e6717d11b0b3948 # GitHub Application Client ID
