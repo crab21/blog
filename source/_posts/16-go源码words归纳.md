@@ -1,7 +1,7 @@
 ---
 title: 「16」go源码words归纳
 date: '2020/11/03 10:45:07'
-updated: '2020/11/03 10:45:07'
+updated: '2020/11/25 21:45:07'
 keywords: '汇编,Go,Plan9'
 tags:
   - Go
@@ -36,6 +36,10 @@ corruption  n 腐败，译：损坏
 「11/5」
 assembly  n  装配                                      --> /proc.go
 amortizes  v  缓冲                                     --> /proc.go
+
+「11/25」
+guard  v. 看守																				 --> /proc.go
+Alternatively  或者																		-->  /runtime/rwmutex.go
 ```
 
 
