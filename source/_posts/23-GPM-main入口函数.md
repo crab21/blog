@@ -22,6 +22,7 @@ abbrlink: 9bb71eca
 <!--more-->
 接下来该到main函数的相关处理。
 
+>go version: 1.14.3
 ### code分析
 
 [main函数入口](https://github.com/golang/go/blob/release-branch.go1.14/src/runtime/proc.go#L113)
