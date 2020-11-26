@@ -31,7 +31,7 @@
 <meta property="og:description" content="前序好久没有更新了，不是不更新，最近感冒严重，一直没好，太影响身体了…..「身体还是很重要的!」 当然了，在生病期间也看了很多东西，更多的思考了许多：人生规划的、如何学习技术、后续的生涯发展之类的。「思考的方式很多种，不建议去生病了才去思考.」  后续会更新一篇，主要是结合之前的成长和技术的壁垒来说说后续想怎么学，怎么发展，生涯规划吧。  不扯了，这篇主要想记录一些词汇，主要还是在阅读Go源码中的">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-11-03T02:45:07.000Z">
-<meta property="article:modified_time" content="2020-11-03T02:45:07.000Z">
+<meta property="article:modified_time" content="2020-11-25T13:45:07.000Z">
 <meta property="article:author" content="crab">
 <meta property="article:tag" content="Go">
 <meta property="article:tag" content="Day">
@@ -219,6 +219,13 @@
 
               <time title="创建时间：2020-11-03 10:45:07" itemprop="dateCreated datePublished" datetime="2020-11-03T10:45:07+08:00">2020-11-03</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-11-25 21:45:07" itemprop="dateModified" datetime="2020-11-25T21:45:07+08:00">2020-11-25</time>
+              </span>
 
           
             <span id="/archives/425d5e80.html" class="post-meta-item leancloud_visitors" data-flag-title="「16」go源码words归纳" title="阅读次数">
@@ -247,7 +254,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>669</span>
+              <span>747</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -273,7 +280,7 @@
 </blockquote>
 <p>不扯了，这篇主要想记录一些词汇，主要还是在阅读Go源码中的一些词汇，毕竟英文有点差，再不积累就更差了。</p>
 <h3 id="Words"><a href="#Words" class="headerlink" title="Words"></a>Words</h3><h4 id="全称"><a href="#全称" class="headerlink" title="全称"></a>全称</h4><a id="more"></a>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">「<span class="number">11</span>/<span class="number">3</span>」</span><br><span class="line">Preempt  v 抢占、掠夺                                   --&gt; /proc.<span class="keyword">go</span></span><br><span class="line">retake   v 重新获取「重新分配」                           --&gt; /proc.<span class="keyword">go</span></span><br><span class="line">syscall  v 系统调用                                     --&gt; /proc.<span class="keyword">go</span></span><br><span class="line">decrement v 递减                                       --&gt; /proc.<span class="keyword">go</span></span><br><span class="line">pretending  v 假装、伪装                                --&gt; /proc.<span class="keyword">go</span></span><br><span class="line">contended  v 竞争                                      --&gt; /proc.<span class="keyword">go</span></span><br><span class="line">procresize  v 扩大                                     --&gt; /proc.<span class="keyword">go</span> </span><br><span class="line">corruption  n 腐败，译：损坏</span><br><span class="line"></span><br><span class="line">「<span class="number">11</span>/<span class="number">5</span>」</span><br><span class="line">assembly  n  装配                                      --&gt; /proc.<span class="keyword">go</span></span><br><span class="line">amortizes  v  缓冲                                     --&gt; /proc.<span class="keyword">go</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">「<span class="number">11</span>/<span class="number">3</span>」</span><br><span class="line">Preempt  v 抢占、掠夺                                   --&gt; /proc.<span class="keyword">go</span></span><br><span class="line">retake   v 重新获取「重新分配」                           --&gt; /proc.<span class="keyword">go</span></span><br><span class="line">syscall  v 系统调用                                     --&gt; /proc.<span class="keyword">go</span></span><br><span class="line">decrement v 递减                                       --&gt; /proc.<span class="keyword">go</span></span><br><span class="line">pretending  v 假装、伪装                                --&gt; /proc.<span class="keyword">go</span></span><br><span class="line">contended  v 竞争                                      --&gt; /proc.<span class="keyword">go</span></span><br><span class="line">procresize  v 扩大                                     --&gt; /proc.<span class="keyword">go</span> </span><br><span class="line">corruption  n 腐败，译：损坏</span><br><span class="line"></span><br><span class="line">「<span class="number">11</span>/<span class="number">5</span>」</span><br><span class="line">assembly  n  装配                                      --&gt; /proc.<span class="keyword">go</span></span><br><span class="line">amortizes  v  缓冲                                     --&gt; /proc.<span class="keyword">go</span></span><br><span class="line"></span><br><span class="line">「<span class="number">11</span>/<span class="number">25</span>」</span><br><span class="line">guard  v. 看守																				 --&gt; /proc.<span class="keyword">go</span></span><br><span class="line">Alternatively  或者																		--&gt;  /runtime/rwmutex.<span class="keyword">go</span></span><br></pre></td></tr></table></figure>
 
 
 <h4 id="简写"><a href="#简写" class="headerlink" title="简写"></a>简写</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">「<span class="number">11</span>/<span class="number">3</span>」</span><br><span class="line">sysmon -&gt; system monitor 系统监控                                               /proc.<span class="keyword">go</span></span><br><span class="line">incidlelocked  --&gt; increment idle locked   增加空闲锁                           /proc.<span class="keyword">go</span></span><br><span class="line">sysmontick  --&gt; system monitor ticket   系统监控数量                            /proc.<span class="keyword">go</span></span><br></pre></td></tr></table></figure>
@@ -395,7 +402,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">23</span>
+          <span class="site-state-item-count">24</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -451,13 +458,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">站点总字数：</span>
-    <span title="站点总字数">61k</span>
+    <span title="站点总字数">75k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
-    <span title="站点阅读时长">55 分钟</span>
+    <span title="站点阅读时长">1:08</span>
 </div>
 
 
