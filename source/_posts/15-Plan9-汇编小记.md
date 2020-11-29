@@ -3,7 +3,7 @@ title: 「15」Plan9 汇编小记
 date: '2020/10/09 13:47:39'
 updated: '2020/10/09 13:47:39'
 keywords: '汇编,Go,Plan9'
-top: true
+top: false
 sticky: 3
 tags:
   - Plan9

@@ -3,7 +3,7 @@ title: 「13」Linux 进程
 date: '2020/09/24 19:09:49'
 updated: '2020/09/24 20:00:00'
 keywords: 'Linux,Linux 进程'
-top: true
+top: false
 sticky: 4
 tags:
   - Linux
