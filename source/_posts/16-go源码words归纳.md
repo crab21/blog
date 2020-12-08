@@ -32,6 +32,12 @@ pretending  v 假装、伪装                                --> /proc.go
 contended  v 竞争                                      --> /proc.go
 procresize  v 扩大                                     --> /proc.go 
 corruption  n 腐败，译：损坏
+infinite  adj 无限的  
+reproduce v  复制
+consists  v 组成
+reproducer  v 复制
+allocating v 分配
+embed   v 嵌入 
 
 「11/5」
 assembly  n  装配                                      --> /proc.go
