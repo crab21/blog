@@ -221,4 +221,88 @@ if debug.schedtrace <= 0 && (sched.gcwaiting != 0 || atomic.Load(&sched.npidle) 
 		}
 ```
 
+#### wakeScavenger
+
+>判断需要唤醒请求
+```go
+		if atomic.Load(&scavenge.sysmonWake) != 0 {
+			// Kick the scavenger awake if someone requested it.
+			wakeScavenger()
+		}
+```
+
+```go
+// wakeScavenger immediately unparks the scavenger if necessary.
+//
+// May run without a P, but it may allocate, so it must not be called
+// on any allocation path.
+//
+// mheap_.lock, scavenge.lock, and sched.lock must not be held.
+func wakeScavenger() {
+	lock(&scavenge.lock)
+	if scavenge.parked {
+		// Notify sysmon that it shouldn't bother waking up the scavenger.
+		atomic.Store(&scavenge.sysmonWake, 0)
+
+		// Try to stop the timer but we don't really care if we succeed.
+		// It's possible that either a timer was never started, or that
+		// we're racing with it.
+		// In the case that we're racing with there's the low chance that
+		// we experience a spurious wake-up of the scavenger, but that's
+		// totally safe.
+		stopTimer(scavenge.timer)
+
+		// Unpark the goroutine and tell it that there may have been a pacing
+		// change. Note that we skip the scheduler's runnext slot because we
+		// want to avoid having the scavenger interfere with the fair
+		// scheduling of user goroutines. In effect, this schedules the
+		// scavenger at a "lower priority" but that's OK because it'll
+		// catch up on the work it missed when it does get scheduled.
+		scavenge.parked = false
+
+		// Ready the goroutine by injecting it. We use injectglist instead
+		// of ready or goready in order to allow us to run this function
+		// without a P. injectglist also avoids placing the goroutine in
+		// the current P's runnext slot, which is desireable to prevent
+		// the scavenger from interfering with user goroutine scheduling
+		// too much.
+		var list gList
+		list.push(scavenge.g)
+		injectglist(&list)
+	}
+	unlock(&scavenge.lock)
+}
+
+```
+
+#### retake夺取
+
+>夺取空闲的P
+```go
+		// retake P's blocked in syscalls
+		// and preempt long running G's
+		if retake(now) != 0 {
+			idle = 0
+		} else {
+			idle++
+		}
+```
+
+#### GC 判断
+
+```go
+		// check if we need to force a GC
+		//划重点 t.test()
+		if t := (gcTrigger{kind: gcTriggerTime, now: now}); t.test() && atomic.Load(&forcegc.idle) != 0 {
+			lock(&forcegc.lock)
+			forcegc.idle = 0
+			var list gList
+			list.push(forcegc.g)
+			injectglist(&list)
+			unlock(&forcegc.lock)
+		}
+```
+
+
+### 待续....
 
