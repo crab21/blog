@@ -106,12 +106,12 @@ theme: nextTheme
 
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
-deploy:
-  type: git
-  repo: https://github.com/crab21/blog #https://bitbucket.org/JohnSmith/johnsmith.bitbucket.io
-  branch: server
-  message:
-  token: dd6fb607ff7f3e60659161e6e6e0471fad8f2c49
+#deploy:
+#  type: git
+#  repo: https://github.com/crab21/blog #https://bitbucket.org/JohnSmith/johnsmith.bitbucket.io
+#  branch: server
+#  message:
+#  token: dd6fb607ff7f3e60659161e6e6e0471fad8f2c49
 
 search:
   path: search.xml
@@ -123,4 +123,4 @@ symbols_count_time:
   symbols: true # 文章字数
   time: true # 阅读时长
   total_symbols: true # 所有文章总字数
-  total_time: true # 所有文章阅读中时长
+  total_time: true # 
