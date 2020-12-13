@@ -13,6 +13,7 @@ abbrlink: 458b44c2
 [官方 specification](https://github.com/commitizen/cz-cli)
 简单的说为了代码提交更加规范
 
+
 ### 场景
 git commit使用
 https://github.com/commitizen/cz-cli/raw/master/meta/screenshots/add-commit.png
