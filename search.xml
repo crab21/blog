@@ -436,8 +436,8 @@
 ]]></content>
       <tags>
         <tag>Go</tag>
-        <tag>Go源码</tag>
         <tag>GPM</tag>
+        <tag>Go源码</tag>
       </tags>
   </entry>
   <entry>
@@ -527,8 +527,8 @@
 <h3 id="未完待续"><a href="#未完待续" class="headerlink" title="未完待续."></a>未完待续.</h3>]]></content>
       <tags>
         <tag>Go</tag>
-        <tag>Go源码</tag>
         <tag>GPM</tag>
+        <tag>Go源码</tag>
       </tags>
   </entry>
   <entry>
@@ -715,8 +715,8 @@
 ]]></content>
       <tags>
         <tag>Go</tag>
-        <tag>Go源码</tag>
         <tag>GPM</tag>
+        <tag>Go源码</tag>
       </tags>
   </entry>
   <entry>
@@ -785,8 +785,8 @@
 ]]></content>
       <tags>
         <tag>Go</tag>
-        <tag>Go源码</tag>
         <tag>GPM</tag>
+        <tag>Go源码</tag>
       </tags>
   </entry>
   <entry>
@@ -864,8 +864,8 @@
 ]]></content>
       <tags>
         <tag>Go</tag>
-        <tag>Go源码</tag>
         <tag>GPM</tag>
+        <tag>Go源码</tag>
       </tags>
   </entry>
   <entry>
@@ -911,8 +911,8 @@
 <h3 id="待续…"><a href="#待续…" class="headerlink" title="待续…."></a>待续….</h3>]]></content>
       <tags>
         <tag>Go</tag>
-        <tag>Go源码</tag>
         <tag>GPM</tag>
+        <tag>Go源码</tag>
       </tags>
   </entry>
   <entry>
@@ -1111,6 +1111,53 @@
       </tags>
   </entry>
   <entry>
+    <title>「7」Go Context包使用</title>
+    <url>/archives/410dfaec.html</url>
+    <content><![CDATA[<h3 id="版本"><a href="#版本" class="headerlink" title="版本"></a>版本</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">◯  go version</span><br><span class="line">go version go1.14.9 darwin&#x2F;amd64</span><br></pre></td></tr></table></figure>
+
+<h3 id="用Go的都离不开Context，引用官网的一句话来描述Context包："><a href="#用Go的都离不开Context，引用官网的一句话来描述Context包：" class="headerlink" title="用Go的都离不开Context，引用官网的一句话来描述Context包："></a>用Go的都离不开Context，引用官网的一句话来描述Context包：</h3><blockquote>
+<p>Package context defines the Context type, which carries deadlines, cancellation signals, and other request-scoped values across API boundaries and between processes.</p>
+</blockquote>
+<p>主要掌握四个方法的使用</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">WithCancel</span><br><span class="line">WithDeadline</span><br><span class="line">WithTimeout</span><br><span class="line">WithValue</span><br></pre></td></tr></table></figure>
+<h3 id="前期ready"><a href="#前期ready" class="headerlink" title="前期ready"></a>前期ready</h3><p>要用下面的方法，先了解下部分结构和逻辑：</p>
+<blockquote>
+<p>既然context全部都是和取消相关的，最起码Go在设计时会有这么一个结构。</p>
+</blockquote>
+<a id="more"></a>
+
+<blockquote>
+<p>具体的取消设计结构</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">type cancelCtx struct &#123;</span><br><span class="line">	Context</span><br><span class="line"></span><br><span class="line">	mu       sync.Mutex            &#x2F;&#x2F; protects following fields  加锁用</span><br><span class="line">	done     chan struct&#123;&#125;         &#x2F;&#x2F; created lazily, closed by first cancel call   控制channel</span><br><span class="line">	children map[canceler]struct&#123;&#125; &#x2F;&#x2F; set to nil by the first cancel call  cancel函数调用后，释放子类</span><br><span class="line">	err      error                 &#x2F;&#x2F; set to non-nil by the first cancel call</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>timer控制死锁时间结构：</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;&#x2F; A timerCtx carries a timer and a deadline. It embeds a cancelCtx to</span><br><span class="line">&#x2F;&#x2F; implement Done and Err. It implements cancel by stopping its timer then</span><br><span class="line">&#x2F;&#x2F; delegating to cancelCtx.cancel.</span><br><span class="line"></span><br><span class="line">type timerCtx struct &#123;</span><br><span class="line">	cancelCtx  </span><br><span class="line">	timer *time.Timer &#x2F;&#x2F; Under cancelCtx.mu.</span><br><span class="line"></span><br><span class="line">	deadline time.Time</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="WithCancel"><a href="#WithCancel" class="headerlink" title="WithCancel"></a>WithCancel</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">func WithCancel(parent Context) (ctx Context, cancel CancelFunc) &#123;</span><br><span class="line">    if parent &#x3D;&#x3D; nil &#123;  &#x2F;&#x2F;日常判空</span><br><span class="line">		panic(&quot;cannot create context from nil parent&quot;)</span><br><span class="line">	&#125;</span><br><span class="line">	c :&#x3D; newCancelCtx(parent) &#x2F;&#x2F;cancelCtx new</span><br><span class="line">	propagateCancel(parent, &amp;c)  &#x2F;&#x2F;循环传播取消函数for ctx</span><br><span class="line">	return &amp;c, func() &#123; c.cancel(true, Canceled) &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>看似很简单，四行解决，但是更重要的是学会看注释说明和相关的设计思路：<br>TODO </p>
+</blockquote>
+<p>引用官方的语言：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;&#x2F; WithCancel returns a copy of parent with a new Done channel. The returned</span><br><span class="line">&#x2F;&#x2F; context&#39;s Done channel is closed when the returned cancel function is called</span><br><span class="line">&#x2F;&#x2F; or when the parent context&#39;s Done channel is closed, whichever happens first.</span><br><span class="line">&#x2F;&#x2F;</span><br><span class="line">&#x2F;&#x2F; Canceling this context releases resources associated with it, so code should</span><br><span class="line">&#x2F;&#x2F; call cancel as soon as the operations running in this Context complete.</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Withcancel 返回的是一个parent的镜像&#x2F;复制，伴随一个Done channel通道。</span><br><span class="line">Done关闭状态取决于</span><br><span class="line">1、返回的cancel函数。</span><br><span class="line">2、parent的Done Channel关闭。</span><br><span class="line">这两个哪个先符合条件了。</span><br></pre></td></tr></table></figure>
+
+<h3 id="WithDeadline-WithTimeout"><a href="#WithDeadline-WithTimeout" class="headerlink" title="WithDeadline/WithTimeout"></a>WithDeadline/WithTimeout</h3><p>自己梳理的逻辑执行顺序：</p>
+<p><img src="https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/20200907-152032.png"></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Deadline&#x2F;WithTimeout区别：</span><br><span class="line"></span><br><span class="line">* deadline:的入参是一个具体的截止时间：Time.time</span><br><span class="line">* withTimeout:入参是一个多少时间后超时：Time.Duration</span><br></pre></td></tr></table></figure>
+
+<h3 id="WithValue"><a href="#WithValue" class="headerlink" title="WithValue"></a>WithValue</h3><blockquote>
+<p>Withvalue和value是成对出现的:</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">1、给ctx设置k,v：withvalue(ctx,k,v)</span><br><span class="line">2、获取ctx中k的值value(ctx,k)</span><br></pre></td></tr></table></figure>
+<h3 id="TODO"><a href="#TODO" class="headerlink" title="TODO"></a>TODO</h3><h4 id="timerCtx详细的设计思路和结构文档"><a href="#timerCtx详细的设计思路和结构文档" class="headerlink" title="timerCtx详细的设计思路和结构文档"></a>timerCtx详细的设计思路和结构文档</h4><h4 id="框架图整理"><a href="#框架图整理" class="headerlink" title="框架图整理"></a>框架图整理</h4><h3 id="END"><a href="#END" class="headerlink" title="END"></a>END</h3>]]></content>
+      <tags>
+        <tag>Go</tag>
+        <tag>Go Package</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>「8」go rwmutex解读</title>
     <url>/archives/3038b6c3.html</url>
     <content><![CDATA[<pre><code>好久没有更新文章了，表达能力生疏了许多😄....
@@ -1156,53 +1203,6 @@
         <tag>Go源码</tag>
         <tag>Go Package</tag>
         <tag>锁</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>「7」Go Context包使用</title>
-    <url>/archives/410dfaec.html</url>
-    <content><![CDATA[<h3 id="版本"><a href="#版本" class="headerlink" title="版本"></a>版本</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">◯  go version</span><br><span class="line">go version go1.14.9 darwin&#x2F;amd64</span><br></pre></td></tr></table></figure>
-
-<h3 id="用Go的都离不开Context，引用官网的一句话来描述Context包："><a href="#用Go的都离不开Context，引用官网的一句话来描述Context包：" class="headerlink" title="用Go的都离不开Context，引用官网的一句话来描述Context包："></a>用Go的都离不开Context，引用官网的一句话来描述Context包：</h3><blockquote>
-<p>Package context defines the Context type, which carries deadlines, cancellation signals, and other request-scoped values across API boundaries and between processes.</p>
-</blockquote>
-<p>主要掌握四个方法的使用</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">WithCancel</span><br><span class="line">WithDeadline</span><br><span class="line">WithTimeout</span><br><span class="line">WithValue</span><br></pre></td></tr></table></figure>
-<h3 id="前期ready"><a href="#前期ready" class="headerlink" title="前期ready"></a>前期ready</h3><p>要用下面的方法，先了解下部分结构和逻辑：</p>
-<blockquote>
-<p>既然context全部都是和取消相关的，最起码Go在设计时会有这么一个结构。</p>
-</blockquote>
-<a id="more"></a>
-
-<blockquote>
-<p>具体的取消设计结构</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">type cancelCtx struct &#123;</span><br><span class="line">	Context</span><br><span class="line"></span><br><span class="line">	mu       sync.Mutex            &#x2F;&#x2F; protects following fields  加锁用</span><br><span class="line">	done     chan struct&#123;&#125;         &#x2F;&#x2F; created lazily, closed by first cancel call   控制channel</span><br><span class="line">	children map[canceler]struct&#123;&#125; &#x2F;&#x2F; set to nil by the first cancel call  cancel函数调用后，释放子类</span><br><span class="line">	err      error                 &#x2F;&#x2F; set to non-nil by the first cancel call</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>timer控制死锁时间结构：</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;&#x2F; A timerCtx carries a timer and a deadline. It embeds a cancelCtx to</span><br><span class="line">&#x2F;&#x2F; implement Done and Err. It implements cancel by stopping its timer then</span><br><span class="line">&#x2F;&#x2F; delegating to cancelCtx.cancel.</span><br><span class="line"></span><br><span class="line">type timerCtx struct &#123;</span><br><span class="line">	cancelCtx  </span><br><span class="line">	timer *time.Timer &#x2F;&#x2F; Under cancelCtx.mu.</span><br><span class="line"></span><br><span class="line">	deadline time.Time</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="WithCancel"><a href="#WithCancel" class="headerlink" title="WithCancel"></a>WithCancel</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">func WithCancel(parent Context) (ctx Context, cancel CancelFunc) &#123;</span><br><span class="line">    if parent &#x3D;&#x3D; nil &#123;  &#x2F;&#x2F;日常判空</span><br><span class="line">		panic(&quot;cannot create context from nil parent&quot;)</span><br><span class="line">	&#125;</span><br><span class="line">	c :&#x3D; newCancelCtx(parent) &#x2F;&#x2F;cancelCtx new</span><br><span class="line">	propagateCancel(parent, &amp;c)  &#x2F;&#x2F;循环传播取消函数for ctx</span><br><span class="line">	return &amp;c, func() &#123; c.cancel(true, Canceled) &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>看似很简单，四行解决，但是更重要的是学会看注释说明和相关的设计思路：<br>TODO </p>
-</blockquote>
-<p>引用官方的语言：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;&#x2F; WithCancel returns a copy of parent with a new Done channel. The returned</span><br><span class="line">&#x2F;&#x2F; context&#39;s Done channel is closed when the returned cancel function is called</span><br><span class="line">&#x2F;&#x2F; or when the parent context&#39;s Done channel is closed, whichever happens first.</span><br><span class="line">&#x2F;&#x2F;</span><br><span class="line">&#x2F;&#x2F; Canceling this context releases resources associated with it, so code should</span><br><span class="line">&#x2F;&#x2F; call cancel as soon as the operations running in this Context complete.</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Withcancel 返回的是一个parent的镜像&#x2F;复制，伴随一个Done channel通道。</span><br><span class="line">Done关闭状态取决于</span><br><span class="line">1、返回的cancel函数。</span><br><span class="line">2、parent的Done Channel关闭。</span><br><span class="line">这两个哪个先符合条件了。</span><br></pre></td></tr></table></figure>
-
-<h3 id="WithDeadline-WithTimeout"><a href="#WithDeadline-WithTimeout" class="headerlink" title="WithDeadline/WithTimeout"></a>WithDeadline/WithTimeout</h3><p>自己梳理的逻辑执行顺序：</p>
-<p><img src="https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/20200907-152032.png"></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Deadline&#x2F;WithTimeout区别：</span><br><span class="line"></span><br><span class="line">* deadline:的入参是一个具体的截止时间：Time.time</span><br><span class="line">* withTimeout:入参是一个多少时间后超时：Time.Duration</span><br></pre></td></tr></table></figure>
-
-<h3 id="WithValue"><a href="#WithValue" class="headerlink" title="WithValue"></a>WithValue</h3><blockquote>
-<p>Withvalue和value是成对出现的:</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">1、给ctx设置k,v：withvalue(ctx,k,v)</span><br><span class="line">2、获取ctx中k的值value(ctx,k)</span><br></pre></td></tr></table></figure>
-<h3 id="TODO"><a href="#TODO" class="headerlink" title="TODO"></a>TODO</h3><h4 id="timerCtx详细的设计思路和结构文档"><a href="#timerCtx详细的设计思路和结构文档" class="headerlink" title="timerCtx详细的设计思路和结构文档"></a>timerCtx详细的设计思路和结构文档</h4><h4 id="框架图整理"><a href="#框架图整理" class="headerlink" title="框架图整理"></a>框架图整理</h4><h3 id="END"><a href="#END" class="headerlink" title="END"></a>END</h3>]]></content>
-      <tags>
-        <tag>Go</tag>
-        <tag>Go Package</tag>
       </tags>
   </entry>
   <entry>

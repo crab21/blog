@@ -207,13 +207,6 @@
 
   
   <url>
-    <loc>http://blog.imrcrab.com/tags/life/</loc>
-    <lastmod>2020-12-13</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>http://blog.imrcrab.com/tags/Go/</loc>
     <lastmod>2020-12-13</lastmod>
     <changefreq>daily</changefreq>
@@ -221,7 +214,28 @@
   </url>
   
   <url>
+    <loc>http://blog.imrcrab.com/tags/GPM/</loc>
+    <lastmod>2020-12-13</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>http://blog.imrcrab.com/tags/Go%E6%BA%90%E7%A0%81/</loc>
+    <lastmod>2020-12-13</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://blog.imrcrab.com/tags/Git/</loc>
+    <lastmod>2020-12-13</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://blog.imrcrab.com/tags/life/</loc>
     <lastmod>2020-12-13</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -291,13 +305,6 @@
   </url>
   
   <url>
-    <loc>http://blog.imrcrab.com/tags/GPM/</loc>
-    <lastmod>2020-12-13</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>http://blog.imrcrab.com/tags/vscode/</loc>
     <lastmod>2020-12-13</lastmod>
     <changefreq>daily</changefreq>
@@ -313,13 +320,6 @@
   
   <url>
     <loc>http://blog.imrcrab.com/tags/%E5%8D%9A%E5%AE%A2/</loc>
-    <lastmod>2020-12-13</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://blog.imrcrab.com/tags/Git/</loc>
     <lastmod>2020-12-13</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
