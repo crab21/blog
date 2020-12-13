@@ -124,8 +124,3 @@ symbols_count_time:
   time: true # 阅读时长
   total_symbols: true # 所有文章总字数
   total_time: true # 所有文章阅读中时长
-
-admin:
-  username: mrcrab
-  password_hash: $2a$10$LsC3lEcQnB4JTkxLqSjLV.Oj08GyOmZA5lTYRq0NmH85A1sqdvoHu
-  secret: gogoowang come up!
