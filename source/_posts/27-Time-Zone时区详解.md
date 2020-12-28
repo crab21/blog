@@ -7,6 +7,7 @@ tags:
   - Go
   - time
   - Day
+abbrlink: 513dbeba
 ---
 
 

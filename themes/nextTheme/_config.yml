@@ -413,6 +413,7 @@ font:
 
   # Uri of fonts host, e.g. https://fonts.googleapis.com (Default).
   host:
+  size: 14px
 
   # Font options:
   # `external: true` will load this font family from `host` above.
@@ -423,29 +424,31 @@ font:
   global:
     external: true
     family: Lato
-    size:
+    size: 12px
 
   # Font settings for site title (.site-title).
   title:
     external: true
     family:
-    size:
+    size: 12px
 
   # Font settings for headlines (<h1> to <h6>).
   headings:
     external: true
     family:
-    size:
+    size: 12px
 
   # Font settings for posts (.post-body).
   posts:
     external: true
     family:
+    size: 12px
 
   # Font settings for <code> and code blocks.
   codes:
     external: true
     family:
+    size: 12px
 
 
 # ---------------------------------------------------------------
