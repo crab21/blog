@@ -46,6 +46,10 @@ amortizes  v  缓冲                                     --> /proc.go
 「11/25」
 guard  v. 看守																				 --> /proc.go
 Alternatively  或者																		-->  /runtime/rwmutex.go
+
+「later」
+demonstrate  v 演示
+
 ```
 
 
