@@ -16,7 +16,7 @@ abbrlink: 458b44c2
 
 ### 场景
 git commit使用
-https://github.com/commitizen/cz-cli/raw/master/meta/screenshots/add-commit.png
+![](https://github.com/commitizen/cz-cli/raw/master/meta/screenshots/add-commit.png)
 
 ### 使用步骤
 * 安装nodejs，版本建议最新.[官网](https://nodejs.org/zh-cn/) 
