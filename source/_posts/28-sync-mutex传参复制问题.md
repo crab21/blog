@@ -23,6 +23,9 @@ sync.Mutex当参数,值传递后出错.
 
 >不废话,上代码:
 
+
+<!--more-->
+
 ```go
 
 package main
@@ -74,7 +77,6 @@ func main() {
 #### Lock源码: 
 *A Mutex must not be copied after first use*
 
-<!--more-->
 ### 根源:
 
 * Go参数传递属于值传递
