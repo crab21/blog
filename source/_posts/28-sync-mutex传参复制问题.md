@@ -74,6 +74,7 @@ func main() {
 #### Lock源码: 
 *A Mutex must not be copied after first use*
 
+<!--more-->
 ### 根源:
 
 * Go参数传递属于值传递
