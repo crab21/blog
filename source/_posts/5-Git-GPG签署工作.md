@@ -95,6 +95,7 @@ gpg --armor --export  7BB8CF3593CA174C
 #### Git PGP生效
 
 >再次提交commit即可生效。产生如下图的签名效果：
+
 ![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/20200902123343.png)
 
 #### End

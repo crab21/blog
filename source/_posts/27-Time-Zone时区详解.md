@@ -1,7 +1,7 @@
 ---
 title: 「27」Time Zone时区详解
-date: '2020/12/28 08:00:17'
-updated: '2020/12/28 08:00:17'
+date: '2020/12/28 09:00:17'
+updated: '2020/12/28 09:00:17'
 keywords: 'time,zone,Go'
 tags:
   - Go

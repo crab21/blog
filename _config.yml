@@ -125,3 +125,4 @@ symbols_count_time:
   time: true # 阅读时长
   total_symbols: true # 所有文章总字数
   total_time: true # 
+
