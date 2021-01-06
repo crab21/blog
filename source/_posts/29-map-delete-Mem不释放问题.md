@@ -4,10 +4,11 @@ date: '2021/1/6 12:00:17'
 updated: '2021/1/6 12:00:17'
 keywords: 'Go,Map,Hash,delete'
 tags:
-    - Day
-    - Go
-    - Map
-    - Hash
+  - Day
+  - Go
+  - Map
+  - Hash
+abbrlink: 2de36dd7
 ---
 
 ### Go version:

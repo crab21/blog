@@ -8,7 +8,7 @@ tags:
   - sync
   - Day
   - Mutex
-
+abbrlink: a82ae489
 ---
 ### Go version:
 
