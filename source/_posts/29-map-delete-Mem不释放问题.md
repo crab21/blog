@@ -1,5 +1,5 @@
 ---
-title: 「29」map delete Mem内存不释放问题
+title: 「29」map delete Mem不释放问题
 date: '2021/1/6 12:00:17'
 updated: '2021/1/6 12:00:17'
 keywords: 'Go,Map,Hash,delete'
