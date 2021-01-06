@@ -10,7 +10,12 @@ tags:
   - Mutex
 
 ---
+### Go version:
 
+```go
+7384 ◯  go version
+go version go1.14.9 darwin/amd64
+```
 
 ### 起因:
 

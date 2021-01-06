@@ -21,6 +21,12 @@ abbrlink: 513dbeba
 >很多场景都会看到这个时间的重要性，这次看到16的特性中有一个修改项，觉得自己对time和zone了解的太少了，以此记录，以便积累。
 
 <!--more-->
+### Go version:
+
+```go
+7384 ◯  go version
+go version go1.14.9 darwin/amd64
+```
 
 ### 时区 UTC\GMT\MDT\CST
 
