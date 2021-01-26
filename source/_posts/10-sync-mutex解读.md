@@ -14,7 +14,7 @@ abbrlink: ff0d6c2b
 上次说到rwmutex读写锁，其实就是加强了锁的粒度，区分读和写时不同的情况，核心思想：写优先于读。
 这次来看看mutex，go中的锁是如何实现的，用一张图来概括整个流程：
 <!-- more -->
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/mutex.png)
+![](https://crab-1251738482.cos.accelerate.myqcloud.com/mutex.png)
 
 >核心思想：饥饿和队列，正常流程都是加入到队列尾部，如果超过一定的时间限制则加入到队列头部。
 
@@ -196,7 +196,7 @@ func (m *Mutex) lockSlow() {
 
 用一个流程图来表示解锁过程：
 
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/mutex-unlock.png)
+![](https://crab-1251738482.cos.accelerate.myqcloud.com/mutex-unlock.png)
 
 ```go
 func (m *Mutex) Unlock() {

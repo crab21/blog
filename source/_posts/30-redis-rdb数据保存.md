@@ -24,7 +24,7 @@ abbrlink: 44b34745
 
 * 这里罗列了几个比较重要的过程:
 
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/redis-rdb-1.png)
+![](https://crab-1251738482.cos.accelerate.myqcloud.com/redis-rdb-1.png)
 
 
 ### 待更新ing....

@@ -68,13 +68,13 @@ func sysmon() {
 ```
 
 
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/GPM-sysmon-1.png)
+![](https://crab-1251738482.cos.accelerate.myqcloud.com/GPM-sysmon-1.png)
 
 
 
 ### 循环干什么？
 
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20201206_085755.png)
+![](https://crab-1251738482.cos.accelerate.myqcloud.com/clipboard_20201206_085755.png)
 
 
 >一个个过吧
