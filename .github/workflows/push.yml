@@ -24,4 +24,6 @@ jobs:
           npm install -g hexo-cli
 
       - name: Build project
-        run: hexo g -d
+        run: |
+          hexo clean
+          hexo g -d
