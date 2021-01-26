@@ -115,8 +115,8 @@ theme: nextTheme
 deploy: 
   type: cos
   appId: 1251738482
-  secretId: AKIDCodCrKWD2nMfz4vXt0f4RXNSLxJPu1Xo
-  secretKey: c8OP1Qgg1uXw50fW8VcTwADlHNEJ7h16
+  secretId: AKIDlOk6JNwsOlwxqZaXJxRksqdAWlpScVpz
+  secretKey: CRXTEogLrCbIo8HSUMoe4UlsX5a1WgfT
   bucket: blog-imrcrab-com-1251738482
   region: ap-nanjing
 
