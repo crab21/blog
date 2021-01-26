@@ -112,6 +112,13 @@ theme: nextTheme
 #  branch: server
 #  message:
 #  token: dd6fb607ff7f3e60659161e6e6e0471fad8f2c49
+deploy: 
+  type: cos
+  appId: 1251738482
+  secretId: AKIDCodCrKWD2nMfz4vXt0f4RXNSLxJPu1Xo
+  secretKey: c8OP1Qgg1uXw50fW8VcTwADlHNEJ7h16
+  bucket: blog-imrcrab-com-1251738482
+  region: ap-nanjing
 
 search:
   path: search.xml

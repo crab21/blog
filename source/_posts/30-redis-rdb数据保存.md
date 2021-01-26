@@ -8,6 +8,7 @@ tags:
   - Redis
   - RDB
   - 源码
+abbrlink: 44b34745
 ---
 
 >RDB和AOF常常被提起,好奇RDB这个到底是怎么实现的,这样才能运用的更加灵活和精准.
@@ -26,4 +27,4 @@ tags:
 ![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/redis-rdb-1.png)
 
 
-### 待更....
+### 待更新....

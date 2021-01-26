@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/title.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/title.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="IjX74irabw9RP2570h6wHZn7wHfXIobMdcU1b1Xcj6U" />
+  <meta name="baidu-site-verification" content="Fu7a4NLfPU" />
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.imrcrab.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":true,"nav":null,"activeClass":"valine"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="今天无意中看到Go101发了一个推特: 123456789101112131415161718package mainimport (  &quot;fmt&quot;  &quot;reflect&quot;)func p(a, b interface&amp;#123;&amp;#125;) &amp;#123;  fmt.Print(&quot;:&quot;, reflect.DeepEqual(a, b))&amp;#">
+<meta property="og:type" content="article">
+<meta property="og:title" content="「9」Go reflect ~ DeepEqual">
+<meta property="og:url" content="http://blog.imrcrab.com/archives/e2e7cc4e.html">
+<meta property="og:site_name" content="迷茫的小螃蟹">
+<meta property="og:description" content="今天无意中看到Go101发了一个推特: 123456789101112131415161718package mainimport (  &quot;fmt&quot;  &quot;reflect&quot;)func p(a, b interface&amp;#123;&amp;#125;) &amp;#123;  fmt.Print(&quot;:&quot;, reflect.DeepEqual(a, b))&amp;#">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/20200918-124746.png">
+<meta property="og:image" content="https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/20200920-103516@2x.png">
+<meta property="article:published_time" content="2020-09-18T04:35:03.000Z">
+<meta property="article:modified_time" content="2020-09-20T08:16:52.000Z">
+<meta property="article:author" content="crab">
+<meta property="article:tag" content="Go">
+<meta property="article:tag" content="Go Package">
+<meta property="article:tag" content="Day">
+<meta property="article:tag" content="Go reflect">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/20200918-124746.png">
+
+<link rel="canonical" href="http://blog.imrcrab.com/archives/e2e7cc4e.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>「9」Go reflect ~ DeepEqual | 迷茫的小螃蟹</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">迷茫的小螃蟹</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/crab21" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://blog.imrcrab.com/archives/e2e7cc4e.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="crab">
+      <meta itemprop="description" content="日行一步...">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="迷茫的小螃蟹">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          「9」Go reflect ~ DeepEqual
+        </h1>
+
+        <div class="post-meta">
+        
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-09-18 12:35:03" itemprop="dateCreated datePublished" datetime="2020-09-18T12:35:03+08:00">2020-09-18</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-09-20 16:16:52" itemprop="dateModified" datetime="2020-09-20T16:16:52+08:00">2020-09-20</time>
+              </span>
+
+          
+            <span id="/archives/e2e7cc4e.html" class="post-meta-item leancloud_visitors" data-flag-title="「9」Go reflect ~ DeepEqual" title="阅读次数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/archives/e2e7cc4e.html#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/archives/e2e7cc4e.html" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>5.5k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>5 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>今天无意中看到Go101发了一个推特:</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">  <span class="string">&quot;fmt&quot;</span></span><br><span class="line">  <span class="string">&quot;reflect&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">p</span><span class="params">(a, b <span class="keyword">interface</span>&#123;&#125;)</span></span> &#123;</span><br><span class="line">  fmt.Print(<span class="string">&quot;:&quot;</span>, reflect.DeepEqual(a, b))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">  a := [<span class="number">1</span>]<span class="function"><span class="keyword">func</span><span class="params">()</span></span>&#123;<span class="function"><span class="keyword">func</span><span class="params">()</span></span>&#123;&#125;&#125;</span><br><span class="line">  p(a, a)</span><br><span class="line">  p(a[:], a[:])</span><br><span class="line">  b := a</span><br><span class="line">  p(a[:], b[:])</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>输出结果？？ :true:true:false</p>
+</blockquote>
+<a id="more"></a>
+
+<blockquote>
+<p>正确答案 :false:true:false</p>
+</blockquote>
+<h3 id="错误来源"><a href="#错误来源" class="headerlink" title="错误来源"></a>错误来源</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">第一个为啥想着为true,第一眼看过去，比较两个a的函数，那两个函数肯定是相等的，这是第一直觉(狗屁直觉).</span><br><span class="line">第二个两个都为nil了，这个是没有什么问题，两个nil肯定是deep相等的。</span><br><span class="line">第三个虽然是重新初始化了，所以两个肯定不是deep相等的。</span><br></pre></td></tr></table></figure>
+
+<h3 id="思路比对（错在哪里）"><a href="#思路比对（错在哪里）" class="headerlink" title="思路比对（错在哪里）"></a>思路比对（错在哪里）</h3><p>查阅文档之后，发现理解错了：</p>
+<p><img src="https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/20200918-124746.png"></p>
+<h3 id="DeepEqual正确理解"><a href="#DeepEqual正确理解" class="headerlink" title="DeepEqual正确理解"></a>DeepEqual正确理解</h3><blockquote>
+<p>源码也很简洁：</p>
+</blockquote>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">DeepEqual</span><span class="params">(x, y <span class="keyword">interface</span>&#123;&#125;)</span> <span class="title">bool</span></span> &#123;</span><br><span class="line">  <span class="comment">//同nil</span></span><br><span class="line">	<span class="keyword">if</span> x == <span class="literal">nil</span> || y == <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> x == y</span><br><span class="line">	&#125;</span><br><span class="line">	v1 := ValueOf(x)</span><br><span class="line">  v2 := ValueOf(y)</span><br><span class="line">  <span class="comment">//属于同一类型</span></span><br><span class="line">	<span class="keyword">if</span> v1.Type() != v2.Type() &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> deepValueEqual(v1, v2, <span class="built_in">make</span>(<span class="keyword">map</span>[visit]<span class="keyword">bool</span>), <span class="number">0</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>除了上面看源码，主要还是要看官方的文档和说明性的，这个算是理解源码的前提把：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// DeepEqual reports whether x and y are ``deeply equal,&#x27;&#x27; defined as follows.</span></span><br><span class="line"><span class="comment">// Two values of identical type are deeply equal if one of the following cases applies.</span></span><br><span class="line"><span class="comment">// Values of distinct types are never deeply equal.</span></span><br><span class="line"><span class="comment">//  条件：数组深度相等，相应的元素都是相等的。</span></span><br><span class="line"><span class="comment">// Array values are deeply equal when their corresponding elements are deeply equal.</span></span><br><span class="line"><span class="comment">//  条件：结构体相对应的字段都是相等的。</span></span><br><span class="line"><span class="comment">// Struct values are deeply equal if their corresponding fields,</span></span><br><span class="line"><span class="comment">// both exported and unexported, are deeply equal.</span></span><br><span class="line"><span class="comment">// 条件：函数都是nil，则为深度相等，其它情况下都是不相等的。</span></span><br><span class="line"><span class="comment">// Func values are deeply equal if both are nil; otherwise they are not deeply equal.</span></span><br><span class="line"><span class="comment">// </span></span><br><span class="line"><span class="comment">// 条件：两个interface持有深度相同的值。</span></span><br><span class="line"><span class="comment">// Interface values are deeply equal if they hold deeply equal concrete values.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line">    条件：下面条件为<span class="literal">true</span>，则深度相等：</span><br><span class="line">    两个全是<span class="literal">nil</span>，或者全non-<span class="literal">nil</span>，有相同的长度并且有相同的对象/key对应的值是相等的。</span><br><span class="line"><span class="comment">// Map values are deeply equal when all of the following are true:</span></span><br><span class="line"><span class="comment">// they are both nil or both non-nil, they have the same length,</span></span><br><span class="line"><span class="comment">// and either they are the same map object or their corresponding keys</span></span><br><span class="line"><span class="comment">// (matched using Go equality) map to deeply equal values.</span></span><br><span class="line">    条件：用 == 比较或者 point的</span><br><span class="line"><span class="comment">// Pointer values are deeply equal if they are equal using Go&#x27;s == operator</span></span><br><span class="line"><span class="comment">// or if they point to deeply equal values.</span></span><br><span class="line">    条件：下面条件为<span class="literal">true</span>，则深度相等：</span><br><span class="line">    两个全是<span class="literal">nil</span>，或者全non-<span class="literal">nil</span>，有相同的长度，指向相同的初始化节点（即：相同的数组）或相同的元素深度相等。</span><br><span class="line">    注意：empty和<span class="literal">nil</span> slice不是深度相等的。</span><br><span class="line"><span class="comment">// Slice values are deeply equal when all of the following are true:</span></span><br><span class="line"><span class="comment">// they are both nil or both non-nil, they have the same length,</span></span><br><span class="line"><span class="comment">// and either they point to the same initial entry of the same underlying array</span></span><br><span class="line"><span class="comment">// (that is, &amp;x[0] == &amp;y[0]) or their corresponding elements (up to length) are deeply equal.</span></span><br><span class="line"><span class="comment">// Note that a non-nil empty slice and a nil slice (for example, []byte&#123;&#125; and []byte(nil))</span></span><br><span class="line"><span class="comment">// are not deeply equal.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// Other values - numbers, bools, strings, and channels - are deeply equal</span></span><br><span class="line"><span class="comment">// if they are equal using Go&#x27;s == operator.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// In general DeepEqual is a recursive relaxation of Go&#x27;s == operator.</span></span><br><span class="line"><span class="comment">// However, this idea is impossible to implement without some inconsistency.</span></span><br><span class="line"><span class="comment">// Specifically, it is possible for a value to be unequal to itself,</span></span><br><span class="line"><span class="comment">// either because it is of func type (uncomparable in general)</span></span><br><span class="line"><span class="comment">// or because it is a floating-point NaN value (not equal to itself in floating-point comparison),</span></span><br><span class="line"><span class="comment">// or because it is an array, struct, or interface containing</span></span><br><span class="line"><span class="comment">// such a value.</span></span><br><span class="line"><span class="comment">// On the other hand, pointer values are always equal to themselves,</span></span><br><span class="line"><span class="comment">// even if they point at or contain such problematic values,</span></span><br><span class="line"><span class="comment">// because they compare equal using Go&#x27;s == operator, and that</span></span><br><span class="line"><span class="comment">// is a sufficient condition to be deeply equal, regardless of content.</span></span><br><span class="line"><span class="comment">// DeepEqual has been defined so that the same short-cut applies</span></span><br><span class="line"><span class="comment">// to slices and maps: if x and y are the same slice or the same map,</span></span><br><span class="line"><span class="comment">// they are deeply equal regardless of content.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// As DeepEqual traverses the data values it may find a cycle. The</span></span><br><span class="line"><span class="comment">// second and subsequent times that DeepEqual compares two pointer</span></span><br><span class="line"><span class="comment">// values that have been compared before, it treats the values as</span></span><br><span class="line"><span class="comment">// equal rather than examining the values to which they point.</span></span><br><span class="line"><span class="comment">// This ensures that DeepEqual terminates.</span></span><br></pre></td></tr></table></figure>
+
+<p>再看看详细的deepValueEqual,大致的过程：<br><img src="https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/20200920-103516@2x.png"></p>
+<blockquote>
+<p>大致分为三个过程：</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1、判断类型和值</span><br><span class="line">2、hard回调</span><br><span class="line">3、按照kind分类处理</span><br></pre></td></tr></table></figure>
+
+<h4 id="数组："><a href="#数组：" class="headerlink" title="数组："></a>数组：</h4><p>比较每一个元素</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">  <span class="keyword">for</span> i := <span class="number">0</span>; i &lt; v1.Len(); i++ &#123;</span><br><span class="line">	<span class="keyword">if</span> !deepValueEqual(v1.Index(i), v2.Index(i), visited, depth+<span class="number">1</span>) &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<h4 id="Slice"><a href="#Slice" class="headerlink" title="Slice"></a>Slice</h4><ul>
+<li>比较为nil</li>
+<li>比较长度</li>
+<li>比较地址</li>
+<li>比较每一个元素<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">  <span class="keyword">if</span> v1.IsNil() != v2.IsNil() &#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> v1.Len() != v2.Len() &#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> v1.Pointer() == v2.Pointer() &#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">for</span> i := <span class="number">0</span>; i &lt; v1.Len(); i++ &#123;</span><br><span class="line">	<span class="keyword">if</span> !deepValueEqual(v1.Index(i), v2.Index(i), visited, depth+<span class="number">1</span>) &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h4 id="Interface"><a href="#Interface" class="headerlink" title="Interface"></a>Interface</h4><ul>
+<li>比较nil</li>
+<li>递归比较<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">  <span class="keyword">if</span> v1.IsNil() || v2.IsNil() &#123;</span><br><span class="line">	<span class="keyword">return</span> v1.IsNil() == v2.IsNil()</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> deepValueEqual(v1.Elem(), v2.Elem(), visited, depth+<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+<h4 id="Ptr"><a href="#Ptr" class="headerlink" title="Ptr"></a>Ptr</h4></li>
+<li>地址</li>
+<li>递归比较<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">  <span class="keyword">if</span> v1.Pointer() == v2.Pointer() &#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> deepValueEqual(v1.Elem(), v2.Elem(), visited, depth+<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h4 id="struct"><a href="#struct" class="headerlink" title="struct"></a>struct</h4><ul>
+<li>比较每一个元素<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">  <span class="keyword">for</span> i, n := <span class="number">0</span>, v1.NumField(); i &lt; n; i++ &#123;</span><br><span class="line">	<span class="keyword">if</span> !deepValueEqual(v1.Field(i), v2.Field(i), visited, depth+<span class="number">1</span>) &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h4 id="Map"><a href="#Map" class="headerlink" title="Map"></a>Map</h4><ul>
+<li>比较Nil</li>
+<li>比较长度</li>
+<li>地址比较</li>
+<li>每一个key对应的value</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">  <span class="keyword">if</span> v1.IsNil() != v2.IsNil() &#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> v1.Len() != v2.Len() &#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> v1.Pointer() == v2.Pointer() &#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">for</span> _, k := <span class="keyword">range</span> v1.MapKeys() &#123;</span><br><span class="line">	val1 := v1.MapIndex(k)</span><br><span class="line">	val2 := v2.MapIndex(k)</span><br><span class="line">	<span class="keyword">if</span> !val1.IsValid() || !val2.IsValid() || !deepValueEqual(val1, val2, visited, depth+<span class="number">1</span>) &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="Func"><a href="#Func" class="headerlink" title="Func"></a>Func</h4><ul>
+<li>非nil，为不等。<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">  <span class="keyword">if</span> v1.IsNil() &amp;&amp; v2.IsNil() &#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// Can&#x27;t do better than this:</span></span><br><span class="line"><span class="keyword">return</span> <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="painc注意点："><a href="#painc注意点：" class="headerlink" title="painc注意点："></a>painc注意点：</h3><p> deepValueEqual函数：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"> .....</span><br><span class="line"> ....</span><br><span class="line"> ...</span><br><span class="line"> ..</span><br><span class="line"> .</span><br><span class="line"> 递归次数超过<span class="number">10</span>次则会painc....</span><br><span class="line"> <span class="comment">// if depth &gt; 10 &#123; panic(&quot;deepValueEqual&quot;) &#125;	// for debugging</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// We want to avoid putting more in the visited map than we need to.</span></span><br><span class="line"><span class="comment">// For any possible reference cycle that might be encountered,</span></span><br><span class="line"><span class="comment">// hard(v1, v2) needs to return true for at least one of the types in the cycle,</span></span><br><span class="line"><span class="comment">// and it&#x27;s safe and valid to get Value&#x27;s internal pointer.</span></span><br><span class="line">hard := <span class="function"><span class="keyword">func</span><span class="params">(v1, v2 Value)</span> <span class="title">bool</span></span> &#123;</span><br><span class="line">	<span class="keyword">switch</span> v1.Kind() &#123;</span><br><span class="line">	<span class="keyword">case</span> Map, Slice, Ptr, Interface:</span><br><span class="line">		<span class="comment">// Nil pointers cannot be cyclic. Avoid putting them in the visited map.</span></span><br><span class="line">		<span class="keyword">return</span> !v1.IsNil() &amp;&amp; !v2.IsNil()</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line"> &#125;</span><br><span class="line"> .</span><br><span class="line"> ..</span><br><span class="line"> ...</span><br><span class="line"> ....</span><br><span class="line"> .....</span><br><span class="line"> ......</span><br></pre></td></tr></table></figure>
+<h3 id="END"><a href="#END" class="headerlink" title="END"></a>END</h3>
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>crab
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://blog.imrcrab.com/archives/e2e7cc4e.html" title="「9」Go reflect ~ DeepEqual">http://blog.imrcrab.com/archives/e2e7cc4e.html</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/Go/" rel="tag"><i class="fa fa-tag"></i> Go</a>
+              <a href="/tags/Go-Package/" rel="tag"><i class="fa fa-tag"></i> Go Package</a>
+              <a href="/tags/Day/" rel="tag"><i class="fa fa-tag"></i> Day</a>
+              <a href="/tags/Go-reflect/" rel="tag"><i class="fa fa-tag"></i> Go reflect</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/archives/3038b6c3.html" rel="prev" title="「8」go rwmutex解读">
+      <i class="fa fa-chevron-left"></i> 「8」go rwmutex解读
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/archives/ff0d6c2b.html" rel="next" title="「10」go mutex解读">
+      「10」go mutex解读 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%94%99%E8%AF%AF%E6%9D%A5%E6%BA%90"><span class="nav-text">错误来源</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF%E6%AF%94%E5%AF%B9%EF%BC%88%E9%94%99%E5%9C%A8%E5%93%AA%E9%87%8C%EF%BC%89"><span class="nav-text">思路比对（错在哪里）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DeepEqual%E6%AD%A3%E7%A1%AE%E7%90%86%E8%A7%A3"><span class="nav-text">DeepEqual正确理解</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E7%BB%84%EF%BC%9A"><span class="nav-text">数组：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Slice"><span class="nav-text">Slice</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Interface"><span class="nav-text">Interface</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Ptr"><span class="nav-text">Ptr</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#struct"><span class="nav-text">struct</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Map"><span class="nav-text">Map</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Func"><span class="nav-text">Func</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#painc%E6%B3%A8%E6%84%8F%E7%82%B9%EF%BC%9A"><span class="nav-text">painc注意点：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#END"><span class="nav-text">END</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">crab</p>
+  <div class="site-description" itemprop="description">日行一步...</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">28</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/crab21" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;crab21" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:pywang112@gmail.com" title="E-Mail → mailto:pywang112@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2020 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">crab</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">89k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">1:21</span>
+</div>
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="/lib/canvas-ribbon/canvas-ribbon.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : true,
+      appId      : 'rSgtfmim6nG8DA8i3gVctzC2-gzGzoHsz',
+      appKey     : '9VTNtVhOTowLUAHYs2PJDms4',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : true,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
