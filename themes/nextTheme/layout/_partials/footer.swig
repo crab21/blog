@@ -1,5 +1,5 @@
 {% if theme.footer.counter %}
-    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <script async src="//blog-imrcrab-com-1251738482.cos.accelerate.myqcloud.com/js/busuanzi.js"></script>
     <span id="busuanzi_container_site_pv">本站总访问量<span id="busuanzi_value_site_pv"></span>次</span>
     <span class="post-meta-divider">|</span>
     <span id="busuanzi_container_site_uv">本站访客数<span id="busuanzi_value_site_uv"></span>人</span>
@@ -68,5 +68,5 @@
 {{- next_inject('footer') }}
 
 
-<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script async src="//blog-imrcrab-com-1251738482.cos.accelerate.myqcloud.com/js/busuanzi.js"></script>
 

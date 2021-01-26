@@ -1,6 +1,6 @@
 {%- if theme.busuanzi_count.enable %}
 <div class="busuanzi-count">
-  <script{{ pjax }} async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <script{{ pjax }} async src="https://blog-imrcrab-com-1251738482.cos.accelerate.myqcloud.com/js/busuanzi.js"></script>
 
   {%- if theme.busuanzi_count.total_visitors %}
     <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
