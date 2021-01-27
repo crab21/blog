@@ -928,9 +928,9 @@ vendors:
   # jquery: //cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js
   # fancybox: //cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js
   # fancybox_css: //cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css
-  jquery: //blog-imrcrab-com-1251738482.cos.accelerate.myqcloud.com/js/fancybox.js
-  fancybox: //blog-imrcrab-com-1251738482.cos.accelerate.myqcloud.com/js/fancybox.mini.js
-  fancybox_css: //blog-imrcrab-com-1251738482.cos.accelerate.myqcloud.com/css/fancybox.css
+  jquery: //blog.imrcrab.com/js/fancybox.js
+  fancybox: //blog.imrcrab.com/js/fancybox.mini.js
+  fancybox_css: //blog.imrcrab.com/css/fancybox.css
 
   # Medium-zoom
   # mediumzoom: //cdn.jsdelivr.net/npm/medium-zoom@1/dist/medium-zoom.min.js

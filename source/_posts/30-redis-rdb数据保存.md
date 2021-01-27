@@ -26,5 +26,6 @@ abbrlink: 44b34745
 
 ![](https://crab-1251738482.cos.accelerate.myqcloud.com/redis-rdb-1.png)
 
+![](http://example-1258125638.cos.ap-shanghai.myqcloud.com/sample.png?imageMogr2/format/tpg)
 
 ### 待更新ing....
