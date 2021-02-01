@@ -1,7 +1,7 @@
 ---
 title: 「14」hexo-安装&插件
 date: '2020/09/30 19:24:32'
-updated: '2020/09/30 19:24:32'
+updated: '2021/02/01 19:30:28'
 tags:
   - hexo
 abbrlink: ae4aba0d
@@ -36,6 +36,9 @@ hexo安装及其第三方插件包下载总结，以便后续CI一次到位。
  npm install --save hexo-admin
  npm audit fix
  npm install hexo-deployer-git --save
+ npm audit fix
+
+ sudo npm install hexo-toc --save
  npm audit fix
 ```
 

@@ -126,3 +126,6 @@ symbols_count_time:
   total_symbols: true # 所有文章总字数
   total_time: true # 
 
+
+toc:
+    maxDepth: 6 //表示目录深度为3，即最多生成三级目录
