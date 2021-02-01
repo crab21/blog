@@ -29,7 +29,8 @@ abbrlink: 44b34745
 
 * 错误返回-1,正常返回1,其它返回0
 * 主逻辑只需负责入参和返回值「抽象」
-* 优先级: expire > lru > lfu > <key,values>
+* 优先级: expire > lru > lfu > [<key,values>]
+
 ```c
 /* Save a key-value pair, with expire time, type, key, value.
  * On error -1 is returned.
