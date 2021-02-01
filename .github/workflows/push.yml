@@ -26,7 +26,9 @@ jobs:
       - name: Build project
         run: |
           hexo clean
-          hexo g -d
+          hexo g
+          gulp
+          hexo d
       - name: Upload COS
         uses: zkqiang/tencent-cos-action@v0.1.0
         with:
