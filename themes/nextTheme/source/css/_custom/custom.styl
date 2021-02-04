@@ -30,3 +30,26 @@
 .post-toc .nav .nav-level-1>.nav-child {
   display: block;
 }
+
+//基本样式
+table {
+width: 100%; /_表格宽度_/
+max-width: 65em; /_表格最大宽度，避免表格过宽_/
+border: 1px solid #dedede; /_表格外边框设置_/
+margin: 15px auto; /_外边距_/
+border-collapse: collapse; /_使用单一线条的边框_/
+empty-cells: show; /_单元格无内容依旧绘制边框_/
+}
+table th,
+table td {
+height: 35px; /_统一每一行的默认高度_/
+border: 1px solid #dedede; /_内部边框样式_/
+padding: 0 10px; /_内边距_/
+}
+
+//表头样式
+table th {
+font-weight: bold; /_加粗_/
+text-align: center !important; /_内容居中，加上 !important 避免被 Markdown 样式覆盖_/
+background: rgba(158,188,226,0.2); /_背景色_/
+}

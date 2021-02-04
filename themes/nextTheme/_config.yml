@@ -409,11 +409,11 @@ github_banner:
 # ---------------------------------------------------------------
 
 font:
-  enable: false
+  enable: true
 
   # Uri of fonts host, e.g. https://fonts.googleapis.com (Default).
-  host:
-  size: 14px
+  host: //fonts.loli.net
+  size: 12px
 
   # Font options:
   # `external: true` will load this font family from `host` above.
@@ -423,14 +423,14 @@ font:
   # Global font settings used for all elements inside <body>.
   global:
     external: true
-    family: Lato
+    family: Roboto
     size: 12px
 
   # Font settings for site title (.site-title).
   title:
     external: true
     family:
-    size: 12px
+    size: 13px
 
   # Font settings for headlines (<h1> to <h6>).
   headings:
@@ -441,14 +441,14 @@ font:
   # Font settings for posts (.post-body).
   posts:
     external: true
-    family:
+    family: Roboto
     size: 12px
 
   # Font settings for <code> and code blocks.
   codes:
     external: true
     family:
-    size: 12px
+    size: 13px
 
 
 # ---------------------------------------------------------------

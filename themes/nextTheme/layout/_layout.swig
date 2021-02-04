@@ -56,5 +56,6 @@
   {%- if theme.pjax %}
     </div>
   {%- endif %}
+  {{ live2d() }}
 </body>
 </html>

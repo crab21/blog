@@ -1,7 +1,7 @@
 ---
 title: 「14」hexo-安装&插件
 date: '2020/09/30 19:24:32'
-updated: '2021/02/01 19:30:28'
+updated: '2021/02/04 19:30:28'
 tags:
   - hexo
 abbrlink: ae4aba0d
@@ -40,6 +40,11 @@ hexo安装及其第三方插件包下载总结，以便后续CI一次到位。
 
  sudo npm install hexo-toc --save
  npm audit fix
+
+//猫咪模型
+ sudo npm install --save hexo-helper-live2d 
+ npm audit fix
+ sudo npm install --save live2d-widget-model-z16
 ```
 
 >未完待续......

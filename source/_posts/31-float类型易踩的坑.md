@@ -9,6 +9,7 @@ tags:
   - Golang
   - Float
   - IEEE
+abbrlink: cb90ed2a
 ---
 
 ### 前序
@@ -23,6 +24,8 @@ tags:
 >下面的结果，a应该是什么值？why？
 
 <!--more-->
+
+>go version go1.14.14 darwin/amd64
 
 ```go
 func main() {
