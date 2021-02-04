@@ -40,13 +40,13 @@ jobs:
                 upload -r ./public/page / &&
                 delete -r -f /tags && 
                 upload -r ./public/tags / &&
-                delete -r -f index.html && 
+                delete -f index.html && 
                 upload -r ./public/index.html / &&
-                delete -r -f search.xml && 
+                delete -f search.xml && 
                 upload -r ./public/search.xml / &&
-                delete -r -fbaidusitemap.xml && 
+                delete -f baidusitemap.xml && 
                 upload -r ./public/baidusitemap.xml / &&
-                delete -r -f sitemap.xml && 
+                delete -f sitemap.xml && 
                 upload -r ./public/sitemap.xml / &&
           secret_id: ${{ secrets.COS_TENCENT_ID }}
           secret_key: ${{ secrets.COS_TENCENT_KEY }}
