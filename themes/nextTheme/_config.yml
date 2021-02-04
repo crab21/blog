@@ -412,7 +412,7 @@ font:
   enable: true
 
   # Uri of fonts host, e.g. https://fonts.googleapis.com (Default).
-  host: //fonts.loli.net
+  host: //blog.imrcrab.com/lib/robofont.css
   size: 12px
 
   # Font options:
