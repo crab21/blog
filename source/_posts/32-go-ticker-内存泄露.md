@@ -147,7 +147,7 @@ func doaddtimer(pp *p, t *timer) {
 
 * 判断长度
 * 判断上一个timer状态
-* 
+
 ```go
 // cleantimers cleans up the head of the timer queue. This speeds up
 // programs that create and delete timers; leaving them in the heap
