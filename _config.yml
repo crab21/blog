@@ -145,3 +145,69 @@ live2d:
     show: true
   react:
     opacity: 0.7
+
+# Markdown-it config
+## Docs: https://github.com/celsomiranda/hexo-renderer-markdown-it/wiki
+markdown:
+  render:
+    # Enable HTML tags in source
+    html: true
+
+    # Use '/' to close single tags (<br />). This is only for full CommonMark compatibility.
+    xhtmlOut: true        
+
+    # Convert '\n' in paragraphs into <br> 
+    breaks: true      
+
+    # CSS language prefix for fenced blocks. Can be useful for external highlighters.
+    langPrefix: 'language-'  
+
+    # Autoconvert URL-like text to links 
+    linkify: true        
+
+    # Enable some language-neutral replacement + quotes beautification
+    typographer: false
+
+    # Double + single quotes replacement pairs, when typographer enabled,
+    # and smartquotes on. Could be either a String or an Array.
+    #
+    # For example, you can use '«»„“' for Russian, '„“‚‘' for German,
+    # and ['«\xA0', '\xA0»', '‹\xA0', '\xA0›'] for French (including nbsp).
+    quotes: '“”‘’'
+
+  # Plugins
+  plugins:
+    - markdown-it-abbr
+    - markdown-it-footnote
+    - markdown-it-ins
+    - markdown-it-sub
+    - markdown-it-sup
+    - markdown-it-anchor
+    - markdown-it-deflist
+    - markdown-it-mark
+    - markdown-it-container
+
+    - markdown-it-emoji
+    - markdown-it-attrs
+    - name: markdown-it-task-lists
+      options:
+        enabled: false
+        label: true
+        labelAfter: false
+  
+  # Automatic Headline ID's
+  anchors:
+    # Minimum level for ID creation. (Ex. h2 to h6)
+    level: 2
+
+    # A suffix that is prepended to the number given if the ID is repeated.
+    collisionSuffix: 'v'           
+
+    # If `true`, creates an anchor tag with a permalink besides the heading.
+    permalink: false              
+
+    # Class used for the permalink anchor tag.
+    permalinkClass: header-anchor 
+
+    # The symbol used to make the permalink
+    permalinkSymbol: ¶
