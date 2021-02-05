@@ -72,6 +72,7 @@ npm install --save markdown-it-container
 npm install --save markdown-it-emoji
 npm install --save markdown-it-attrs
 npm install --save markdown-it-task-lists
+npm install --save markdown-it-68tygbv 
 
 
 
@@ -119,6 +120,8 @@ markdown:
     - markdown-it-container
 
     - markdown-it-emoji
+    - markdown-it-named-headings
+    - markdown-it-toc
     - markdown-it-attrs
     - name: markdown-it-task-lists
       options:

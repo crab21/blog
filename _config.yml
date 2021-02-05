@@ -150,64 +150,25 @@ live2d:
 ## Docs: https://github.com/celsomiranda/hexo-renderer-markdown-it/wiki
 markdown:
   render:
-    # Enable HTML tags in source
-    html: true
-
-    # Use '/' to close single tags (<br />). This is only for full CommonMark compatibility.
-    xhtmlOut: true        
-
-    # Convert '\n' in paragraphs into <br> 
-    breaks: true      
-
-    # CSS language prefix for fenced blocks. Can be useful for external highlighters.
-    langPrefix: 'language-'  
-
-    # Autoconvert URL-like text to links 
-    linkify: true        
-
-    # Enable some language-neutral replacement + quotes beautification
-    typographer: false
-
-    # Double + single quotes replacement pairs, when typographer enabled,
-    # and smartquotes on. Could be either a String or an Array.
-    #
-    # For example, you can use '«»„“' for Russian, '„“‚‘' for German,
-    # and ['«\xA0', '\xA0»', '‹\xA0', '\xA0›'] for French (including nbsp).
-    quotes: '“”‘’'
-
-  # Plugins
+    html: true # Doesn't escape HTML content so the tags will appear as html.
+    xhtmlOut: false # Parser will not produce XHTML compliant code.
+    breaks: true # Parser produces `<br>` tags every time there is a line break in the source document.
+    linkify: false # Returns text links as text.
+    typographer: true # Substitution of common typographical elements will take place.
+    quotes: '“”‘’' # "double" will be turned into “single”
+                   # 'single' will be turned into ‘single’
   plugins:
     - markdown-it-abbr
+    - markdown-it-checkbox # 本行启用了 checkbox 插件
+    - markdown-it-emoji # 如果你想在 md 中使用 emoji 表情的话，需要另外下载相关插件
     - markdown-it-footnote
     - markdown-it-ins
     - markdown-it-sub
     - markdown-it-sup
-    - markdown-it-anchor
-    - markdown-it-deflist
-    - markdown-it-mark
-    - markdown-it-container
-
-    - markdown-it-emoji
-    - markdown-it-attrs
-    - name: markdown-it-task-lists
-      options:
-        enabled: false
-        label: true
-        labelAfter: false
-  
-  # Automatic Headline ID's
   anchors:
-    # Minimum level for ID creation. (Ex. h2 to h6)
-    level: 2
-
-    # A suffix that is prepended to the number given if the ID is repeated.
-    collisionSuffix: 'v'           
-
-    # If `true`, creates an anchor tag with a permalink besides the heading.
-    permalink: false              
-
-    # Class used for the permalink anchor tag.
-    permalinkClass: header-anchor 
-
-    # The symbol used to make the permalink
-    permalinkSymbol: ¶
+    level: 2 # Minimum level for ID creation. (Ex. h2 to h6)
+    collisionSuffix: 'v' # A suffix that is prepended to the number given if the ID is repeated.
+    permalink: true # If true, creates an anchor tag with a permalink besides the heading.
+    permalinkClass: header-anchor # Class used for the permalink anchor tag.
+    permalinkSymbol: ¶ # The symbol used to make the permalink.
+    permalinkBefore: true

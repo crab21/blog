@@ -170,6 +170,7 @@
     {#################}
     {### POST BODY ###}
     {#################}
+
     <div class="post-body{%- if post.direction and post.direction.toLowerCase() === 'rtl' %} rtl{%- endif %}" itemprop="articleBody">
 
       {# Gallery support #}

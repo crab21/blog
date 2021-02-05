@@ -260,7 +260,6 @@ static int poll_schedule_timeout(struct poll_wqueues *pwq, int state,
 	return rc;
 }
 ```
-#### 
 ### poll_wait
 
 ```c++
