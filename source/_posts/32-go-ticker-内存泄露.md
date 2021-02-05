@@ -222,7 +222,6 @@ func dodeltimer0(pp *p) {
 }
 
 ```
-
 ### 参考
 * [NewTicker官方实现](https://github.com/golang/go/blob/master/src/time/tick.go#L39)
 
