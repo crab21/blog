@@ -1,5 +1,5 @@
 ---
-title: 33-IEEE745-Float
+title: 「33」Float IEEE标准
 date: '2021/2/6 10:01:17'
 updated: '2021/2/6 10:01:17'
 keywords: 'Go,IEEE,Float'
@@ -13,7 +13,7 @@ tags:
 
 ### 前序
 
-前几天踩坑Float类型的计算问题,今天来系统的总结下float类型.
+前几天踩坑Float类型的计算问题,今天来系统的总结下float相关的知识点.
 
 ### 掌握关键点:
 
