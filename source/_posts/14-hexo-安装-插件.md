@@ -54,8 +54,8 @@ hexo next解析插件更换：
 ```go
 npm un hexo-renderer-marked -S
 
-npm un hexo-renderer-marked --save
-
+ npm uninstall hexo-renderer-marked --save
+ 
 再安装下面插件：
 
 
@@ -77,6 +77,8 @@ npm install --save markdown-it-68tygbv
 npm install markdown-it-mathjax --save
 npm audit fix
 npm i markdown-it-latex2img --save
+npm audit fix
+npm install markdown-it-texmath
 npm audit fix
 
 最后更新下hexo更目录下的_config.yaml
