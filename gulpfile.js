@@ -6,6 +6,7 @@ var htmlclean = require('gulp-htmlclean');
 var imagemin = require('gulp-imagemin');
 var del = require('del');
 var Hexo = require('hexo');
+const babel = require('gulp-babel')
 var minifyInlineJSON = require('gulp-minify-inline-json');
 
 gulp.task('clean', function () {
@@ -98,4 +99,12 @@ gulp.task('minifyInlineJSON', function () {
 
 gulp.task('compress', gulp.series('minify-html', 'minify-css', 'minify-img', 'minify-js', 'minifyInlineJSON'));
 
+gulp.task('js', () => {
+    return gulp.src('main.js')
+    .pipe(uglify())
+    .pipe(rename({suffix: '.min'}))
+    .pipe(gulp.dest('.'));
+})
+
+// gulp.task('default', gulp.parallel('js'));
 gulp.task('default', gulp.series('clean', 'generate', 'compress', 'deploy'));
