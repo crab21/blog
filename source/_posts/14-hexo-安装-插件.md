@@ -74,7 +74,10 @@ npm install --save markdown-it-attrs
 npm install --save markdown-it-task-lists
 npm install --save markdown-it-68tygbv 
 
-
+npm install markdown-it-mathjax --save
+npm audit fix
+npm i markdown-it-latex2img --save
+npm audit fix
 
 最后更新下hexo更目录下的_config.yaml
 

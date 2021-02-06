@@ -165,6 +165,8 @@ markdown:
     - markdown-it-ins
     - markdown-it-sub
     - markdown-it-sup
+    - markdown-it-mathjax
+    - markdown-it-latex2img
   anchors:
     level: 2 # Minimum level for ID creation. (Ex. h2 to h6)
     collisionSuffix: 'v' # A suffix that is prepended to the number given if the ID is repeated.
