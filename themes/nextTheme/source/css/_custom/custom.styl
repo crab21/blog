@@ -31,7 +31,6 @@
   display: block;
 }
 
-//基本样式
 table {
 width: 100%; /_表格宽度_/
 max-width: 65em; /_表格最大宽度，避免表格过宽_/
@@ -47,7 +46,6 @@ border: 1px solid #dedede; /_内部边框样式_/
 padding: 0 10px; /_内边距_/
 }
 
-//表头样式
 table th {
 font-weight: bold; /_加粗_/
 text-align: center !important; /_内容居中，加上 !important 避免被 Markdown 样式覆盖_/
@@ -75,14 +73,13 @@ input[type="checkbox"]:checked + label::before {
 
 .back-to-top {
   right: 60px;
-  width: 70px;  //图片素材宽度
-  height: 900px;  //图片素材高度
+  width: 70px;  
+  height: 900px;
   top: -900px;
   bottom: unset;
   transition: all .5s ease-in-out;
   background: url("/images/scroll.png");
 
-  //隐藏箭头图标
   > i {
     display: none;
   }
