@@ -138,13 +138,14 @@ live2d:
   model:
     use: live2d-widget-model-hijiki
   display:
-    position: right
+    position: right 
     width: 150
     height: 300
   mobile:
     show: true
   react:
-    opacity: 0.7
+    opacity: 0.8
+
 
 # Markdown-it config
 ## Docs: https://github.com/celsomiranda/hexo-renderer-markdown-it/wiki
@@ -165,6 +166,8 @@ markdown:
     - markdown-it-ins
     - markdown-it-sub
     - markdown-it-sup
+    - markdown-it-mathjax
+    - markdown-it-latex2img
   anchors:
     level: 2 # Minimum level for ID creation. (Ex. h2 to h6)
     collisionSuffix: 'v' # A suffix that is prepended to the number given if the ID is repeated.

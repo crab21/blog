@@ -54,7 +54,7 @@ hexo next解析插件更换：
 ```go
 npm un hexo-renderer-marked -S
 
-npm un hexo-renderer-marked --save
+ npm uninstall hexo-renderer-marked --save
 
 再安装下面插件：
 
@@ -74,7 +74,12 @@ npm install --save markdown-it-attrs
 npm install --save markdown-it-task-lists
 npm install --save markdown-it-68tygbv 
 
-
+npm install markdown-it-mathjax --save
+npm audit fix
+npm i markdown-it-latex2img --save
+npm audit fix
+npm install markdown-it-texmath
+npm audit fix
 
 最后更新下hexo更目录下的_config.yaml
 
@@ -149,4 +154,25 @@ markdown:
 ```
 
 
+hexo gulp兼容es5:
+```
+npm install gulp --save
+npm audit fix
+npm install gulp-minify-css --save
+npm audit fix
+npm install gulp-uglify --save
+npm audit fix
+npm install gulp-htmlmin --save
+npm audit fix
+npm install gulp-htmlclean --save
+npm audit fix
+npm install gulp-imagemin --save
+npm audit fix
+
+npm install babel-core@6.26.3 --save
+npm install gulp-babel@7.0.1 --save
+npm install babel-preset-es2015@6.24.1 --save
+npm audit fix
+
+```
 >未完待续......
