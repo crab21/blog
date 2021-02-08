@@ -1,0 +1,35 @@
+name: RELEASE DEV
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout master
+        uses: actions/checkout@v2
+        with:
+          ref: master
+      - name: Setup node
+        uses: actions/setup-node@v1
+        with:
+          node-version: "14.x"
+
+      - name: Install hexo
+        run: |
+          npm install -g hexo-cli
+          npm install -g gulp
+
+      - name: Build project
+        run: |
+          hexo clean
+          hexo g
+          gulp
+          hexo d
+      - name: Upload File To COS
+        run: |
+          chmod +x ./cosUpload
+          ./cosUpload --Path ./public --SecretID ${{ secrets.COS_TENCENT_ID }} --SecretKey ${{ secrets.COS_TENCENT_KEY }} --cosUrl ${{ secrets.COS_UPLOAD_URL }}
