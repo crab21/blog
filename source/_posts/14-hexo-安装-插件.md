@@ -175,4 +175,9 @@ npm install babel-preset-es2015@6.24.1 --save
 npm audit fix
 
 ```
+
+next文章加密用：
+```
+npm install --save hexo-blog-encrypt
+```
 >未完待续......
