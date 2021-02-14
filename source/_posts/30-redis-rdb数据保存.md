@@ -36,6 +36,141 @@ abbrlink: 44b34745
 * 主逻辑只需负责入参和返回值「抽象」
 * 优先级: expire > lru > lfu > [<key,values>]
 
+#### 
+```c++
+int rdbSaveBackground(char *filename, rdbSaveInfo *rsi) {
+    pid_t childpid;
+
+    if (hasActiveChildProcess()) return C_ERR;
+
+    server.dirty_before_bgsave = server.dirty;
+    server.lastbgsave_try = time(NULL);
+    openChildInfoPipe();
+
+    if ((childpid = redisFork(CHILD_TYPE_RDB)) == 0) { // fork一个子进程
+        int retval;
+
+        /* Child */
+        redisSetProcTitle("redis-rdb-bgsave"); // 设置标题
+        redisSetCpuAffinity(server.bgsave_cpulist); // 设置cpu亲和力
+        retval = rdbSave(filename,rsi); // rdb保存
+        if (retval == C_OK) {
+            sendChildCOWInfo(CHILD_TYPE_RDB, "RDB");
+        }
+        exitFromChild((retval == C_OK) ? 0 : 1); // 子进程退出
+    } else {
+        /* Parent */
+        if (childpid == -1) { // -1 发生错误了
+            closeChildInfoPipe();
+            server.lastbgsave_status = C_ERR;
+            serverLog(LL_WARNING,"Can't save in background: fork: %s",
+                strerror(errno));
+            return C_ERR;
+        }
+        serverLog(LL_NOTICE,"Background saving started by pid %d",childpid); // 下面是一些重新初始化的部分
+        server.rdb_save_time_start = time(NULL);
+        server.rdb_child_pid = childpid;
+        server.rdb_child_type = RDB_CHILD_TYPE_DISK;
+        return C_OK;
+    }
+    return C_OK; /* unreached */
+}
+
+```
+
+##### rdbSaveInfo「struct」
+```c++
+/* This structure can be optionally passed to RDB save/load functions in
+ * order to implement additional functionalities, by storing and loading
+ * metadata to the RDB file.
+ *
+ * Currently the only use is to select a DB at load time, useful in
+ * replication in order to make sure that chained slaves (slaves of slaves)
+ * select the correct DB and are able to accept the stream coming from the
+ * top-level master. */
+typedef struct rdbSaveInfo {
+    /* Used saving and loading. */
+    int repl_stream_db;  /* DB to select in server.master client. */ // 选中复制的db
+
+    /* Used only loading. */
+    int repl_id_is_set;  /* True if repl_id field is set. */
+    char repl_id[CONFIG_RUN_ID_SIZE+1];     /* Replication ID. */ 副本ID
+    long long repl_offset;                  /* Replication offset. */ 偏移量
+} rdbSaveInfo;
+```
+
+#### rdbSave
+```c++
+/* Save the DB on disk. Return C_ERR on error, C_OK on success. */
+int rdbSave(char *filename, rdbSaveInfo *rsi) {
+    char tmpfile[256];
+    char cwd[MAXPATHLEN]; /* Current working dir path for error messages. */
+    FILE *fp = NULL;
+    rio rdb;
+    int error = 0;
+
+    snprintf(tmpfile,256,"temp-%d.rdb", (int) getpid()); // 临时文件命名 pid
+    fp = fopen(tmpfile,"w"); // 只读模式
+    if (!fp) {
+        char *cwdp = getcwd(cwd,MAXPATHLEN);
+        serverLog(LL_WARNING,
+            "Failed opening the RDB file %s (in server root dir %s) "
+            "for saving: %s",
+            filename,
+            cwdp ? cwdp : "unknown",
+            strerror(errno));
+        return C_ERR;
+    }
+
+    rioInitWithFile(&rdb,fp); // rdb初始化
+    startSaving(RDBFLAGS_NONE);
+
+    if (server.rdb_save_incremental_fsync)
+        rioSetAutoSync(&rdb,REDIS_AUTOSYNC_BYTES);
+
+    if (rdbSaveRio(&rdb,&error,RDBFLAGS_NONE,rsi) == C_ERR) { // rdb保存「重点」
+        errno = error;
+        goto werr;
+    }
+
+    /* Make sure data will not remain on the OS's output buffers */ // 刷新fp文件中内容
+    if (fflush(fp)) goto werr;
+    if (fsync(fileno(fp))) goto werr;
+    if (fclose(fp)) { fp = NULL; goto werr; }
+    fp = NULL;
+    
+    /* Use RENAME to make sure the DB file is changed atomically only
+     * if the generate DB file is ok. */
+    if (rename(tmpfile,filename) == -1) { // 临时文件重新命名
+        char *cwdp = getcwd(cwd,MAXPATHLEN);
+        serverLog(LL_WARNING,
+            "Error moving temp DB file %s on the final "
+            "destination %s (in server root dir %s): %s",
+            tmpfile,
+            filename,
+            cwdp ? cwdp : "unknown",
+            strerror(errno));
+        unlink(tmpfile);
+        stopSaving(0);
+        return C_ERR;
+    }
+
+    serverLog(LL_NOTICE,"DB saved on disk"); // 日志保存
+    server.dirty = 0; // 最后的变量该置空&该保存状态的
+    server.lastsave = time(NULL);
+    server.lastbgsave_status = C_OK;
+    stopSaving(1); // 停止保存
+    return C_OK;
+
+werr:
+    serverLog(LL_WARNING,"Write error saving DB on disk: %s", strerror(errno));
+    if (fp) fclose(fp);
+    unlink(tmpfile);
+    stopSaving(0);
+    return C_ERR;
+}
+
+```
 
 #### rdbSaveRio
 ```c
