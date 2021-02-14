@@ -30,13 +30,8 @@ abbrlink: 44b34745
 * 这里罗列了几个比较重要的过程:
 
 ![](https://crab-1251738482.cos.accelerate.myqcloud.com/redis-rdb-1.png)
-### rdbSaveKeyValuePair「2021-01-31 22:57:28」
 
-* 错误返回-1,正常返回1,其它返回0
-* 主逻辑只需负责入参和返回值「抽象」
-* 优先级: expire > lru > lfu > [<key,values>]
-
-#### 
+#### rdbSaveBackground
 ```c++
 int rdbSaveBackground(char *filename, rdbSaveInfo *rsi) {
     pid_t childpid;
@@ -276,6 +271,11 @@ werr:
 ```
 
 #### rdbSaveKeyValuePair实现
+
+* 错误返回-1,正常返回1,其它返回0
+* 主逻辑只需负责入参和返回值「抽象」
+* 优先级: expire > lru > lfu > [<key,values>]
+
 
 ```c
 /* Save a key-value pair, with expire time, type, key, value.
