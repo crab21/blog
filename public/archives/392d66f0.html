@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.1.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/title.webp">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/title.webp">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="IjX74irabw9RP2570h6wHZn7wHfXIobMdcU1b1Xcj6U" />
+  <meta name="baidu-site-verification" content="Fu7a4NLfPU" />
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//blog.imrcrab.com/css/robofont.css">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//blog.imrcrab.com/css/fancybox.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.imrcrab.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":true,"nav":null,"activeClass":"valine"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="¶前序 GPM算是经典的调度模型，但是每个程序都需要一个启动的函数或者入口； GPM也不例外。 直接分析源码，显得很枯燥，如果说要你设计GPM中的G和M的执行关系，你应该怎么设计呢？">
+<meta property="og:type" content="article">
+<meta property="og:title" content="「22」GPM g0和m0">
+<meta property="og:url" content="https://blog.imrcrab.com/archives/392d66f0.html">
+<meta property="og:site_name" content="迷茫的小螃蟹">
+<meta property="og:description" content="¶前序 GPM算是经典的调度模型，但是每个程序都需要一个启动的函数或者入口； GPM也不例外。 直接分析源码，显得很枯燥，如果说要你设计GPM中的G和M的执行关系，你应该怎么设计呢？">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://crab-1251738482.cos.accelerate.myqcloud.com/GPM202011182201.png">
+<meta property="og:image" content="https://crab-1251738482.cos.accelerate.myqcloud.com/GPM202011182219.png">
+<meta property="article:published_time" content="2020-11-18T13:09:17.000Z">
+<meta property="article:modified_time" content="2020-11-18T15:09:17.000Z">
+<meta property="article:author" content="crab">
+<meta property="article:tag" content="Go">
+<meta property="article:tag" content="GPM">
+<meta property="article:tag" content="Go源码">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://crab-1251738482.cos.accelerate.myqcloud.com/GPM202011182201.png">
+
+<link rel="canonical" href="https://blog.imrcrab.com/archives/392d66f0.html">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>「22」GPM g0和m0 | 迷茫的小螃蟹</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">迷茫的小螃蟹</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/crab21" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.imrcrab.com/archives/392d66f0.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="crab">
+      <meta itemprop="description" content="日行一步...">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="迷茫的小螃蟹">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          「22」GPM g0和m0
+        </h1>
+
+        <div class="post-meta">
+        
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-11-18 21:09:17 / 修改时间：23:09:17" itemprop="dateCreated datePublished" datetime="2020-11-18T21:09:17+08:00">2020-11-18</time>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/archives/392d66f0.html#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/archives/392d66f0.html" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3.6k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>3 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="前序"><a class="header-anchor" href="#前序">¶</a>前序</h3>
+<p>GPM算是经典的调度模型，但是每个程序都需要一个启动的函数或者入口；<br>
+GPM也不例外。<br>
+直接分析源码，显得很枯燥，如果说要你设计GPM中的G和M的执行关系，你应该怎么设计呢？</p>
+<a id="more"></a>
+<blockquote>
+<p>go version: 1.14.3</p>
+</blockquote>
+<h3 id="尝试设计"><a class="header-anchor" href="#尝试设计">¶</a>尝试设计</h3>
+<p><img src="https://crab-1251738482.cos.accelerate.myqcloud.com/GPM202011182201.png" alt=""><br>
+如果只是这样的话，那总体的G和M是否需要管理者，毕竟在1.1版本之前只有GM模型，，，<br>
+那么为了好管理M和G，就需要第一个M和G成为管理者，类似于大总管这样的存在。</p>
+<h3 id="再次设计"><a class="header-anchor" href="#再次设计">¶</a>再次设计</h3>
+<p><img src="https://crab-1251738482.cos.accelerate.myqcloud.com/GPM202011182219.png" alt=""></p>
+<h3 id="关键点："><a class="header-anchor" href="#关键点：">¶</a>关键点：</h3>
+<ul>
+<li>p先启动</li>
+<li>g0的创建；用于创建新的G</li>
+<li>m0的创建；用于创建新的M</li>
+<li>启动main调度整个系统</li>
+</ul>
+<blockquote>
+<p>上述这样比较合理点。</p>
+</blockquote>
+<h3 id="Go源码的如何实现？"><a class="header-anchor" href="#Go源码的如何实现？">¶</a>Go源码的如何实现？</h3>
+<p><a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/release-branch.go1.14/src/runtime/proc.go#L524">bootstrap sequence</a></p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// The bootstrap sequence is:</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//	call osinit</span></span><br><span class="line"><span class="comment">//	call schedinit</span></span><br><span class="line"><span class="comment">//	make &amp; queue new G</span></span><br><span class="line"><span class="comment">//	call runtime·mstart</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// The new G calls runtime·main.</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/release-branch.go1.14/src/runtime/asm_amd64.s#L194">g0和m0初始化过程</a></p>
+</blockquote>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// set the per-goroutine and per-mach &quot;registers&quot;</span></span><br><span class="line">	get_tls(BX)</span><br><span class="line">	LEAQ	runtime·g0(SB), CX</span><br><span class="line">	MOVQ	CX, g(BX)</span><br><span class="line">	LEAQ	runtime·m0(SB), AX</span><br><span class="line"></span><br><span class="line">	<span class="comment">// save m-&gt;g0 = g0</span></span><br><span class="line">	MOVQ	CX, m_g0(AX)</span><br><span class="line">	<span class="comment">// save m0 to g0-&gt;m</span></span><br><span class="line">	MOVQ	AX, g_m(CX)</span><br><span class="line"></span><br><span class="line">	CLD				<span class="comment">// convention is D is always left cleared</span></span><br><span class="line">	CALL	runtime·check(SB)</span><br><span class="line"></span><br><span class="line">	MOVL	<span class="number">16</span>(SP), AX		<span class="comment">// copy argc</span></span><br><span class="line">	MOVL	AX, <span class="number">0</span>(SP)</span><br><span class="line">	MOVQ	<span class="number">24</span>(SP), AX		<span class="comment">// copy argv</span></span><br><span class="line">	MOVQ	AX, <span class="number">8</span>(SP)</span><br><span class="line">	CALL	runtime·args(SB)</span><br><span class="line">	CALL	runtime·osinit(SB)</span><br><span class="line">	CALL	runtime·schedinit(SB)</span><br><span class="line"></span><br><span class="line">	<span class="comment">// create a new goroutine to start program</span></span><br><span class="line">	MOVQ	$runtime·mainPC(SB), AX		<span class="comment">// entry</span></span><br><span class="line">	PUSHQ	AX</span><br><span class="line">	PUSHQ	$<span class="number">0</span>			<span class="comment">// arg size</span></span><br><span class="line">	CALL	runtime·newproc(SB)</span><br><span class="line">	POPQ	AX</span><br><span class="line">	POPQ	AX</span><br><span class="line"></span><br><span class="line">	<span class="comment">// start this M</span></span><br><span class="line">	CALL	runtime·mstart(SB)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>到这里了，初始化思路基本确定了</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1、initP</span><br><span class="line">2、m0和g0的绑定</span><br><span class="line">3、new groutine for main主线程启动</span><br><span class="line">4、mstart</span><br></pre></td></tr></table></figure>
+<h3 id="m-init涉及到的函数"><a class="header-anchor" href="#m-init涉及到的函数">¶</a>m init涉及到的函数</h3>
+<ul>
+<li>mstart</li>
+<li>mstart1</li>
+<li>mstartm0</li>
+</ul>
+<h4 id="mstart"><a class="header-anchor" href="#mstart">¶</a>mstart</h4>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// mstart is the entry-point for new Ms.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// This must not split the stack because we may not even have stack</span></span><br><span class="line"><span class="comment">// bounds set up yet.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// May run during STW (because it doesn&#x27;t have a P yet), so write</span></span><br><span class="line"><span class="comment">// barriers are not allowed.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//go:nosplit</span></span><br><span class="line"><span class="comment">//go:nowritebarrierrec</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">mstart</span><span class="params">()</span></span> &#123;</span><br><span class="line">	_g_ := getg()</span><br><span class="line"></span><br><span class="line">    <span class="comment">//低位判断</span></span><br><span class="line">	osStack := _g_.stack.lo == <span class="number">0</span></span><br><span class="line">	<span class="keyword">if</span> osStack &#123;</span><br><span class="line">		<span class="comment">// Initialize stack bounds from system stack.</span></span><br><span class="line">		<span class="comment">// Cgo may have left stack size in stack.hi.</span></span><br><span class="line">		<span class="comment">// minit may update the stack bounds.</span></span><br><span class="line">		size := _g_.stack.hi</span><br><span class="line">		<span class="keyword">if</span> size == <span class="number">0</span> &#123;</span><br><span class="line">			size = <span class="number">8192</span> * sys.StackGuardMultiplier</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//g0的stack空间是真的大</span></span><br><span class="line">		_g_.stack.hi = <span class="keyword">uintptr</span>(noescape(unsafe.Pointer(&amp;size)))</span><br><span class="line">		_g_.stack.lo = _g_.stack.hi - size + <span class="number">1024</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">// Initialize stack guard so that we can start calling regular</span></span><br><span class="line">	<span class="comment">// Go code.</span></span><br><span class="line">	_g_.stackguard0 = _g_.stack.lo + _StackGuard</span><br><span class="line">	<span class="comment">// This is the g0, so we can also call go:systemstack</span></span><br><span class="line">	<span class="comment">// functions, which check stackguard1.</span></span><br><span class="line">	_g_.stackguard1 = _g_.stackguard0</span><br><span class="line">	mstart1()</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Exit this thread.</span></span><br><span class="line">	<span class="keyword">switch</span> GOOS &#123;</span><br><span class="line">	<span class="keyword">case</span> <span class="string">&quot;windows&quot;</span>, <span class="string">&quot;solaris&quot;</span>, <span class="string">&quot;illumos&quot;</span>, <span class="string">&quot;plan9&quot;</span>, <span class="string">&quot;darwin&quot;</span>, <span class="string">&quot;aix&quot;</span>:</span><br><span class="line">		<span class="comment">// Windows, Solaris, illumos, Darwin, AIX and Plan 9 always system-allocate</span></span><br><span class="line">		<span class="comment">// the stack, but put it in _g_.stack before mstart,</span></span><br><span class="line">		<span class="comment">// so the logic above hasn&#x27;t set osStack yet.</span></span><br><span class="line">		osStack = <span class="literal">true</span></span><br><span class="line">	&#125;</span><br><span class="line">	mexit(osStack)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="mstart1"><a class="header-anchor" href="#mstart1">¶</a>mstart1</h4>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">mstart1</span><span class="params">()</span></span> &#123;</span><br><span class="line">	_g_ := getg()</span><br><span class="line"></span><br><span class="line">    <span class="comment">//启动非g0就崩盘了</span></span><br><span class="line">	<span class="keyword">if</span> _g_ != _g_.m.g0 &#123;</span><br><span class="line">		throw(<span class="string">&quot;bad runtime·mstart&quot;</span>)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//初始化</span></span><br><span class="line">	<span class="comment">// Record the caller for use as the top of stack in mcall and</span></span><br><span class="line">	<span class="comment">// for terminating the thread.</span></span><br><span class="line">	<span class="comment">// We&#x27;re never coming back to mstart1 after we call schedule,</span></span><br><span class="line">	<span class="comment">// so other calls can reuse the current frame.</span></span><br><span class="line">	save(getcallerpc(), getcallersp())</span><br><span class="line">	asminit()</span><br><span class="line">	minit()</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Install signal handlers; after minit so that minit can</span></span><br><span class="line">    <span class="comment">// prepare the thread to be able to handle the signals.</span></span><br><span class="line">    <span class="comment">//m0启动</span></span><br><span class="line">	<span class="keyword">if</span> _g_.m == &amp;m0 &#123;</span><br><span class="line">		mstartm0()</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> fn := _g_.m.mstartfn; fn != <span class="literal">nil</span> &#123;</span><br><span class="line">		fn()</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> _g_.m != &amp;m0 &#123;</span><br><span class="line">		acquirep(_g_.m.nextp.ptr())</span><br><span class="line">		_g_.m.nextp = <span class="number">0</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//开始调度</span></span><br><span class="line">	schedule()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="mstartm0"><a class="header-anchor" href="#mstartm0">¶</a>mstartm0</h4>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// mstart1的具体实现，仅run在m0上</span></span><br><span class="line"><span class="comment">// mstartm0 implements part of mstart1 that only runs on the m0.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// Write barriers are allowed here because we know the GC can&#x27;t be</span></span><br><span class="line"><span class="comment">// running yet, so they&#x27;ll be no-ops.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//go:yeswritebarrierrec</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">mstartm0</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="comment">// Create an extra M for callbacks on threads not created by Go.</span></span><br><span class="line">	<span class="comment">// An extra M is also needed on Windows for callbacks created by</span></span><br><span class="line">    <span class="comment">// syscall.NewCallback. See issue #6751 for details.</span></span><br><span class="line">    <span class="comment">//windows下需要一个额外的M</span></span><br><span class="line">	<span class="keyword">if</span> (iscgo || GOOS == <span class="string">&quot;windows&quot;</span>) &amp;&amp; !cgoHasExtraM &#123;</span><br><span class="line">		cgoHasExtraM = <span class="literal">true</span></span><br><span class="line">		newextram()</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//初始化信号量,用于后续调度</span></span><br><span class="line">	initsig(<span class="literal">false</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="后续schedule函数"><a class="header-anchor" href="#后续schedule函数">¶</a><a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/release-branch.go1.14/src/runtime/proc.go#L1119">后续schedule函数</a></h4>
+<blockquote>
+<p>管家有了，那么开始调度吧…。</p>
+</blockquote>
+<h3 id="下节："><a class="header-anchor" href="#下节：">¶</a>下节：</h3>
+<ul>
+<li>schedule</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+      
+  <div class="popular-posts-header">相关文章</div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/archives/b885f9f7.html" rel="bookmark">「18」GPM 初识/设计</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/archives/c770fe49.html" rel="bookmark">「25」GPM sysmon函数</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/archives/b4edbd7.html" rel="bookmark">「24」GPM newm函数</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/archives/9bb71eca.html" rel="bookmark">「23」GPM main入口函数</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/archives/5c6a362f.html" rel="bookmark">「19」GPM 调度流程</a></div>
+    </li>
+  </ul>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>crab
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://blog.imrcrab.com/archives/392d66f0.html" title="「22」GPM g0和m0">https://blog.imrcrab.com/archives/392d66f0.html</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/Go/" rel="tag"><i class="fa fa-tag"></i> Go</a>
+              <a href="/tags/GPM/" rel="tag"><i class="fa fa-tag"></i> GPM</a>
+              <a href="/tags/Go%E6%BA%90%E7%A0%81/" rel="tag"><i class="fa fa-tag"></i> Go源码</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/archives/ba7b70bf.html" rel="prev" title="「21」linux select源码">
+      <i class="fa fa-chevron-left"></i> 「21」linux select源码
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/archives/9bb71eca.html" rel="next" title="「23」GPM main入口函数">
+      「23」GPM main入口函数 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%89%8D%E5%BA%8F"><span class="nav-number">1.</span> <span class="nav-text">前序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%9D%E8%AF%95%E8%AE%BE%E8%AE%A1"><span class="nav-number">2.</span> <span class="nav-text">尝试设计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%8D%E6%AC%A1%E8%AE%BE%E8%AE%A1"><span class="nav-number">3.</span> <span class="nav-text">再次设计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E7%82%B9%EF%BC%9A"><span class="nav-number">4.</span> <span class="nav-text">关键点：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Go%E6%BA%90%E7%A0%81%E7%9A%84%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%EF%BC%9F"><span class="nav-number">5.</span> <span class="nav-text">Go源码的如何实现？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#m-init%E6%B6%89%E5%8F%8A%E5%88%B0%E7%9A%84%E5%87%BD%E6%95%B0"><span class="nav-number">6.</span> <span class="nav-text">m init涉及到的函数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#mstart"><span class="nav-number">6.1.</span> <span class="nav-text">mstart</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#mstart1"><span class="nav-number">6.2.</span> <span class="nav-text">mstart1</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#mstartm0"><span class="nav-number">6.3.</span> <span class="nav-text">mstartm0</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%90%8E%E7%BB%ADschedule%E5%87%BD%E6%95%B0"><span class="nav-number">6.4.</span> <span class="nav-text">后续schedule函数</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8B%E8%8A%82%EF%BC%9A"><span class="nav-number">7.</span> <span class="nav-text">下节：</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">crab</p>
+  <div class="site-description" itemprop="description">日行一步...</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">34</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">34</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/crab21" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;crab21" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:pywang112@gmail.com" title="E-Mail → mailto:pywang112@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2020 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">crab</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">站点总字数：</span>
+    <span title="站点总字数">112k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">1:42</span>
+</div>
+
+
+<script async src="//blog.imrcrab.com/js/busuanzi.js"></script>
+
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,255' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="//blog.imrcrab.com/js/fancybox.js"></script>
+  <script src="//blog.imrcrab.com/js/fancybox.mini.js"></script>
+
+<script src="/js/utils.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//blog.imrcrab.com/js/valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : true,
+      appId      : 'rSgtfmim6nG8DA8i3gVctzC2-gzGzoHsz',
+      appKey     : '9VTNtVhOTowLUAHYs2PJDms4',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : true,
+      serverURLs : ''
+    });
+  }, window.Valine);
+});
+</script>
+
+  <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":true,"debug":false,"model":{"jsonPath":"/live2dw/assets/hijiki.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true},"react":{"opacity":0.8},"log":false});</script>
+</body>
+</html>

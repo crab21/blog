@@ -32,4 +32,4 @@ jobs:
       - name: Upload File To COS
         run: |
           chmod +x ./cosUpload
-          ./cosUpload --Path ./public --SecretID ${{ secrets.COS_TENCENT_ID }} --SecretKey ${{ secrets.COS_TENCENT_KEY }} --cosUrl ${{ secrets.COS_UPLOAD_URL }}
+          ./cosUpload --utilMode cosUpload --Path ./public --SecretID ${{ secrets.COS_TENCENT_ID }} --SecretKey ${{ secrets.COS_TENCENT_KEY }} --cosUrl ${{ secrets.COS_UPLOAD_URL }}
