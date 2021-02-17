@@ -891,7 +891,7 @@ canvas_nest:
   color: '0,0,255' # RGB values, use ',' to separate
   opacity: 0.5 # the opacity of line: 0~1
   zIndex: -1 # z-index property of the background
-  count: 99 # the number of lines
+  count: 88 # the number of lines
 
 #! ---------------------------------------------------------------
 #! DO NOT EDIT THE FOLLOWING SETTINGS
