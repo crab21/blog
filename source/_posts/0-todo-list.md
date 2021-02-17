@@ -44,3 +44,4 @@ abbrlink: '13593748'
 
 - [ ] [Go time使用](https://blog.imrcrab.com/archives/513dbeba.html#Go-%E4%B8%AD%E5%AF%B9%E4%BA%8E%E6%97%B6%E9%97%B4%E7%9A%84%E4%BD%BF%E7%94%A8)
 
+- [ ] 「35」runtime:recover not correctly recover from panic
