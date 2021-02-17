@@ -23,7 +23,7 @@ mathjax: true
 
 ### 问题:
 
-(runtime: memory leaked observed in go program #40448)[https://github.com/golang/go/issues/40448]
+[runtime: memory leaked observed in go program #40448](https://github.com/golang/go/issues/40448)
 
 #### 简述起因:
 
