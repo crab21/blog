@@ -1,7 +1,7 @@
 ---
 title: 「16」go源码words归纳
 date: '2020/11/03 10:45:07'
-updated: '2020/11/25 21:45:07'
+updated: '2021/2/17 14:45:07'
 keywords: '汇编,Go,Plan9'
 tags:
   - Go
@@ -50,6 +50,11 @@ Alternatively  或者																		-->  /runtime/rwmutex.go
 「later」
 demonstrate  v 演示
 
+
+instructions v  指示  ----> (go github memory leak)[https://github.com/golang/go/issues/40448]
+reiterate    v  重申
+procedure    n 程序
+hypothesis   n 假设
 ```
 
 
