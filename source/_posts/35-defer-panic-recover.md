@@ -1,5 +1,5 @@
 ---
-title: 「35」runtime:recover not correctly recover from panic
+title: '「35」runtime:recover not correctly recover from panic'
 date: '2021/2/17 22:10:17'
 updated: '2021/2/17 22:10:17'
 keywords: 'Go,Runtime'
@@ -9,6 +9,7 @@ tags:
   - Day
   - v1.16
 mathjax: true
+abbrlink: d586b949
 ---
 
 
