@@ -125,7 +125,7 @@ type _defer struct {
 
 ```
 
-#### deferproc
+#### [deferproc](https://github.com/golang/go/blob/release-branch.go1.14/src/runtime/panic.go#L218)
 
 ```go
 // Create a new deferred function fn with siz bytes of arguments.
@@ -242,7 +242,7 @@ func newdefer(siz int32) *_defer {
 }
 ```
 
-#### deferprocStack 
+#### [deferprocStack](https://github.com/golang/go/blob/release-branch.go1.14/src/runtime/panic.go#L271)
 
 ```go
 // deferprocStack queues a new deferred function with a defer record on the stack.
@@ -293,7 +293,7 @@ func deferprocStack(d *_defer) {
 
 ```
 
-#### deferreturn
+#### [deferreturn](https://github.com/golang/go/blob/release-branch.go1.14/src/runtime/panic.go#L528)
 
 ```go
 // Run a deferred function if there is one.
@@ -364,7 +364,7 @@ func deferreturn(arg0 uintptr) {
 
 ### panic
 
-#### 官方定义
+#### [官方定义-->](https://github.com/golang/go/blob/release-branch.go1.14/src/runtime/runtime2.go#L903)
 
 
 ```go
@@ -392,7 +392,7 @@ type _panic struct {
 
 ```
 
-#### gopanic
+#### [gopanic](https://github.com/golang/go/blob/release-branch.go1.14/src/runtime/panic.go#L889)
 
 ```go
 // reflectcallSave calls reflectcall after saving the caller's pc and sp in the
