@@ -7,7 +7,7 @@ tags:
   - Go
   - Runtime
   - Day
-  - v1.16
+  - v1.14
 mathjax: true
 abbrlink: d586b949
 ---

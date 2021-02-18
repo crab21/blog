@@ -18,7 +18,9 @@ abbrlink: b630d910
 [「35」runtime:recover not correctly recover from panic](https://blog.imrcrab.com/archives/d586b949.html#more)说到了v1.16修复的一个panic问题,这次顺带看看底层关于defer的处理.
 
 <!--more-->
+### version
 
+>go version go1.14.14 darwin/amd64
 ### defer处理
 
 #### 程序
