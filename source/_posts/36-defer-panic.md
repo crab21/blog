@@ -720,6 +720,7 @@ func sum(a, b int) int {
 }
 
 ```
+##### output:
 
 ```go
 === 1
@@ -773,6 +774,8 @@ func sum(a, b int) int {
 }
 
 ```
+
+##### output:
 
 ```go
 
