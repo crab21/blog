@@ -127,26 +127,6 @@ symbols_count_time:
   total_time: true # 
 
 
-live2d:
-  enable: true
-  scriptFrom: local
-  pluginRootPath: live2dw/
-  pluginJsPath: lib/
-  pluginModelPath: assets/
-  tagMode: true
-  debug: false
-  model:
-    use: live2d-widget-model-hijiki
-  display:
-    position: right 
-    width: 150
-    height: 300
-  mobile:
-    show: true
-  react:
-    opacity: 0.8
-
-
 # Markdown-it config
 ## Docs: https://github.com/celsomiranda/hexo-renderer-markdown-it/wiki
 markdown:
