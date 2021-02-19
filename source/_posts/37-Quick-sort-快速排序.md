@@ -1,5 +1,5 @@
 ---
-title: 「36」Quick Sort快速排序
+title: 「37」Quick Sort快速排序
 date: '2021/2/19 12:10:17'
 updated: '2021/2/19 12:10:17'
 keywords: 'Go,Quick Sort,Sort'
