@@ -8,8 +8,9 @@ tags:
   - Sort
   - Day
 mathjax: true
+abbrlink: aa75061e
 ---
-
+<!-- toc -->
 
 ### 前序
 最近在想一个问题：Go里面的sort包到底是怎么实现的，，，，
