@@ -55,7 +55,7 @@ CST
 
 >如果你查查源码，就会发现这个函数上面写着时区的问题，也跟不用百度时区，有的自然支持，没有的写了就是乱写了。
 
-![](https://crab-1251738482.cos.accelerate.myqcloud.com/clipboard_20201228_112003.png)
+![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20201228_112003.png)
 
 ```go
 查询的时区一直就在你goroot路径下的一个压缩文件中。
@@ -63,7 +63,7 @@ CST
 
 具体的有兴趣可以去看看所有的时区，后续也就有一个全面的了解了：
 
-![](https://crab-1251738482.cos.accelerate.myqcloud.com/clipboard_20201228_112408.png)
+![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20201228_112408.png)
 
 
 

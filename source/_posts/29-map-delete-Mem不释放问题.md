@@ -284,7 +284,7 @@ func printMemStats() {
 
 比较有意思的一行：
 
-![](https://crab-1251738482.cos.accelerate.myqcloud.com/clipboard_20210106_051000.png)
+![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210106_051000.png)
 
 ```
 XORL 异或运算符 
@@ -304,7 +304,7 @@ XORL AX,AX --->将AX置0值
 
 [点击Github查看](https://github.com/golang/go/blob/release-branch.go1.14/src/runtime/map_fast64.go#L272)
 
-![](https://crab-1251738482.cos.accelerate.myqcloud.com/clipboard_20210106_052140.png)
+![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210106_052140.png)
 
 
 >有意思的是：map的设计就是这样，删除key，只是把这个槽位置empty，并没有释放内存.

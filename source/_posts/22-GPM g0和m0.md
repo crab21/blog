@@ -22,13 +22,13 @@ GPM也不例外。
 ### 尝试设计
 
 
-![](https://crab-1251738482.cos.accelerate.myqcloud.com/GPM202011182201.png)
+![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/GPM202011182201.png)
 如果只是这样的话，那总体的G和M是否需要管理者，毕竟在1.1版本之前只有GM模型，，，
 那么为了好管理M和G，就需要第一个M和G成为管理者，类似于大总管这样的存在。
 
 ### 再次设计
 
-![](https://crab-1251738482.cos.accelerate.myqcloud.com/GPM202011182219.png)
+![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/GPM202011182219.png)
 
 ### 关键点：
 * p先启动

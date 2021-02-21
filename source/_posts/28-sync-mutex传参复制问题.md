@@ -89,7 +89,7 @@ func main() {
 * Mutex中的Lock和Unlock「方法」属于指针类型<sup>图1</sup>
 
 
-![](https://crab-1251738482.cos.accelerate.myqcloud.com/clipboard_20210102_102753.png)
+![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210102_102753.png)
 **<center>图<sup>1</sup></center>**
 
 ### 解决办法
