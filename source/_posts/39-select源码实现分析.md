@@ -1,5 +1,5 @@
 ---
-title: 「39」select源码实现分析
+title: 「39」Go select源码实现分析
 date: '2021/2/22 12:10:17'
 updated: '2021/2/22 12:10:17'
 keywords: 'Go,select,selectgo源码'
@@ -8,6 +8,7 @@ tags:
   - 源码
   - Day
 mathjax: true
+abbrlink: e1051649
 ---
 
 ### 前序

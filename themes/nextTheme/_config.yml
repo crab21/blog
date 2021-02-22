@@ -423,8 +423,8 @@ font:
   # Global font settings used for all elements inside <body>.
   global:
     external: true
-    family: Roboto
-    size: 12px
+    family: STKaiti 
+    size: 13px
 
   # Font settings for site title (.site-title).
   title:
@@ -436,13 +436,13 @@ font:
   headings:
     external: true
     family:
-    size: 12px
+    size: 13px
 
   # Font settings for posts (.post-body).
   posts:
     external: true
-    family: Roboto
-    size: 12px
+    family: STKaiti 
+    size: 13px
 
   # Font settings for <code> and code blocks.
   codes:
