@@ -1,7 +1,7 @@
 ---
 title: 「39」Go select源码实现分析
 date: '2021/2/22 12:10:17'
-updated: '2021/2/22 12:10:17'
+updated: '2021/2/23 21:10:17'
 keywords: 'Go,select,selectgo源码'
 tags:
   - Go
@@ -463,3 +463,254 @@ func reflect_rselect(cases []runtimeSelect) (int, bool) {
 ```
 
 #### selectgo主循环
+
+>selectgo会根据不通的逻辑判断,跳转到不通的逻辑中,主要分为如下几部分:
+
+* bufrecv 可以从缓存区读取数据
+* bufsend 可以向缓存区写入数据
+* recv 可以从休眠的发送方获取数据
+* send 可以向休眠的接收方发送数据
+* rclose 可以从关闭的channel读取EOF
+* sclose 可以向关闭的channel发送数据
+* retc 结束调用并返回
+
+##### send & recv分析 
+
+```go
+.
+..
+...
+....
+.....
+
+loop:
+	// pass 1 - look for something already waiting
+	var dfli int
+	var dfl *scase
+	var casi int
+	var cas *scase
+	var recvOK bool
+	for i := 0; i < ncases; i++ {
+		casi = int(pollorder[i])
+		cas = &scases[casi]
+		c = cas.c
+
+		switch cas.kind {
+		case caseNil:
+			continue
+
+		case caseRecv:
+			sg = c.sendq.dequeue()
+			if sg != nil {
+				goto recv
+			}
+			if c.qcount > 0 {
+				//缓存区total>0
+				goto bufrecv
+			}
+			if c.closed != 0 {
+				// chan已经关闭
+				goto rclose
+			}
+
+		case caseSend:
+			if raceenabled {
+				racereadpc(c.raceaddr(), cas.pc, chansendpc)
+			}
+			if c.closed != 0 {
+				// channel关闭了,但是向其发送消息
+				goto sclose
+			}
+			sg = c.recvq.dequeue()
+			if sg != nil {
+				// 向出队的channel发送消息
+				goto send
+			}
+			if c.qcount < c.dataqsiz {
+
+				goto bufsend
+			}
+
+		case caseDefault:
+			dfli = casi
+			dfl = cas
+		}
+	}
+.....
+....
+...
+..
+.
+```
+
+>这里可能要温习下hchan结构:
+
+```go
+
+type hchan struct {
+	qcount   uint           // total data in the queue
+	dataqsiz uint           // size of the circular queue
+	buf      unsafe.Pointer // points to an array of dataqsiz elements
+	elemsize uint16
+	closed   uint32
+	elemtype *_type // element type
+	sendx    uint   // send index
+	recvx    uint   // receive index
+	recvq    waitq  // list of recv waiters
+	sendq    waitq  // list of send waiters
+
+	// lock protects all fields in hchan, as well as several
+	// fields in sudogs blocked on this channel.
+	//
+	// Do not change another G's status while holding this lock
+	// (in particular, do not ready a G), as this can deadlock
+	// with stack shrinking.
+	lock mutex
+}
+```
+
+##### bufrecv:
+
+```go
+bufrecv:
+	// can receive from buffer
+	if raceenabled {
+		if cas.elem != nil {
+			raceWriteObjectPC(c.elemtype, cas.elem, cas.pc, chanrecvpc)
+		}
+		raceacquire(chanbuf(c, c.recvx))
+		racerelease(chanbuf(c, c.recvx))
+	}
+	if msanenabled && cas.elem != nil {
+		msanwrite(cas.elem, c.elemtype.size)
+	}
+	// recv 赋值
+	recvOK = true
+	qp = chanbuf(c, c.recvx) // chan指针指向
+	if cas.elem != nil { 
+		typedmemmove(c.elemtype, cas.elem, qp)
+	}
+	typedmemclr(c.elemtype, qp)
+	c.recvx++
+	if c.recvx == c.dataqsiz {
+		c.recvx = 0
+	}
+	c.qcount--
+	selunlock(scases, lockorder)
+	goto retc
+
+```
+
+##### bufsend:
+
+```go
+bufsend:
+	// can send to buffer
+	if raceenabled {
+		raceacquire(chanbuf(c, c.sendx))
+		racerelease(chanbuf(c, c.sendx))
+		raceReadObjectPC(c.elemtype, cas.elem, cas.pc, chansendpc)
+	}
+	if msanenabled {
+		msanread(cas.elem, c.elemtype.size)
+	}
+	typedmemmove(c.elemtype, chanbuf(c, c.sendx), cas.elem)
+	c.sendx++
+	if c.sendx == c.dataqsiz { // 缓存区满了
+		c.sendx = 0
+	}
+	c.qcount++
+	selunlock(scases, lockorder)
+	goto retc
+```
+
+##### recv:
+
+```go
+recv:
+	// can receive from sleeping sender (sg)
+	recv(c, sg, cas.elem, func() { selunlock(scases, lockorder) }, 2)
+	if debugSelect {
+		print("syncrecv: cas0=", cas0, " c=", c, "\n")
+	}
+	recvOK = true
+	goto retc
+
+```
+
+##### rclose:
+
+```go
+	// read at end of closed channel
+	selunlock(scases, lockorder)
+	recvOK = false
+	if cas.elem != nil {
+		typedmemclr(c.elemtype, cas.elem)
+	}
+	if raceenabled {
+		raceacquire(c.raceaddr())
+	}
+	goto retc
+```
+
+##### send:
+
+```go
+send:
+	// can send to a sleeping receiver (sg)
+	if raceenabled {
+		raceReadObjectPC(c.elemtype, cas.elem, cas.pc, chansendpc)
+	}
+	if msanenabled {
+		msanread(cas.elem, c.elemtype.size)
+	}
+	// send函数
+	send(c, sg, cas.elem, func() { selunlock(scases, lockorder) }, 2)
+	if debugSelect {
+		print("syncsend: cas0=", cas0, " c=", c, "\n")
+	}
+	goto retc
+```
+
+##### sclose:
+
+```go
+sclose:
+	// send on closed channel
+	selunlock(scases, lockorder)
+	// 向一个close的channel发送消息,就发生panic
+	panic(plainError("send on closed channel"))
+}
+```
+
+
+##### retc:
+
+```go
+retc:
+	if cas.releasetime > 0 {
+		blockevent(cas.releasetime-t0, 1)
+	}
+	return casi, recvOK
+```
+
+#### channel的recv和send方式:
+
+```go
+
+1、当 case 不包含 Channel 时；
+    这种 case 会被跳过；
+2、当 case 会从 Channel 中recv数据时；
+    如果当前 Channel 的 sendq 上有等待的 Goroutine，就会跳到 recv 标签并从缓冲区读取数据后将等待 Goroutine 中的数据放入到缓冲区中相同的位置；
+    如果当前 Channel 的缓冲区不为空，就会跳到 bufrecv 标签处从缓冲区获取数据；
+    如果当前 Channel 已经被关闭，就会跳到 rclose 做一些清除的收尾工作；
+3、当 case 会向 Channel send数据时；
+    如果当前 Channel 已经被关，闭就会直接跳到 sclose 标签，触发 panic 尝试中止程序；
+    如果当前 Channel 的 recvq 上有等待的 Goroutine，就会跳到 send 标签向 Channel 发送数据；
+    如果当前 Channel 的缓冲区存在空闲位置，就会将待发送的数据存入缓冲区；
+4、当 select 语句中包含 default 时；
+    表示前面的所有 case 都没有被执行，这里会解锁所有 Channel 并返回，意味着当前 select 结构中的收发都是非阻塞的；
+
+```
+
+### End
