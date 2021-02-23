@@ -268,6 +268,8 @@ func walkselectcases(cases *Nodes) []*Node {
 
 ![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210223_052947.png)
 
+* 关于fastrandn后面单独分析吧，还挺有意思的。
+
 ##### 没有case,单单一个select情况:
 
 >前几行就写的很清楚了。
@@ -460,4 +462,4 @@ func reflect_rselect(cases []runtimeSelect) (int, bool) {
 
 ```
 
-####
+#### selectgo主循环
