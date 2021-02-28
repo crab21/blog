@@ -1,7 +1,7 @@
 ---
 title: 「15」Plan9 汇编小记
 date: '2020/10/09 13:47:39'
-updated: '2020/10/09 13:47:39'
+updated: '2021/02/28 20:47:39'
 keywords: '汇编,Go,Plan9'
 top: false
 sticky: 3
@@ -53,6 +53,13 @@ go build -gcflags -S ***.go
 |变址寄存器|SI|ESI|RSI|
 |堆栈顶指针|SP|ESP|RSP|
 |指令寄存器|IP|EIP|RIP|
+
+##### 4个伪寄存器:
+
+* FP: 指向栈底位置,一般用来引用函数的输入参数,用于函数参数的访问「frame pointer」
+* PC: 程序计数器,用于分支与跳转.「program counter」
+* SB: 函数声明和全局变量.「static base pointer」
+* SP: 指向当前栈帧的局部变量的开始位置「栈顶位置」,用于局部变量的引用.
 
 ##### MOV
 
