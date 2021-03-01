@@ -7,9 +7,9 @@ tags:
   - Go
   - Sort
   - Day
-mathjax: true:
+mathjax: true
+abbrlink: 359bb4b6
 ---
-
 ### 前序:
 [「37」Quick Sort快速排序](https://blog.imrcrab.com/archives/aa75061e.html)分析过快速排序,之前有个问题一直是个痛点:
 自定义结构体排序过程中,还是要写不少逻辑判断代码,可以再抽象点么?
