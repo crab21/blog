@@ -136,8 +136,12 @@ func sortByRules(a, b interface{}, sortingRules map[string]bool) bool {
 			of := va.FieldByName(v)
 			ofb := vb.FieldByName(v)
 
+			if of.Kind() == reflect.Struct || ofb.Kind() == reflect.Struct {
+				return !flagResult
+			}
+
 			if !of.IsValid() || !ofb.IsValid() {
-				return flagResult
+				return !flagResult
 			}
 
 			result := typeChooseOfReflect(of, ofb, k)
