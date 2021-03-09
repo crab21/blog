@@ -18,7 +18,7 @@ mathjax: true
 
 ## git log命令基本使用：
 
->这里只能用go仓库的log来演示和学习log相关操作。
+>这里用go仓库的log来演示和学习log相关操作。
 
 ### 版本：
 
