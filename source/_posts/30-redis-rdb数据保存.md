@@ -357,7 +357,7 @@ int rdbSaveKeyValuePair(rio *rdb, robj *key, robj *val, long long expiretime) {
 ![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/redis-2021-03-16-13-58-41.png)
 
 **再细分下中间的过程**
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210316_021414.png)
+![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/redis-2021-03-16-14-13-35.png)
 
 ### Todo
 - [x] rdb快速备份原因: fork主进程
