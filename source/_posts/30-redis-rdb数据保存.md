@@ -344,3 +344,21 @@ int rdbSaveKeyValuePair(rio *rdb, robj *key, robj *val, long long expiretime) {
 
 ![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210316_085205.png)
 
+### 关于rdbsave和redis如何联系的？
+>写到这里的才慢慢理解这个里面的关系，如果你问我为啥不在前面就列出来关系图呢？
+
+>那我只能说这是一个学习的正常流程，抓住其中的关键点，先看实现，然后再向外扩散，由内而外.
+
+![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/redis-2021-03-16-13-48-23.png)
+
+
+**如果区分下redis的上下层面的关系，那就可以大致分为三层：command+底层实现+最底层的IO操作等.**
+
+![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/redis-2021-03-16-13-58-41.png)
+
+### Todo
+- [x] rdb快速备份原因: fork主进程
+- [ ] 故障「断电」等恢复机制
+- [ ] 主备复制怎么进行的？
+
+### End
