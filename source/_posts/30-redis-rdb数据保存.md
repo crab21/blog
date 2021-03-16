@@ -1,7 +1,7 @@
 ---
 title: 「30」redis rdb源码-1
 date: '2021/1/25 22:00:17'
-updated: '2021/02/14 16:01:00'
+updated: '2021/03/16 07:01:00'
 keywords: 'redis,RDB'
 tags:
   - Day
@@ -331,4 +331,16 @@ int rdbSaveKeyValuePair(rio *rdb, robj *key, robj *val, long long expiretime) {
 
 ```
 
-### 待更ing...
+### 使用场景:「2021-03-16」
+* 执行command
+* 条件命令 conf配置
+* shutdown时
+
+#### rdbSave usage location:
+
+![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210316_083902.png)
+
+>关于rdbSaveBackgroud的使用地方:
+
+![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210316_085205.png)
+
