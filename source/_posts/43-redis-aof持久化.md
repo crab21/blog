@@ -37,14 +37,14 @@ createBoolConfig("appendonly", NULL, MODIFIABLE_CONFIG, server.aof_enabled, 0, N
 
 ![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210318_020100.png)
 
-#### 主要方向：
+### 主要方向：
 * aof在启动时候加载顺序
 * aof存文件如何被触发执行的
 * aof保存的机制/同步策略？
 * aof机制和rdb混用？
 * aof如何保持较高的性能？
 
-##### server启动，aof开启，加载流程：
+#### server启动，aof开启，加载流程：
 
 ```c++
 /* Replay the append log file. On success C_OK is returned. On non fatal
@@ -277,9 +277,21 @@ fmterr: /* Format error. */
 }
 ```
 
-###### 流程图：
+##### 流程图：
 
 ![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210318_032504.png)
+
+#### aof触发流程：
+
+参照前面的方法，先找到appendfsync对应的变量，然后看使用场景。
+
+```c++
+createEnumConfig("appendfsync", NULL, MODIFIABLE_CONFIG, aof_fsync_enum, server.aof_fsync, AOF_FSYNC_EVERYSEC, NULL, NULL),
+```
+
+##### aof_fsync_enum哪里用到了？
+
+![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210318_041746.png)
 
 
 
