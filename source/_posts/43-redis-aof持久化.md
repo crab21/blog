@@ -293,6 +293,9 @@ createEnumConfig("appendfsync", NULL, MODIFIABLE_CONFIG, aof_fsync_enum, server.
 
 ![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210318_041746.png)
 
+##### 流程图:
+![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/redis-2021-3-18-22-38.png)
+
 
 
 ### 待更....「绘图ing...」
