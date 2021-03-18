@@ -288,6 +288,16 @@ fmterr: /* Format error. */
 ```c++
 createEnumConfig("appendfsync", NULL, MODIFIABLE_CONFIG, aof_fsync_enum, server.aof_fsync, AOF_FSYNC_EVERYSEC, NULL, NULL),
 ```
+##### appendfsync取值
+
+```c++
+configEnum aof_fsync_enum[] = {
+    {"everysec", AOF_FSYNC_EVERYSEC}, 每秒
+    {"always", AOF_FSYNC_ALWAYS}, 每个操作
+    {"no", AOF_FSYNC_NO}, 由操作系统决定何时同步
+    {NULL, 0}
+};
+```
 
 ##### aof_fsync_enum哪里用到了？
 
