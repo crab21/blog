@@ -1,7 +1,7 @@
 ---
 title: 「43」Redis AOF持久化
 date: '2021/03/17 22:10:17'
-updated: '2021/03/17 22:10:17'
+updated: '2021/03/18 23:10:17'
 keywords: 'Git'
 tags:
   - Redis
