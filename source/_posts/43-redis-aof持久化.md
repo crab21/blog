@@ -306,6 +306,21 @@ configEnum aof_fsync_enum[] = {
 ##### 流程图:
 ![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/redis-2021-3-18-22-38.png)
 
+#### aof和RDB混用的情况
+
+##### 配置项:
+
+```go
+aof-use-rdb-preamble  true/false
+
+config.c配置:
+
+createBoolConfig("aof-use-rdb-preamble", NULL, MODIFIABLE_CONFIG, server.aof_use_rdb_preamble, 1, NULL, NULL),
+```
+
+##### 流程图:
+
+![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/redis-2021-03-21-23-34.png)
 
 
 ### 待更....「绘图ing...」
