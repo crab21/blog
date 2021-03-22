@@ -1,7 +1,7 @@
 ---
 title: 「43」Redis AOF持久化
 date: '2021/03/17 22:10:17'
-updated: '2021/03/18 23:10:17'
+updated: '2021/03/21 23:10:17'
 keywords: 'Git'
 tags:
   - Redis
@@ -323,4 +323,26 @@ createBoolConfig("aof-use-rdb-preamble", NULL, MODIFIABLE_CONFIG, server.aof_use
 ![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/redis-2021-03-21-23-34.png)
 
 
-### 待更....「绘图ing...」
+
+
+#### aof文件如何“高效”持久化
+
+##### 如何持久化到硬盘？「flushAppendOnlyFile」
+
+```c++
+flushAppendOnlyFile函数
+
+说明：
+
+ Write the append only file buffer on disk.
+```
+
+##### 流程图：
+![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/redis2021-3-22-23-47.png)
+
+
+### Todo
+
+- [ ] [aof和rdb多维度比较]
+
+### End
