@@ -338,7 +338,7 @@ flushAppendOnlyFile函数
 ```
 
 ##### 流程图：
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/redis2021-3-22-23-47.png)
+![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/acsz8-d5ehw.webp)
 
 
 ### Todo
