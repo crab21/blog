@@ -3,7 +3,7 @@ title: '「18」GPM 初识/设计'
 date: '2020/11/14 13:09:17'
 updated: '2020/11/14 13:09:17'
 keywords: 'GPM,Go,Go调度器,Go资源调度器'
-top: true
+top: false
 tags:
   - Go
   - GPM
