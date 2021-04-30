@@ -34,6 +34,10 @@ chan在Go中很常用，平时用的不少，但是总是没用的完整，
 
 ![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/chanrecv.png)
 
+### closed过程
+
+![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/closed.png)
+
 ### summary
 
 ![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/summary.png)
