@@ -19,6 +19,8 @@ mathjax: true
 * osinit  os系统初始化
 * schedinit 调度初始化
 
+<!--more-->
+
 ![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210506_105845.png)
 
 
