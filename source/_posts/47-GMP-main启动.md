@@ -1,5 +1,5 @@
 ---
-title: 「47」GMP main启动
+title: 「47」GPM main启动
 date: 2021/05/05 21:32:25
 updated: '2021/05/05 21:33:17'
 keywords: 'Go,GPM,G0,M0'
@@ -23,7 +23,35 @@ mathjax: true
 
 ![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210505_094951.png)
 
+
 <!--more-->
+
+### 搞一个简单的main函数看下汇编：
+
+#### Main函数
+```go
+package main
+
+import "fmt"
+
+func main() {
+	fmt.Println("hello world")
+}
+
+```
+
+#### 汇编结果
+![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210506_111747.png)
+
+
+### 汇编代码定义：
+
+* 全局：
+![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210506_112649.png)
+
+* 入口：
+![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210506_122959.png)
+
 
 ### rt0_go函数：
 
@@ -194,4 +222,9 @@ ok:
 
 ### ➡️➡️[👋mstart作用](https://blog.imrcrab.com/archives/392d66f0.html#mstart)
 
-### 待更新...
+
+
+### 大体流程：
+![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210506_013950.png)
+
+### END
