@@ -1,7 +1,7 @@
 ---
 title: 「47」GPM main启动
 date: 2021/05/05 21:32:25
-updated: '2021/05/05 21:33:17'
+updated: '2021/05/06 20:33:17'
 keywords: 'Go,GPM,G0,M0'
 tags:
   - GPM
@@ -43,6 +43,9 @@ func main() {
 #### 汇编结果
 ![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210506_111747.png)
 
+
+### 大体流程：
+![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210506_013950.png)
 
 ### 汇编代码定义：
 
@@ -226,7 +229,6 @@ ok:
 
 
 
-### 大体流程：
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210506_013950.png)
+
 
 ### END
