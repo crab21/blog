@@ -46,10 +46,12 @@ func main() {
 
 ### 汇编代码定义：
 
-* 全局：
+* 全局：[👉🏻](https://github.com/golang/go/blob/release-branch.go1.14/src/runtime/asm_amd64.s#L236)
+
 ![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210506_112649.png)
 
-* 入口：
+* 入口：[👉🏻](https://github.com/golang/go/blob/release-branch.go1.14/src/runtime/asm_amd64.s#L22)
+
 ![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210506_122959.png)
 
 
