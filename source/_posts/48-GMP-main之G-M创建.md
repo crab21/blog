@@ -164,6 +164,11 @@ func schedinit() {
 ```
 
 ### 关于gomaxprocs最大值
+#### [👉👉Go 1.8及以前](https://github.com/golang/go/blob/release-branch.go1.8/src/runtime/runtime2.go#L533)
+
+>最大为256
+
+![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/ico/clipboard_20210507_102912.png)
 
 #### [👉👉Go 1.9中](https://github.com/golang/go/blob/release-branch.go1.9/src/runtime/runtime2.go#L523)
 
