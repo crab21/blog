@@ -1,7 +1,7 @@
 ---
 title: 「48」GMP main之G&M创建
 date: 2021/05/06 21:55:30
-updated: '2021/05/06 21:56:17'
+updated: '2021/05/07 07:56:17'
 keywords: 'Go,GPM,G0,M0'
 tags:
   - GPM
@@ -30,7 +30,7 @@ mathjax: true
 
 >getpid()获取当前的proc的id号，赋值给当前g->m.procid
 
-### 【call 👉👉schedinit函数](https://github.com/golang/go/blob/release-branch.go1.14/src/runtime/proc.go#L532)
+### [call 👉👉schedinit函数](https://github.com/golang/go/blob/release-branch.go1.14/src/runtime/proc.go#L532)
 
 
 ```go
