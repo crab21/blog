@@ -1,11 +1,11 @@
 ---
-title: 「49」GPM runtime操作「持续更新」
+title: 「49」Go runtime操作「持续更新」
 date: 2021/05/06 21:55:30
-updated: '2021/05/07 22:56:17'
+updated: '2021/05/08 22:56:17'
 keywords: 'Go,GPM,G0,M0'
 top: true
 tags:
-  - GPM
+  - Runtime
   - Day
   - Go
   - Go源码
@@ -66,7 +66,7 @@ _defer		*_defer
 m     		 *m
 // goid序号
 goid		 int64
-// 竞争关系 
+// 抢占关系 
 preempt		 bool
 // 等待的队列
 waiting		 *sudog
@@ -103,12 +103,44 @@ m 		*m
 timerslock mutex
 timers []*timer
 numTimers uint32
-// 竞争关系
+// 抢占关系
 preempt bool
 ```
 
 #### [👉👉_defer](https://github.com/golang/go/blob/release-branch.go1.14/src/runtime/runtime2.go#L865)
+```go
+	...
+	fn        *funcval // can be nil for open-coded defers
+	_panic    *_panic  // panic that is running defer
+	link      *_defer
+	...
+```
 
 #### [👉👉_panic](https://github.com/golang/go/blob/release-branch.go1.14/src/runtime/runtime2.go#L903)
+
+```go
+// A _panic holds information about an active panic.
+//
+// A _panic value must only ever live on the stack.
+//
+// The argp and link fields are stack pointers, but don't need special
+// handling during stack growth: because they are pointer-typed and
+// _panic values only live on the stack, regular stack pointer
+// adjustment takes care of them.
+type _panic struct {
+	// function
+	argp      unsafe.Pointer // pointer to arguments of deferred call run during panic; cannot move - known to liblink
+	// 参数
+	arg       interface{}    // argument to panic
+	// link to _panic
+	link      *_panic        // link to earlier panic
+	pc        uintptr        // where to return to in runtime if this panic is bypassed
+	sp        unsafe.Pointer // where to return to in runtime if this panic is bypassed
+	// recover标志
+	recovered bool           // whether this panic is over
+	aborted   bool           // the panic was aborted
+	goexit    bool
+}
+```
 
 ### 持续更新...🧞‍♂️🧞‍♂️🧞‍♂️🧞‍♂️🧞‍♂️🧞‍♂️🧞‍♂️🧞‍♂️🧞‍♂️🧞‍♂️🧞‍♂️
