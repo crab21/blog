@@ -227,4 +227,4 @@ if nprocs <= int32(cap(allp)) {
 ### GOMAXPROCS最大值？？
 >所以GOMAXPROCS最大为: int32(^uint32(0) >> 1)-31
 
-### 🔚🔚🔚
+### END
