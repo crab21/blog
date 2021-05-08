@@ -412,7 +412,8 @@ font:
   enable: true
 
   # Uri of fonts host, e.g. https://fonts.googleapis.com (Default).
-  host: //blog.imrcrab.com/css/robofont.css
+  #host: //blog.imrcrab.com/css/robofont.css
+  host: //blog.imrcrab.com/css/combine.css
   size: 12px
 
   # Font options:
@@ -938,7 +939,8 @@ vendors:
   # fancybox_css: //cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css
   jquery: //blog.imrcrab.com/js/fancybox.js
   fancybox: //blog.imrcrab.com/js/fancybox.mini.js
-  fancybox_css: //blog.imrcrab.com/css/fancybox.css
+  #fancybox_css: //blog.imrcrab.com/css/fancybox.css
+  fancybox_css: //blog.imrcrab.com/css/combine.css
 
   # Medium-zoom
   # mediumzoom: //cdn.jsdelivr.net/npm/medium-zoom@1/dist/medium-zoom.min.js

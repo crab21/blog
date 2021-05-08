@@ -1,6 +1,6 @@
 ---
 title: 「49」Go runtime操作「持续更新」
-date: 2021/05/06 21:55:30
+date: '2021/05/06 21:55:30'
 updated: '2021/05/08 22:56:17'
 keywords: 'Go,GPM,G0,M0'
 top: true
@@ -10,6 +10,7 @@ tags:
   - Go
   - Go源码
 mathjax: true
+abbrlink: 3b137bd0
 ---
 
 主要从以下几个方面：

@@ -1,6 +1,6 @@
 ---
 title: 「48」GMP main之G&M创建
-date: 2021/05/06 21:55:30
+date: '2021/05/06 21:55:30'
 updated: '2021/05/07 07:56:17'
 keywords: 'Go,GPM,G0,M0'
 tags:
@@ -9,6 +9,7 @@ tags:
   - Go
   - Go源码
 mathjax: true
+abbrlink: a90dcb34
 ---
 
 前面说了GPM的main函数启动[👉👉👉「47」GPM main启动](https://blog.imrcrab.com/archives/66b6223a.html#more)，这次看下这个启动过程中如何创建第一个M和G的操作。
@@ -227,4 +228,4 @@ if nprocs <= int32(cap(allp)) {
 ### GOMAXPROCS最大值？？
 >所以GOMAXPROCS最大为: int32(^uint32(0) >> 1)-31
 
-### 🔚🔚🔚
+### END
