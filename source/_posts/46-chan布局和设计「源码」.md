@@ -9,6 +9,7 @@ tags:
   - Go
   - Go源码
 mathjax: true
+abbrlink: a0547b09
 ---
 
 chan在Go中很常用，平时用的不少，但是总是没用的完整，

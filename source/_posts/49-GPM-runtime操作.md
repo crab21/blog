@@ -1,7 +1,7 @@
 ---
 title: 「49」Go runtime操作「持续更新」
-date: 2021/05/06 21:55:30
-updated: '2021/05/08 22:56:17'
+date: '2021/05/06 21:55:30'
+updated: '2021/05/07 22:56:17'
 keywords: 'Go,GPM,G0,M0'
 top: true
 tags:
@@ -10,6 +10,7 @@ tags:
   - Go
   - Go源码
 mathjax: true
+abbrlink: 3b137bd0
 ---
 
 主要从以下几个方面：
@@ -51,11 +52,11 @@ var (
 )
 ```
 
-#### [👉👉sudog](https://github.com/golang/go/blob/release-branch.go1.14/src/runtime/runtime2.go#L332)
+#### [sudog](https://github.com/golang/go/blob/release-branch.go1.14/src/runtime/runtime2.go#L332)
 
 **waiting list**
 
-#### [👉👉g](https://github.com/golang/go/blob/release-branch.go1.14/src/runtime/runtime2.go#L395)
+#### [g](https://github.com/golang/go/blob/release-branch.go1.14/src/runtime/runtime2.go#L395)
 
 ```go
 // panic结构
@@ -77,7 +78,7 @@ timer		 *timer
 ...
 ```
 
-#### [👉👉m](https://github.com/golang/go/blob/release-branch.go1.14/src/runtime/runtime2.go#L477)
+#### [m](https://github.com/golang/go/blob/release-branch.go1.14/src/runtime/runtime2.go#L477)
 
 ```go
 g0 		*g
@@ -93,7 +94,7 @@ alllink *m
 
 ```
 
-#### [👉👉p](https://github.com/golang/go/blob/release-branch.go1.14/src/runtime/runtime2.go#L556)
+#### [p](https://github.com/golang/go/blob/release-branch.go1.14/src/runtime/runtime2.go#L556)
 
 ```go
 id		int32
@@ -107,7 +108,7 @@ numTimers uint32
 preempt bool
 ```
 
-#### [👉👉_defer](https://github.com/golang/go/blob/release-branch.go1.14/src/runtime/runtime2.go#L865)
+#### [_defer](https://github.com/golang/go/blob/release-branch.go1.14/src/runtime/runtime2.go#L865)
 ```go
 	...
 	fn        *funcval // can be nil for open-coded defers
@@ -115,9 +116,7 @@ preempt bool
 	link      *_defer
 	...
 ```
-
-#### [👉👉_panic](https://github.com/golang/go/blob/release-branch.go1.14/src/runtime/runtime2.go#L903)
-
+#### [_panic](https://github.com/golang/go/blob/release-branch.go1.14/src/runtime/runtime2.go#L903)
 ```go
 // A _panic holds information about an active panic.
 //
@@ -142,5 +141,4 @@ type _panic struct {
 	goexit    bool
 }
 ```
-
-### 持续更新...🧞‍♂️🧞‍♂️🧞‍♂️🧞‍♂️🧞‍♂️🧞‍♂️🧞‍♂️🧞‍♂️🧞‍♂️🧞‍♂️🧞‍♂️
+### 持续更新...

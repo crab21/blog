@@ -1,6 +1,6 @@
 ---
 title: 「48」GMP main之G&M创建
-date: 2021/05/06 21:55:30
+date: '2021/05/06 21:55:30'
 updated: '2021/05/07 07:56:17'
 keywords: 'Go,GPM,G0,M0'
 tags:
@@ -9,9 +9,10 @@ tags:
   - Go
   - Go源码
 mathjax: true
+abbrlink: a90dcb34
 ---
 
-前面说了GPM的main函数启动[👉👉👉「47」GPM main启动](https://blog.imrcrab.com/archives/66b6223a.html#more)，这次看下这个启动过程中如何创建第一个M和G的操作。
+前面说了GPM的main函数启动[👉「47」GPM main启动](https://blog.imrcrab.com/archives/66b6223a.html#more)，这次看下这个启动过程中如何创建第一个M和G的操作。
 
 在main函数汇编的入口地方call这么几个函数：
 
@@ -24,13 +25,13 @@ mathjax: true
 ![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210506_105845.png)
 
 
-### [call 👉👉osinit函数](https://github.com/golang/go/blob/release-branch.go1.14/src/runtime/os_plan9.go#L291)
+### [call osinit函数](https://github.com/golang/go/blob/release-branch.go1.14/src/runtime/os_plan9.go#L291)
 
 ![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210506_105719.png)
 
 >getpid()获取当前的proc的id号，赋值给当前g->m.procid
 
-### [call 👉👉schedinit函数](https://github.com/golang/go/blob/release-branch.go1.14/src/runtime/proc.go#L532)
+### [call schedinit函数](https://github.com/golang/go/blob/release-branch.go1.14/src/runtime/proc.go#L532)
 
 
 ```go
@@ -164,19 +165,19 @@ func schedinit() {
 ```
 
 ### 关于gomaxprocs最大值
-#### [👉👉Go 1.8及以前](https://github.com/golang/go/blob/release-branch.go1.8/src/runtime/runtime2.go#L533)
+#### [Go 1.8及以前](https://github.com/golang/go/blob/release-branch.go1.8/src/runtime/runtime2.go#L533)
 
 >最大为256
 
 ![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/ico/clipboard_20210507_102912.png)
 
-#### [👉👉Go 1.9中](https://github.com/golang/go/blob/release-branch.go1.9/src/runtime/runtime2.go#L523)
+#### [Go 1.9中](https://github.com/golang/go/blob/release-branch.go1.9/src/runtime/runtime2.go#L523)
 
 >最大为1024
 
 ![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210506_115200.png)
 
-#### [Go 1.9以后「👉👉1.14为例」](https://github.com/golang/go/blob/release-branch.go1.14/src/runtime/runtime2.go#L1018)
+#### [Go 1.9以后「1.14为例」](https://github.com/golang/go/blob/release-branch.go1.14/src/runtime/runtime2.go#L1018)
 
 >最大为int32的最大值：
 ![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210507_121640.png)
@@ -227,4 +228,4 @@ if nprocs <= int32(cap(allp)) {
 ### GOMAXPROCS最大值？？
 >所以GOMAXPROCS最大为: int32(^uint32(0) >> 1)-31
 
-### END
+### END

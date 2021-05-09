@@ -1,6 +1,6 @@
 ---
 title: 「47」GPM main启动
-date: 2021/05/05 21:32:25
+date: '2021/05/05 21:32:25'
 updated: '2021/05/06 20:33:17'
 keywords: 'Go,GPM,G0,M0'
 tags:
@@ -9,6 +9,7 @@ tags:
   - Go
   - Go源码
 mathjax: true
+abbrlink: 66b6223a
 ---
 
 
