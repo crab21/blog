@@ -2,11 +2,12 @@
 title: 「43」Redis AOF持久化
 date: '2021/03/17 22:10:17'
 updated: '2021/03/22 23:10:17'
-keywords: 'Git'
+keywords: Git
 tags:
   - Redis
   - Day
 mathjax: true
+abbrlink: 777dd730
 ---
 
 

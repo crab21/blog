@@ -2,11 +2,12 @@
 title: 「42」Git Log常用场景
 date: '2021/03/09 08:10:17'
 updated: '2021/03/09 08:10:17'
-keywords: 'Git'
+keywords: Git
 tags:
   - Git
   - Day
 mathjax: true
+abbrlink: a02f04ba
 ---
 
 ## 前序：
