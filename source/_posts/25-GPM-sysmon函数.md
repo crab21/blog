@@ -322,8 +322,25 @@ func wakeScavenger() {
 ![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/ico/clipboard_20210510_014127.png)
 
 关于这个第一点的说法是建立在18年Go 1.11的时候，是没有问题，大家按不同的版本，变化的来看待。
-
+##### Go 1.11
 附上关于5分钟回收的链接[👉🏻👉🏻Go 1.11 proc.go](https://github.com/golang/go/blob/release-branch.go1.11/src/runtime/proc.go#L4328)
+
+调用函数：
+
+![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/ico/clipboard_20210510_020832.png)
+
+##### Go 1.14
+> scavengeAll替代 scavenge函数
+
+
+[👉🏻scavengeALL](https://github.com/golang/go/blob/release-branch.go1.14/src/runtime/mheap.go#L1424)
+
+![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/ico/clipboard_20210510_021037.png)
+
+
+调用地方 [👉🏻runtime debug freeosMemory](https://github.com/golang/go/blob/5cf057ddedfbb149b71c85ec86050431dd6b2d9d/src/runtime/mheap.go#L1445)：
+
+![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/ico/clipboard_20210510_021423.png)
 
 
 ### 参考：
