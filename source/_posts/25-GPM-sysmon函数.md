@@ -17,7 +17,12 @@ abbrlink: c770fe49
 
 这次主要是来学学这个sysmon，系统监控调度的逻辑。
 <!--more-->
+### Go version
+
+>go 1.14
+
 ### 前序
+
 
 在深入之前呢，先对下面这些变量有个概念，后续提到也就不陌生了。「摘抄自sysmon函数」
 
@@ -302,5 +307,25 @@ func wakeScavenger() {
 		}
 ```
 
-### 待续....
+### 总结下干了什么？？
 
+* 1、强制垃圾回收。
+* 2、将长时间未处理的netpoll结果添加到任务队列。
+* 3、对长时间运行G，进行retake夺P的调度。
+* 4、回收syscall长时间阻塞的P。
+
+
+### 关于资料参考更正：
+
+#### 参考：
+
+![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/ico/clipboard_20210510_014127.png)
+
+关于这个第一点的说法是建立在18年Go 1.11的时候，是没有问题，大家按不同的版本，变化的来看待。
+
+附上关于5分钟回收的链接[👉🏻👉🏻Go 1.11 proc.go](https://github.com/golang/go/blob/release-branch.go1.11/src/runtime/proc.go#L4328)
+
+
+### 参考：
+
+[Go学习整理笔记](https://studygolang.com/articles/12112)
