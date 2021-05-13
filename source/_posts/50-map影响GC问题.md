@@ -1,6 +1,6 @@
 ---
 title: 「50」Map GC问题
-date: 2021/05/12 22:24:19
+date: '2021/05/12 22:24:19'
 updated: '2021/05/12 22:56:17'
 keywords: 'Go,Map'
 top: false
@@ -10,6 +10,7 @@ tags:
   - Go
   - Go源码
 mathjax: true
+abbrlink: af25fb6c
 ---
 
 问题的起因:[「29」map delete Mem不释放问题](https://blog.imrcrab.com/archives/2de36dd7.html)
