@@ -165,7 +165,7 @@ func schedinit() {
 ```
 #### 函数分析
 
-{% pdf https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/GPM%20schedinit%E5%87%BD%E6%95%B0.pdf %}
+{% pdf https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/gpmschedinit.pdf %}
 
 ### 关于gomaxprocs最大值
 #### [Go 1.8及以前](https://github.com/golang/go/blob/release-branch.go1.8/src/runtime/runtime2.go#L533)
