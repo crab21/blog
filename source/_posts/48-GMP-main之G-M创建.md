@@ -165,7 +165,21 @@ func schedinit() {
 ```
 #### 函数分析
 
-{% pdf https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/gpmschedinit.pdf %}
+##### schedinit
+
+![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210515_102713.png)
+
+##### worldstop
+
+![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210515_102811.png)
+
+##### stackinit
+
+![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210515_102849.png)
+
+##### sigsave
+
+![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210515_102930.png)
 
 ### 关于gomaxprocs最大值
 #### [Go 1.8及以前](https://github.com/golang/go/blob/release-branch.go1.8/src/runtime/runtime2.go#L533)
