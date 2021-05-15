@@ -12,12 +12,12 @@ mathjax: true
 abbrlink: a90dcb34
 ---
 
-前面说了GPM的main函数启动[👉「47」GPM main启动](https://blog.imrcrab.com/archives/66b6223a.html#more)，这次看下这个启动过程中如何创建第一个M和G的操作。
+前面说了GPM的main函数启动[「47」GPM main启动](https://blog.imrcrab.com/archives/66b6223a.html#more)，这次看下这个启动过程中如何创建第一个M和G的操作。
 
 在main函数汇编的入口地方call这么几个函数：
 
 * args 参数设定
-* osinit  os系统初始化
+* osinit os系统初始化
 * schedinit 调度初始化
 
 <!--more-->
@@ -165,7 +165,7 @@ func schedinit() {
 ```
 #### 函数分析
 
-{% https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/GPM%20schedinit%E5%87%BD%E6%95%B0.pdf %}
+{% pdf https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/GPM%20schedinit%E5%87%BD%E6%95%B0.pdf %}
 
 ### 关于gomaxprocs最大值
 #### [Go 1.8及以前](https://github.com/golang/go/blob/release-branch.go1.8/src/runtime/runtime2.go#L533)

@@ -1,6 +1,6 @@
 ---
 title: 「51」getg()函数实现源码
-date: 2021/05/13 22:30:30
+date: '2021/05/13 22:30:30'
 updated: '2021/05/13 23:20:17'
 keywords: 'Go,GPM,G0,M0'
 tags:
@@ -9,6 +9,7 @@ tags:
   - Go
   - Go源码
 mathjax: true
+abbrlink: 82f0ffe7
 ---
 
 在学习[👉🏾schedinit()函数](https://blog.imrcrab.com/archives/a90dcb34.html#call-schedinit%E5%87%BD%E6%95%B0)过程中发现有这个么函数：
