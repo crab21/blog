@@ -1,7 +1,7 @@
 ---
 title: 「48」GMP main之G&M创建
 date: '2021/05/06 21:55:30'
-updated: '2021/05/07 07:56:17'
+updated: '2021/05/15 18:56:17'
 keywords: 'Go,GPM,G0,M0'
 tags:
   - GPM
@@ -163,6 +163,9 @@ func schedinit() {
 11、GOMAXPROCS设置
 12、cgo等初始化
 ```
+#### 函数分析
+
+{% https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/GPM%20schedinit%E5%87%BD%E6%95%B0.pdf %}
 
 ### 关于gomaxprocs最大值
 #### [Go 1.8及以前](https://github.com/golang/go/blob/release-branch.go1.8/src/runtime/runtime2.go#L533)

@@ -45,6 +45,11 @@ hexo安装及其第三方插件包下载总结，以便后续CI一次到位。
  sudo npm install --save hexo-helper-live2d 
  npm audit fix
  sudo npm install --save live2d-widget-model-z16
+
+ //pdf:
+npm install --save hexo-pdf
+npm audit fix
+
 ```
 
 
