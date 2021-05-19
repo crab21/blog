@@ -1,7 +1,7 @@
 ---
 title: 「49」Go runtime操作「持续更新」
 date: '2021/05/06 21:55:30'
-updated: '2021/05/07 22:56:17'
+updated: '2021/05/19 21:56:17'
 keywords: 'Go,GPM,G0,M0'
 top: true
 tags:
@@ -52,9 +52,77 @@ var (
 )
 ```
 
+
+#### G的状态：
+
+```go
+_Gidle
+_Grunnable
+_Grunning
+_Gsyscall
+_Gwaiting
+_Gdead
+_Gcopystack
+_Gpreempted
+_Gscan = 0x1000
+_Gscanrunnable
+_Gscansyscall
+_Gscanwaiting
+_Gscanpreempted
+```
+
+#### P的状态：
+
+```go
+_Pidle
+_Prunning
+_Psyscall
+_Pgcstop
+_Pdead
+```
+
 #### [sudog](https://github.com/golang/go/blob/release-branch.go1.14/src/runtime/runtime2.go#L332)
 
-**waiting list**
+```go
+// sudog represents a g in a wait list, such as for sending/receiving
+// on a channel.
+//
+// sudog is necessary because the g ↔ synchronization object relation
+// is many-to-many. A g can be on many wait lists, so there may be
+// many sudogs for one g; and many gs may be waiting on the same
+// synchronization object, so there may be many sudogs for one object.
+//
+// sudogs are allocated from a special pool. Use acquireSudog and
+// releaseSudog to allocate and free them.
+type sudog struct {
+	// The following fields are protected by the hchan.lock of the
+	// channel this sudog is blocking on. shrinkstack depends on
+	// this for sudogs involved in channel ops.
+	// 当前处于goroutine
+	g *g 
+
+	// isSelect indicates g is participating in a select, so
+	// g.selectDone must be CAS'd to win the wake-up race.
+	// 标记select
+	isSelect bool
+	next     *sudog
+	prev     *sudog
+	elem     unsafe.Pointer // data element (may point to stack)
+
+	// The following fields are never accessed concurrently.
+	// For channels, waitlink is only accessed by g.
+	// For semaphores, all fields (including the ones above)
+	// are only accessed when holding a semaRoot lock.
+
+	acquiretime int64
+	releasetime int64
+	ticket      uint32
+	parent      *sudog // semaRoot binary tree
+	waitlink    *sudog // g.waiting list or semaRoot
+	waittail    *sudog // semaRoot
+	c           *hchan // channel
+}
+```
 
 #### [g](https://github.com/golang/go/blob/release-branch.go1.14/src/runtime/runtime2.go#L395)
 
