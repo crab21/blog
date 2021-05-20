@@ -15,7 +15,10 @@ mathjax: true
 
 ### DFS问题
 
-#### [👉🏿问题描述：#39](https://leetcode-cn.com/problems/combination-sum/)
+
+#### 无重复数组总和问题[👉🏿#39](https://leetcode-cn.com/problems/combination-sum/)
+
+##### [👉🏿问题描述：#39](https://leetcode-cn.com/problems/combination-sum/)
 
 ```go
 给定一个无重复元素的数组 candidates 和一个目标数 target ，找出 candidates 中所有可以使数字和为 target 的组合。
@@ -46,10 +49,18 @@ candidates 中的数字可以无限制重复被选取。
 ```
 
 
-#### 解决思路
+##### 解决思路
 
 
-#### coding：
+![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210520_113008.png)
+
+![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210520_113224.png)
+
+![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210520_113257.png)
+
+![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210520_113320.png)
+
+##### coding：
 
 ```go
 package main
