@@ -87,6 +87,7 @@ func casgstatus(gp *g, oldval, newval uint32) {
 
 	// loop if gp->atomicstatus is in a scan state giving
 	// GC time to finish and change the state to oldval.
+	// 等待GC完成后变成_Grunning，然后再改变值，变为_Grunnable
 	for i := 0; !atomic.Cas(&gp.atomicstatus, oldval, newval); i++ {
 		if oldval == _Gwaiting && gp.atomicstatus == _Grunnable {
 			throw("casgstatus: waiting for Gwaiting but is Grunnable")
@@ -108,6 +109,41 @@ func casgstatus(gp *g, oldval, newval uint32) {
 
 #### dropg
 
+```go
+// dropg removes the association between m and the current goroutine m->curg (gp for short).
+// Typically a caller sets gp's status away from Grunning and then
+// immediately calls dropg to finish the job. The caller is also responsible
+// for arranging that gp will be restarted using ready at an
+// appropriate time. After calling dropg and arranging for gp to be
+// readied later, the caller can do other work but eventually should
+// call schedule to restart the scheduling of goroutines on this m.
+func dropg() {
+	_g_ := getg()
+
+	// 解绑M
+	setMNoWB(&_g_.m.curg.m, nil)
+	// 解绑G
+	setGNoWB(&_g_.m.curg, nil)
+}
+```
+
 #### globrunqput
 
+```go
+// Put gp on the global runnable queue.
+// Sched must be locked.
+// May run during STW, so write barriers are not allowed.
+//go:nowritebarrierrec
+func globrunqput(gp *g) {
+	//将G放回全局队列中
+	sched.runq.pushBack(gp)
+	sched.runqsize++
+}
+
+```
+
 #### schedule
+
+##### 作用：
+
+>find a runnable goroutine and execute it.
