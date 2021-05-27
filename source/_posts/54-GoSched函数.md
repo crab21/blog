@@ -49,7 +49,7 @@ func goschedImpl(gp *g) {
 
 >一个个看看，GMP到底如果配合调度的?
 
-#### readgstatus
+#### 👉🏿 readgstatus
 
 ```go
 
@@ -65,7 +65,7 @@ func readgstatus(gp *g) uint32 {
 
 ![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210526_052742.png)
 
-#### casgstatus
+#### 👉🏿 casgstatus
 
 ```go
 // If asked to move to or from a Gscanstatus this will throw. Use the castogscanstatus
@@ -107,7 +107,7 @@ func casgstatus(gp *g, oldval, newval uint32) {
 }
 ```
 
-#### dropg
+#### 👉🏿 dropg
 
 ```go
 // dropg removes the association between m and the current goroutine m->curg (gp for short).
@@ -127,7 +127,7 @@ func dropg() {
 }
 ```
 
-#### globrunqput
+#### 👉🏿 globrunqput
 
 ```go
 // Put gp on the global runnable queue.
@@ -142,7 +142,7 @@ func globrunqput(gp *g) {
 
 ```
 
-#### schedule
+#### 👉🏿 schedule
 
 ##### 作用：
 
