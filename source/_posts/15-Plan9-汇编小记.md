@@ -1,7 +1,7 @@
 ---
 title: 「15」Plan9 汇编小记
 date: '2020/10/09 13:47:39'
-updated: '2021/02/28 20:47:39'
+updated: '2021/06/08 00:07:39'
 keywords: '汇编,Go,Plan9'
 top: false
 sticky: 3
@@ -74,5 +74,16 @@ MOVSS: 移动单精度浮点数
 [MOVSS](https://c9x.me/x86/html/file_module_x86_id_205.html)
 [Intel汇编指令查询](https://www.felixcloutier.com/x86/index.html)
 [Plan9查询](https://plan9.io/sources/contrib/ericvh/go-plan9/src/pkg/runtime/slice.c)
+[指令查询](http://68k.hax.com/)
+[plan9 doc](https://9p.io/sys/doc/)
+
+####  LEA和MOV
+LEA：操作地址
+MOV：操作数据
+
+
+例子：
+LEAQ 8(SP), SI // argv 把 8(SP)地址放入 SI 寄存器中
+MOVQ 0(SP), DI // argc 把0(SP)内容放入 DI 寄存器中
 
 #### 持续更新....
