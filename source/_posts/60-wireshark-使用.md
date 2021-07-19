@@ -52,7 +52,65 @@ tags:
 
 #### ip
 
+##### ip.addr
+>addr:127.0.0.1     http请求    port:8001
+![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210719_105408.png)
+
+##### ip.host
+
+>官方解释：
+
+![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210719_110147.png)
+
+>eg：
+![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210719_110319.png)
+
+##### ip.proto
+
+>[→→→→官方文档：](https://en.wikipedia.org/wiki/List_of_IP_protocol_numbers)
+
+![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210719_110553.png)
+
+>eg: ICMP
+
+![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210719_110643.png)
+
+>eg: UDP
+
+![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210719_111049.png)
+
+##### ip.version
+
+>官方文档
+![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210719_113128.png)
+
+>eg: IPV4
+
+![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210719_113100.png)
+
+##### ip.ttl
+
+>eg:
+
+![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210719_113728.png)
+
 #### tcp
+
+##### tcp.dstport
+
+>eg: 9026
+![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210719_114812.png)
+
+##### tcp.port
+
+>eg: 9026
+
+![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210719_114949.png)
+
+##### tcp.stream
+
+>eg: ==0
+![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210720_120621.png)
 
 #### tls
 
