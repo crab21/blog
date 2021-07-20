@@ -114,6 +114,32 @@ tags:
 
 #### tls
 
+##### tls.alert_message
+>[👉🏻👉🏻官方参考值](https://datatracker.ietf.org/doc/html/rfc5246#appendix-A.3)
+
+![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210720_051727.png)
+
+>eg:
+![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210720_052127.png)
+
+##### tls.compress_certificate.algorithm
+
+>[👉🏻👉🏻官方参考值](https://datatracker.ietf.org/doc/html/rfc5246#section-7.4.1.4.1)
+
+![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210720_051250.png)
+
+
+>eg:
+
+![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210720_050807.png)
+
+
+##### tls.handshake.version
+
+>[👉🏿👉🏿官方参考](https://tlsfingerprint.io/top/versions)
+
+![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210720_052921.png)
+
 ### Import/Export package
 
 >导入和导出方法异曲同工
@@ -142,4 +168,32 @@ tags:
 
 ### Others
 
+
+#### "TCP segment of reassembled PDU"
+
+![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210720_040500.png)
+
+>关于这个网上有很多种解释，可以自行百度参考[👉🏿👉🏿👉🏿TCP segment of reassembled PDU](https://www.google.com.hk/search?newwindow=1&lei=oHX2YOmaPMiFr7wPj76ViAg&q=tcp%20segment%20of%20a%20reassembled%20pdu%E5%8E%9F%E5%9B%A0&ved=2ahUKEwjp6v7iivHxAhXIwosBHQ9fBYEQsKwBKAF6BAgwEAI&biw=2560&bih=1253)
+
+>关于这个问题，抓包看看，ack是一样的，当前的next sequence number是下一个的sequence number.
+![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210720_041222.png)
+
 ### Reference
+
+* [☞ wireshark官网](https://www.wireshark.org/)
+
+* [→→datatracker](https://datatracker.ietf.org/doc/html/rfc5246#section-7.3)
+
+* [→→micrsoft](https://techcommunity.microsoft.com/t5/iis-support-blog/ssl-tls-alert-protocol-and-the-alert-codes/ba-p/377132)
+
+* [→→tls finger print](https://tlsfingerprint.io/top/versions)
+* [→→tls version](https://tlsfingerprint.io/top/versions)
+* [→→List of IP protocol numbers](https://en.wikipedia.org/wiki/List_of_IP_protocol_numbers)
+
+* [👉🏻 module: tls](https://www.wireshark.org/docs/dfref/t/tls.html)
+* [👉🏻 module: IP](https://www.wireshark.org/docs/dfref/i/ip.html)
+* [👉🏻 module: HTTP](https://www.wireshark.org/docs/dfref/h/http.html)
+
+* [☛ wireshak过滤规则](https://www.cnblogs.com/v1vvwv/p/Wireshark-filtering-rules.html)
+
+* [☛ wireshark基本用法及过滤规则](https://www.jianshu.com/p/d4d7ad6cc95f)
