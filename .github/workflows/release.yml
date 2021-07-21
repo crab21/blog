@@ -31,5 +31,5 @@ jobs:
           hexo d
       - name: Upload File To COS
         run: |
-          chmod +x ./cosUpload
-          ./cosUpload --utilMode cosUpload --Path ./public --SecretID ${{ secrets.COS_TENCENT_ID }} --SecretKey ${{ secrets.COS_TENCENT_KEY }} --cosUrl ${{ secrets.COS_UPLOAD_URL }}
+          chmod +x ./cos5upload
+          ./cos5upload  --Path ./public --SecretID ${{ secrets.COS_TENCENT_ID }} --SecretKey ${{ secrets.COS_TENCENT_KEY }} --Region {{ secrets.REGION }} --BucketName {{ secrets.BUCKETNAME }}
