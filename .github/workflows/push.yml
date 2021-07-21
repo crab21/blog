@@ -33,4 +33,4 @@ jobs:
         run: |
           chmod +x ./cosUpload
           ./cosUpload  --utilMode cosUpload --Path ./public --SecretID ${{ secrets.COS_TENCENT_ID }} --SecretKey ${{ secrets.COS_TENCENT_KEY }} --cosUrl ${{ secrets.COS_UPLOAD_URL }} --ExcludeFilePaths css/:js/:lib/:live2dw/:images/
-          ./cosUpload  --utilMode baiduAPI  --apiDomain blog.imrcrab.com --apiFilePath ./public -apiKey ${{secrets.API_BAIDU_TOKEN}}
+          # ./cosUpload  --utilMode baiduAPI  --apiDomain blog.imrcrab.com --apiFilePath ./public -apiKey ${{secrets.API_BAIDU_TOKEN}}
