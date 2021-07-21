@@ -32,5 +32,5 @@ jobs:
       - name: Upload File To COS
         run: |
           cd ./public
-          chmod +x ./cos5upload
+          chmod +x ../cos5upload
           ../cos5upload  --Path ./ --SecretID ${{ secrets.COS_TENCENT_ID }} --SecretKey ${{ secrets.COS_TENCENT_KEY }} --Region ${{ secrets.REGION }} --BucketName ${{ secrets.BUCKETNAME }}
