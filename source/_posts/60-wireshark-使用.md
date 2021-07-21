@@ -120,6 +120,7 @@ tags:
 ![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210720_051727.png)
 
 >eg:
+
 ![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210720_052127.png)
 
 ##### tls.compress_certificate.algorithm
@@ -165,6 +166,31 @@ tags:
 
 
 ### Preferences
+
+#### Resolve IP to {domain name}
+
+>勾选此选项
+
+![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210721_074453.png)
+
+> eg:
+
+![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210721_075010.png)
+
+#### Follow TCP stream
+
+>方式一：
+
+![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210721_075630.png)
+
+>方式二：
+
+![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210721_075943.png)
+
+>任选一个 eg: TCP stream「http stream方式相同，不再演示」
+
+![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210721_080616.png)
+
 
 ### Others
 
