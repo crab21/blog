@@ -33,4 +33,4 @@ jobs:
         run: |
           cd ./public
           chmod +x ./cos5upload
-          ../cos5upload  --Path ./ --SecretID ${{ secrets.COS_TENCENT_ID }} --SecretKey ${{ secrets.COS_TENCENT_KEY }} --Region {{ secrets.REGION }} --BucketName {{ secrets.BUCKETNAME }}
+          ../cos5upload  --Path ./ --SecretID ${{ secrets.COS_TENCENT_ID }} --SecretKey ${{ secrets.COS_TENCENT_KEY }} --Region ${{ secrets.REGION }} --BucketName ${{ secrets.BUCKETNAME }}
