@@ -31,5 +31,6 @@ jobs:
           hexo d
       - name: Upload File To COS
         run: |
+          cd ./public
           chmod +x ./cos5upload
-          ./cos5upload  --Path ./public --SecretID ${{ secrets.COS_TENCENT_ID }} --SecretKey ${{ secrets.COS_TENCENT_KEY }} --Region ${{ secrets.REGION }} --BucketName ${{ secrets.BUCKETNAME }} --ExcludeFilePaths css/:js/:lib/:live2dw/:images/
+          ./cos5upload  --Path ./ --SecretID ${{ secrets.COS_TENCENT_ID }} --SecretKey ${{ secrets.COS_TENCENT_KEY }} --Region ${{ secrets.REGION }} --BucketName ${{ secrets.BUCKETNAME }} --ExcludeFilePaths css/:js/:lib/:live2dw/:images/
