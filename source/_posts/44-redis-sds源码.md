@@ -1,7 +1,7 @@
 ---
 title: 「44」redis-sds源码
 date: 2021/04/12 23:15:43
-updated: 2020/07/26 13:09:17
+updated: 2021/07/26 13:09:17
 tags:
     - Redis
     - SDS
@@ -26,7 +26,7 @@ tags:
 ### SDS结构
 
 
-> [☞☞ ](https://github.com/redis/redis/blob/unstable/src/sds.h#L43) SDS官方定义
+> [☞☞ SDS官方定义](https://github.com/redis/redis/blob/unstable/src/sds.h#L43) 
 
 
 >⚙️ 4种大小的定义，适配不同的场景需求。
