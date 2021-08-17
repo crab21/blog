@@ -95,6 +95,15 @@ hset hello wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
 
 ![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210817_104655.png)
 
+
+* 触发的时机
+
+```go
+1、定时任务。
+2、对dict的find/delete/add等操作时触发。
+```
+
+![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210817_115402.png)
 >具体rehash过程，后续会讲到。
 
 ### ZIPLIST VS HASHTABLE
@@ -103,5 +112,5 @@ todo 数据采集中.....
 
 理论上分析：
 
-ziplist: get操作是 O(N)+1
+ZIPLIST:   get操作是 O(N)+1
 HASHTABLE: get操作是 O(1)
