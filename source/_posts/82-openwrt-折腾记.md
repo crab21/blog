@@ -56,7 +56,7 @@ tags:
 openwrt装好后，直接跑docker命令即可：
 
 ```go
-docker run -itd --restart=always --network=gogo  --name naive95-client -p 10800:10800  naive-client:v0.1.95
+docker run -itd --restart=always --network=gogo -m 300m --kernel-memory 310m --name naive95-client -p 10899:10800 -v /etc/localtime:/etc/localtime  imrcrab/naive-client:v0.1.95.2
 ```
 
 ```markdown
