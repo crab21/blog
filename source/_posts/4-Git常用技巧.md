@@ -1,7 +1,7 @@
 ---
 title: 「4」Git常用技巧
 date: '2020/09/01 19:22:02'
-updated: '2020/11/10 19:22:02'
+updated: '2021/11/18 18:05:19'
 keywords: 'git,git技巧,git常用技巧'
 tags:
   - Git
@@ -267,6 +267,17 @@ git tag -n
 
 git tag按照时间排序
 git tag -n --sort=taggerdate
+
+git tag按照顺序拉
+git tag --sort=-v:refname
+
+git tag 批量删除
+git tag | grep "v" |xargs git tag -d
+
+git tag 批量删除远端
+git show-ref --tag | grep "v1.0"| awk '{print $2}'|xargs git push origin --delete
+
+
 ```
 
 ##### 打Tag
