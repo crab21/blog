@@ -425,4 +425,34 @@ git reset --hard commit_id
 	注意这仅仅是回滚了你的commit，代码依旧在的。
 ```
 
+
+### Git [ ☞ for-each-ref](https://git-scm.com/docs/git-for-each-ref)
+
+>主要用于查看所有的ref历史等信息。
+
+>不废话，上例子
+
+```git
+git for-each-ref --sort=committerdate --format='*** %(refname)%09%(committerdate) *** %(subject)  %09%(upstream) %09 %(authorname)%(authordate)'|tail -n 10
+```
+
+>输出：
+[这里显示最后10次信息]
+
+```git
+❯ git for-each-ref --sort=committerdate --format='*** %(refname)%09%(committerdate) *** %(subject)  %09%(upstream) %09 %(authorname)%(authordate)'|tail -n 10
+*** refs/tags/v0.1.0.4   *** v0.1.0.4            
+*** refs/tags/v0.1.0.5   *** v0.1.0.5            
+*** refs/tags/v0.1.0.6   *** v0.1.0.6            
+*** refs/tags/v0.1.0.7   *** v0.1.0.7            
+*** refs/tags/v0.1.0.8   *** v0.1.0.8            
+*** refs/tags/v0.1.0.9   *** v0.1.0.9            
+*** refs/remotes/origin/server  Sun Dec 13 11:41:57 2020 +0800 *** Site updated: 2020-12-13 11:41:57             crabSun Dec 13 11:41:57 2020 +0800
+*** refs/heads/master   Wed Mar 30 00:53:31 2022 +0800 *** feat: kubebuilder    refs/remotes/origin/master       crabWed Mar 30 00:53:31 2022 +0800
+*** refs/remotes/origin/HEAD    Wed Mar 30 00:53:31 2022 +0800 *** feat: kubebuilder             crabWed Mar 30 00:53:31 2022 +0800
+*** refs/remotes/origin/master  Wed Mar 30 00:53:31 2022 +0800 *** feat: kubebuilder             crabWed Mar 30 00:53:31 2022 +0800
+
+```
+
+
 ### 持续更新......
