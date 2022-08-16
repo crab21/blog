@@ -4,12 +4,12 @@
 
 # Site
 title: 迷茫的小螃蟹
-subtitle: ''
-description: '日行一步...'
+subtitle: ""
+description: "日行一步..."
 keywords:
 author: crab
 language: zh-CN
-timezone: ''
+timezone: ""
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
@@ -18,8 +18,8 @@ root: /
 # permalink: :year/:month/:day/:title/
 permalink: archives/:abbrlink.html
 abbrlink:
-  alg: crc32  # 算法：crc16(default) and crc32
-  rep: hex    # 进制：dec(default) and hex
+  alg: crc32 # 算法：crc16(default) and crc32
+  rep: hex # 进制：dec(default) and hex
 permalink_defaults:
 pretty_urls:
   trailing_index: true # Set to false to remove trailing 'index.html' from permalinks
@@ -42,7 +42,7 @@ titlecase: false # Transform title into titlecase
 external_link:
   enable: true # Open external links in new tab
   field: site # Apply to the whole site
-  exclude: ''
+  exclude: ""
 filename_case: 0
 render_drafts: false
 post_asset_folder: false
@@ -52,21 +52,21 @@ highlight:
   enable: true
   line_number: true
   auto_detect: false
-  tab_replace: ''
+  tab_replace: ""
   wrap: true
   hljs: false
 prismjs:
   enable: false
   preprocess: true
   line_number: true
-  tab_replace: ''
+  tab_replace: ""
 
 # Home page setting
 # path: Root path for your blogs index page. (default = '')
 # per_page: Posts displayed per page. (0 = disable pagination)
 # order_by: Posts order. (Order by date descending by default)
 index_generator:
-  path: ''
+  path: ""
   per_page: 10
   order_by: -date
 
@@ -86,7 +86,7 @@ meta_generator: true
 date_format: YYYY-MM-DD
 time_format: HH:mm:ss
 ## updated_option supports 'mtime', 'date', 'empty'
-updated_option: 'mtime'
+updated_option: "mtime"
 
 # Pagination
 ## Set per_page to 0 to disable pagination
@@ -119,13 +119,11 @@ search:
   format: html
   limit: 10000
 
-
 symbols_count_time:
   symbols: true # 文章字数
   time: true # 阅读时长
   total_symbols: true # 所有文章总字数
-  total_time: true # 
-
+  total_time: true #
 
 # Markdown-it config
 ## Docs: https://github.com/celsomiranda/hexo-renderer-markdown-it/wiki
@@ -136,8 +134,9 @@ markdown:
     breaks: true # Parser produces `<br>` tags every time there is a line break in the source document.
     linkify: false # Returns text links as text.
     typographer: true # Substitution of common typographical elements will take place.
-    quotes: '“”‘’' # "double" will be turned into “single”
-                   # 'single' will be turned into ‘single’
+    quotes:
+      "“”‘’" # "double" will be turned into “single”
+      # 'single' will be turned into ‘single’
   plugins:
     - markdown-it-abbr
     - markdown-it-checkbox # 本行启用了 checkbox 插件
@@ -150,8 +149,31 @@ markdown:
     - markdown-it-latex2img
   anchors:
     level: 2 # Minimum level for ID creation. (Ex. h2 to h6)
-    collisionSuffix: 'v' # A suffix that is prepended to the number given if the ID is repeated.
+    collisionSuffix: "v" # A suffix that is prepended to the number given if the ID is repeated.
     permalink: true # If true, creates an anchor tag with a permalink besides the heading.
     permalinkClass: header-anchor # Class used for the permalink anchor tag.
     permalinkSymbol: ¶ # The symbol used to make the permalink.
     permalinkBefore: true
+
+giscus:
+  enable: true
+  repo: crab21/blog_giscus # Github repository name
+  repo_id: R_kgDOH05t5g # Github repository id
+  category: "Show and tell" # Github discussion category
+  category_id: DIC_kwDOH05t5s4CQ2aq # Github discussion category id
+  # Available values: pathname | url | title | og:title
+  mapping: pathname
+  # Available values: 0 | 1
+  reactions_enabled: 1
+  # Available values: 0 | 1
+  emit_metadata: 1
+  # Available values: light | dark | dark_high_contrast | transparent_dark | preferred-color-scheme
+  theme: light
+  # Available values: en | zh-C
+  lang: zh-CN
+  # Available value: anonymous
+  crossorigin: anonymous
+  # Place the comment box above the comments
+  input_position: bottom
+  # Load the comments lazily
+  loading: lazy
