@@ -1,0 +1,22 @@
+name: "Push Baidu"
+
+on:
+  push:
+    branches:
+      - master
+  schedule:
+    - cron: "*/15 * * * *"
+
+jobs:
+  start:
+    runs-on: ubuntu-latest
+    steps:
+      # 检查工作流是否可以访问 actions
+      - name: Checkout Repository master branch
+        uses: actions/checkout@v1
+      # 执行仓库中的脚本文件
+      - name: Execute script
+        env:
+          SITEMAP_URL: ${{ secrets.SITEMAP_URL }}
+          PUSH_URL: ${{ secrets.BD_PUSH_URL }}
+        run: php ./.github/push.php -s ${SITEMAP_URL} -p ${PUSH_URL}
