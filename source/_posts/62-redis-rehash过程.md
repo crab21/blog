@@ -21,7 +21,7 @@ tags:
 1、定时任务。
 2、对dict的find/delete/add等操作时触发。
 ```
-
+<!--more-->
 ![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210817_115402.png)
 
 
