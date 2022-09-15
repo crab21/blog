@@ -31,7 +31,6 @@ jobs:
       - name: mv CNAME
         run: |
           mv CNAME ./public/CNAME
-          mv themes/_config.yml themes/nextTheme/_config.yml
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
