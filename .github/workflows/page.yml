@@ -21,6 +21,9 @@ jobs:
           key: ${{ runner.OS }}-npm-cache
           restore-keys: |
             ${{ runner.OS }}-npm-cache
+      - name: mv themes/_config.yml
+        run: |
+          mv themes/_config.yml themes/nextTheme/_config.yml
       - name: Install Dependencies
         run: npm install
       - name: Build
