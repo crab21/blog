@@ -2,7 +2,7 @@ name: PUSH
 on:
   push:
     branches:
-      - master
+      - master_Deprecated
 env:
   NGINX_PATH: /var/www/blog/imrcrab
 
