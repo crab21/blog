@@ -1,11 +1,12 @@
 ---
 title: 「84」tcpdump & wireshark
-date: 2022-02-03 18:00:37
 tags:
-    - 抓包
-    - 网络
-    - tcpdump
-    - 工具
+  - 抓包
+  - 网络
+  - tcpdump
+  - 工具
+abbrlink: a4b12394
+date: 2022-02-03 18:00:37
 ---
 
 

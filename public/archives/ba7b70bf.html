@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 5.4.2">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/title.webp">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/title.webp">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//blog.imrcrab.com/css/robofont.css/css?family=STKaiti:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha256-AbA177XfpSnFEvgpYu1jMygiLabzPCJCRIBtR5jGc0k=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.imrcrab.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.13.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="select poll epoll三个老生长谈的问题.这次不是来讲区别的，后续会更新一篇关于三者区别的。  ¶前序 select属于linux系列的文件系统「fs」的范畴，每次的系统调用、打开软件、启动程序等等都会涉及到文件的读写， 这个是在所难免的。 那么I&#x2F;O事件的基本思路：文件准备ok，开始读写，等函数返回，根据结果继续运行. 如果是自己实现，大体上无非以下思路：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="「21」linux select源码">
+<meta property="og:url" content="https://blog.imrcrab.com/archives/ba7b70bf.html">
+<meta property="og:site_name" content="迷茫的小螃蟹">
+<meta property="og:description" content="select poll epoll三个老生长谈的问题.这次不是来讲区别的，后续会更新一篇关于三者区别的。  ¶前序 select属于linux系列的文件系统「fs」的范畴，每次的系统调用、打开软件、启动程序等等都会涉及到文件的读写， 这个是在所难免的。 那么I&#x2F;O事件的基本思路：文件准备ok，开始读写，等函数返回，根据结果继续运行. 如果是自己实现，大体上无非以下思路：">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/linux%E6%BA%90%E7%A0%81-select-1.png">
+<meta property="article:published_time" content="2020-11-17T11:09:17.000Z">
+<meta property="article:modified_time" content="2020-11-18T11:09:17.000Z">
+<meta property="article:author" content="crab">
+<meta property="article:tag" content="Day">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/linux%E6%BA%90%E7%A0%81-select-1.png">
+
+
+<link rel="canonical" href="https://blog.imrcrab.com/archives/ba7b70bf.html">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.imrcrab.com/archives/ba7b70bf.html","path":"archives/ba7b70bf.html","title":"「21」linux select源码"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>「21」linux select源码 | 迷茫的小螃蟹</title>
+  
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">迷茫的小螃蟹</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%89%8D%E5%BA%8F"><span class="nav-number">1.</span> <span class="nav-text">前序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A6%82%E8%A7%88%E5%9B%BE"><span class="nav-number">2.</span> <span class="nav-text">概览图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#select%E5%88%87%E5%85%A5%E7%82%B9"><span class="nav-number">3.</span> <span class="nav-text">select切入点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SYSCALL-DEFINE5"><span class="nav-number">4.</span> <span class="nav-text">SYSCALL_DEFINE5</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#do-select"><span class="nav-number">5.</span> <span class="nav-text">do_select</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#poll-wait"><span class="nav-number">6.</span> <span class="nav-text">poll_wait</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#fd%E6%95%B0%E9%87%8F%E9%97%AE%E9%A2%98"><span class="nav-number">7.</span> <span class="nav-text">fd数量问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#select-%E4%B8%8Epoll"><span class="nav-number">8.</span> <span class="nav-text">select 与poll</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">9.</span> <span class="nav-text">参考</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">crab</p>
+  <div class="site-description" itemprop="description">日行一步...</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">66</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">53</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/crab21" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;crab21" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:pywang112@gmail.com" title="E-Mail → mailto:pywang112@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.imrcrab.com/archives/ba7b70bf.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="crab">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="迷茫的小螃蟹">
+      <meta itemprop="description" content="日行一步...">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="「21」linux select源码 | 迷茫的小螃蟹">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          「21」linux select源码
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-11-17 19:09:17" itemprop="dateCreated datePublished" datetime="2020-11-17T19:09:17+08:00">2020-11-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2020-11-18 19:09:17" itemprop="dateModified" datetime="2020-11-18T19:09:17+08:00">2020-11-18</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>5.5k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>5 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <blockquote>
+<p>select poll epoll三个老生长谈的问题.这次不是来讲区别的，后续会更新一篇关于三者区别的。</p>
+</blockquote>
+<h3 id="前序"><a class="header-anchor" href="#前序">¶</a>前序</h3>
+<p>select属于linux系列的文件系统「fs」的范畴，每次的系统调用、打开软件、启动程序等等都会涉及到文件的读写，<br>
+这个是在所难免的。</p>
+<p>那么I/O事件的基本思路：文件准备ok，开始读写，等函数返回，根据结果继续运行.</p>
+<p>如果是自己实现，大体上无非以下思路：</p>
+<span id="more"></span>
+<ul>
+<li>创建多个进程/线程来监听</li>
+<li>Non-blocking读写监听的轮询</li>
+<li>异步I/O与Unix Signal事件机制</li>
+</ul>
+<p>先来学习下linux源码是怎么处理select机制的：</p>
+<blockquote>
+<p>linux version: 5.10-r5</p>
+</blockquote>
+<h3 id="概览图"><a class="header-anchor" href="#概览图">¶</a>概览图</h3>
+<p>梳理了下，大概整理成了流程图：</p>
+<p><img src="https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/linux%E6%BA%90%E7%A0%81-select-1.png" alt=""></p>
+<h3 id="select切入点"><a class="header-anchor" href="#select切入点">¶</a>select切入点</h3>
+<p>既然知道了select属于fs系列的，那就很容易找到:[fs/select.c]</p>
+<p>查看select命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">man 2 select</span><br></pre></td></tr></table></figure>
+<p>下面按照以下顺序来解读，一起学习：</p>
+<ul>
+<li>入口 SYSCALL_DEFINE5</li>
+<li>核心函数 do_select</li>
+<li>设备驱动的操作函数</li>
+<li>poll_wait与设备的等待队列</li>
+<li>fd数量限制「why」</li>
+<li>select与poll</li>
+</ul>
+<h3 id="SYSCALL-DEFINE5"><a class="header-anchor" href="#SYSCALL-DEFINE5">¶</a>SYSCALL_DEFINE5</h3>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">SYSCALL_DEFINE5</span>(select, <span class="type">int</span>, n, fd_set __user *, inp, fd_set __user *, outp,</span><br><span class="line">		fd_set __user *, exp, <span class="keyword">struct</span> __kernel_old_timeval __user *, tvp)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="built_in">kern_select</span>(n, inp, outp, exp, tvp);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>函数：core_sys_select中主要的do_select处理其中的逻辑</p>
+<h3 id="do-select"><a class="header-anchor" href="#do-select">¶</a>do_select</h3>
+<p>关键性的结构体</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> &#123;</span><br><span class="line">	<span class="type">unsigned</span> <span class="type">long</span> *in, *out, *ex; <span class="comment">//输出 、输入、异常</span></span><br><span class="line">	<span class="type">unsigned</span> <span class="type">long</span> *res_in, *res_out, *res_ex;</span><br><span class="line">&#125; fd_set_bits;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="type">static</span> <span class="type">int</span> <span class="title">do_select</span><span class="params">(<span class="type">int</span> n, fd_set_bits *fds, <span class="keyword">struct</span> timespec64 *end_time)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">ktime_t</span> expire, *to = <span class="literal">NULL</span>;</span><br><span class="line">	<span class="keyword">struct</span> <span class="title class_">poll_wqueues</span> table;</span><br><span class="line">	poll_table *wait;</span><br><span class="line">	<span class="type">int</span> retval, i, timed_out = <span class="number">0</span>;</span><br><span class="line">	u64 slack = <span class="number">0</span>;</span><br><span class="line">	<span class="type">__poll_t</span> busy_flag = <span class="built_in">net_busy_loop_on</span>() ? POLL_BUSY_LOOP : <span class="number">0</span>;</span><br><span class="line">	<span class="type">unsigned</span> <span class="type">long</span> busy_start = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">	<span class="built_in">rcu_read_lock</span>();</span><br><span class="line">    <span class="comment">//找出文件的最大描述符</span></span><br><span class="line">	retval = <span class="built_in">max_select_fd</span>(n, fds);</span><br><span class="line">	<span class="built_in">rcu_read_unlock</span>();</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (retval &lt; <span class="number">0</span>)</span><br><span class="line">		<span class="keyword">return</span> retval;</span><br><span class="line">	n = retval;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//初始化</span></span><br><span class="line">	<span class="built_in">poll_initwait</span>(&amp;table);</span><br><span class="line">	wait = &amp;table.pt;</span><br><span class="line">	<span class="keyword">if</span> (end_time &amp;&amp; !end_time-&gt;tv_sec &amp;&amp; !end_time-&gt;tv_nsec) &#123;</span><br><span class="line">		wait-&gt;_qproc = <span class="literal">NULL</span>;</span><br><span class="line">		timed_out = <span class="number">1</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (end_time &amp;&amp; !timed_out)</span><br><span class="line">		slack = <span class="built_in">select_estimate_accuracy</span>(end_time);</span><br><span class="line"></span><br><span class="line">	retval = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">for</span> (;;) &#123;</span><br><span class="line">		<span class="type">unsigned</span> <span class="type">long</span> *rinp, *routp, *rexp, *inp, *outp, *exp;</span><br><span class="line">		<span class="type">bool</span> can_busy_loop = <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">		inp = fds-&gt;in; outp = fds-&gt;out; exp = fds-&gt;ex;</span><br><span class="line">		rinp = fds-&gt;res_in; routp = fds-&gt;res_out; rexp = fds-&gt;res_ex;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//遍历所有的fd.......同步等.....</span></span><br><span class="line">		<span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; n; ++rinp, ++routp, ++rexp) &#123;</span><br><span class="line">			<span class="type">unsigned</span> <span class="type">long</span> in, out, ex, all_bits, bit = <span class="number">1</span>, j;</span><br><span class="line">			<span class="type">unsigned</span> <span class="type">long</span> res_in = <span class="number">0</span>, res_out = <span class="number">0</span>, res_ex = <span class="number">0</span>;</span><br><span class="line">			<span class="type">__poll_t</span> mask;</span><br><span class="line"></span><br><span class="line">			in = *inp++; out = *outp++; ex = *exp++;</span><br><span class="line">			all_bits = in | out | ex;</span><br><span class="line">            <span class="comment">//没有任何注册事件</span></span><br><span class="line">			<span class="keyword">if</span> (all_bits == <span class="number">0</span>) &#123;</span><br><span class="line">				i += BITS_PER_LONG;</span><br><span class="line">				<span class="keyword">continue</span>;</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			<span class="keyword">for</span> (j = <span class="number">0</span>; j &lt; BITS_PER_LONG; ++j, ++i, bit &lt;&lt;= <span class="number">1</span>) &#123;</span><br><span class="line">				<span class="keyword">struct</span> <span class="title class_">fd</span> f;</span><br><span class="line">				<span class="keyword">if</span> (i &gt;= n)</span><br><span class="line">					<span class="keyword">break</span>;</span><br><span class="line">                <span class="comment">//跳过未注册的</span></span><br><span class="line">				<span class="keyword">if</span> (!(bit &amp; all_bits))</span><br><span class="line">					<span class="keyword">continue</span>;</span><br><span class="line">				f = <span class="built_in">fdget</span>(i);</span><br><span class="line">				<span class="keyword">if</span> (f.file) &#123;</span><br><span class="line">					<span class="built_in">wait_key_set</span>(wait, in, out, bit,</span><br><span class="line">						     busy_flag);</span><br><span class="line"></span><br><span class="line">                    <span class="comment">//对每一个fd进行检测</span></span><br><span class="line">					mask = <span class="built_in">vfs_poll</span>(f.file, wait);</span><br><span class="line"></span><br><span class="line">					<span class="built_in">fdput</span>(f);</span><br><span class="line">					<span class="keyword">if</span> ((mask &amp; POLLIN_SET) &amp;&amp; (in &amp; bit)) &#123;</span><br><span class="line">						res_in |= bit;</span><br><span class="line">						retval++;</span><br><span class="line">						wait-&gt;_qproc = <span class="literal">NULL</span>;</span><br><span class="line">					&#125;</span><br><span class="line">					<span class="keyword">if</span> ((mask &amp; POLLOUT_SET) &amp;&amp; (out &amp; bit)) &#123;</span><br><span class="line">						res_out |= bit;</span><br><span class="line">						retval++;</span><br><span class="line">						wait-&gt;_qproc = <span class="literal">NULL</span>;</span><br><span class="line">					&#125;</span><br><span class="line">					<span class="keyword">if</span> ((mask &amp; POLLEX_SET) &amp;&amp; (ex &amp; bit)) &#123;</span><br><span class="line">						res_ex |= bit;</span><br><span class="line">						retval++;</span><br><span class="line">						wait-&gt;_qproc = <span class="literal">NULL</span>;</span><br><span class="line">					&#125;</span><br><span class="line">					<span class="comment">/* got something, stop busy polling */</span></span><br><span class="line">					<span class="keyword">if</span> (retval) &#123;</span><br><span class="line">						can_busy_loop = <span class="literal">false</span>;</span><br><span class="line">						busy_flag = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">					<span class="comment">/*</span></span><br><span class="line"><span class="comment">					 * only remember a returned</span></span><br><span class="line"><span class="comment">					 * POLL_BUSY_LOOP if we asked for it</span></span><br><span class="line"><span class="comment">					 */</span></span><br><span class="line">					&#125; <span class="keyword">else</span> <span class="keyword">if</span> (busy_flag &amp; mask)</span><br><span class="line">						can_busy_loop = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">if</span> (res_in)</span><br><span class="line">				*rinp = res_in;</span><br><span class="line">			<span class="keyword">if</span> (res_out)</span><br><span class="line">				*routp = res_out;</span><br><span class="line">			<span class="keyword">if</span> (res_ex)</span><br><span class="line">				*rexp = res_ex;</span><br><span class="line">			<span class="built_in">cond_resched</span>();</span><br><span class="line">		&#125;</span><br><span class="line">		wait-&gt;_qproc = <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//退出循环，条件： 事件就绪/超时/收到信号</span></span><br><span class="line">		<span class="keyword">if</span> (retval || timed_out || <span class="built_in">signal_pending</span>(current))</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		<span class="keyword">if</span> (table.error) &#123;</span><br><span class="line">			retval = table.error;</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="comment">/* only if found POLL_BUSY_LOOP sockets &amp;&amp; not out of time */</span></span><br><span class="line">		<span class="keyword">if</span> (can_busy_loop &amp;&amp; !<span class="built_in">need_resched</span>()) &#123;</span><br><span class="line">			<span class="keyword">if</span> (!busy_start) &#123;</span><br><span class="line">				busy_start = <span class="built_in">busy_loop_current_time</span>();</span><br><span class="line">				<span class="keyword">continue</span>;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">if</span> (!<span class="built_in">busy_loop_timeout</span>(busy_start))</span><br><span class="line">				<span class="keyword">continue</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		busy_flag = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">		<span class="comment">/*</span></span><br><span class="line"><span class="comment">		 * If this is the first loop and we have a timeout</span></span><br><span class="line"><span class="comment">		 * given, then we convert to ktime_t and set the to</span></span><br><span class="line"><span class="comment">		 * pointer to the expiry value.</span></span><br><span class="line"><span class="comment">		 */</span></span><br><span class="line">		<span class="keyword">if</span> (end_time &amp;&amp; !to) &#123;</span><br><span class="line">			expire = <span class="built_in">timespec64_to_ktime</span>(*end_time);</span><br><span class="line">			to = &amp;expire;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//超时就休眠一会儿「中断会儿」</span></span><br><span class="line">		<span class="keyword">if</span> (!<span class="built_in">poll_schedule_timeout</span>(&amp;table, TASK_INTERRUPTIBLE,</span><br><span class="line">					   to, slack))</span><br><span class="line">			timed_out = <span class="number">1</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="built_in">poll_freewait</span>(&amp;table);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> retval;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">static</span> <span class="type">int</span> <span class="title">poll_schedule_timeout</span><span class="params">(<span class="keyword">struct</span> poll_wqueues *pwq, <span class="type">int</span> state,</span></span></span><br><span class="line"><span class="params"><span class="function">			  <span class="type">ktime_t</span> *expires, <span class="type">unsigned</span> <span class="type">long</span> slack)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">int</span> rc = -EINTR;</span><br><span class="line"></span><br><span class="line">	<span class="built_in">set_current_state</span>(state);</span><br><span class="line">	<span class="keyword">if</span> (!pwq-&gt;triggered)</span><br><span class="line">		rc = <span class="built_in">schedule_hrtimeout_range</span>(expires, slack, HRTIMER_MODE_ABS);</span><br><span class="line">	__set_current_state(TASK_RUNNING);</span><br><span class="line"></span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">	 * Prepare for the next iteration.</span></span><br><span class="line"><span class="comment">	 *</span></span><br><span class="line"><span class="comment">	 * The following smp_store_mb() serves two purposes.  First, it&#x27;s</span></span><br><span class="line"><span class="comment">	 * the counterpart rmb of the wmb in pollwake() such that data</span></span><br><span class="line"><span class="comment">	 * written before wake up is always visible after wake up.</span></span><br><span class="line"><span class="comment">	 * Second, the full barrier guarantees that triggered clearing</span></span><br><span class="line"><span class="comment">	 * doesn&#x27;t pass event check of the next iteration.  Note that</span></span><br><span class="line"><span class="comment">	 * this problem doesn&#x27;t exist for the first iteration as</span></span><br><span class="line"><span class="comment">	 * add_wait_queue() has full barrier semantics.</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="built_in">smp_store_mb</span>(pwq-&gt;triggered, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> rc;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="poll-wait"><a class="header-anchor" href="#poll-wait">¶</a>poll_wait</h3>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/* </span></span><br><span class="line"><span class="comment"> * structures and helpers for f_op-&gt;poll implementations</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"> <span class="comment">//类似一个回调函数</span></span><br><span class="line"><span class="function"><span class="keyword">typedef</span> <span class="title">void</span> <span class="params">(*poll_queue_proc)</span><span class="params">(<span class="keyword">struct</span> file *, <span class="type">wait_queue_head_t</span> *, <span class="keyword">struct</span> poll_table_struct *)</span></span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> <span class="title class_">poll_table_struct</span> &#123;</span><br><span class="line">	poll_queue_proc _qproc; <span class="comment">//callback机制</span></span><br><span class="line">	<span class="type">__poll_t</span> _key;</span><br><span class="line">&#125; poll_table;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">static</span> <span class="keyword">inline</span> <span class="type">void</span> <span class="title">poll_wait</span><span class="params">(<span class="keyword">struct</span> file * filp, <span class="type">wait_queue_head_t</span> * wait_address, poll_table *p)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (p &amp;&amp; p-&gt;_qproc &amp;&amp; wait_address)</span><br><span class="line">		p-&gt;_qproc(filp, wait_address, p);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="fd数量问题"><a class="header-anchor" href="#fd数量问题">¶</a>fd数量问题</h3>
+<blockquote>
+<p>include/uapi/linux/posix_types.h</p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> __FD_SETSIZE	1024</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> &#123;</span><br><span class="line">  <span class="comment">//__FD_SETSIZE当下标使？？？what！</span></span><br><span class="line">	<span class="type">unsigned</span> <span class="type">long</span> fds_bits[__FD_SETSIZE / (<span class="number">8</span> * <span class="built_in">sizeof</span>(<span class="type">long</span>))];</span><br><span class="line">&#125; __kernel_fd_set;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">fd</span> &#123;</span><br><span class="line">	<span class="keyword">struct</span> <span class="title class_">file</span> *file;</span><br><span class="line">	<span class="type">unsigned</span> <span class="type">int</span> flags;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>从上面看来文件描述符只是一个整数值，用来操作下标的，主要是每一个进程file数组的下标。理解do_select是核心。</p>
+</blockquote>
+<h3 id="select-与poll"><a class="header-anchor" href="#select-与poll">¶</a>select 与poll</h3>
+<blockquote>
+<p>poll取消了最大数量的限制,返回结果还是需要轮询来获取就绪的描述符。</p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">pollfd</span> &#123;</span><br><span class="line">	<span class="type">int</span> fd;</span><br><span class="line">	<span class="type">short</span> events; <span class="comment">//request</span></span><br><span class="line">	<span class="type">short</span> revents; <span class="comment">// return</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>具体见后续更新「poll源码」</p>
+<h3 id="参考"><a class="header-anchor" href="#参考">¶</a>参考</h3>
+<p><a target="_blank" rel="noopener" href="https://www.oreilly.com/openbook/linuxdrive3/book/">Linux Device Drivers, Third Edition</a><br>
+<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/11496059/how-do-system-calls-like-select-or-poll-work-under-the-hood">How do system calls like select() or poll() work under the hood?</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Day/" rel="tag"># Day</a>
+              <a href="/tags/Linux/" rel="tag"># Linux</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/archives/5ce14ff5.html" rel="prev" title="「20」博客诡异事件">
+                  <i class="fa fa-chevron-left"></i> 「20」博客诡异事件
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/archives/392d66f0.html" rel="next" title="「22」GPM g0和m0">
+                  「22」GPM g0和m0 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  
+  <div class="comments">
+    <script src="https://giscus.app/client.js"
+        data-repo="crab21/blog_giscus" 
+        data-repo-id="R_kgDOH05t5g" 
+        data-category="Show and tell"
+        data-category-id="DIC_kwDOH05t5s4CQ2aq"
+        data-mapping="pathname" 
+        data-reactions-enabled="1" 
+        data-emit-metadata="1" 
+        data-theme="light"
+        data-lang="zh-CN"
+        crossorigin="anonymous"
+        data-input-position="bottom"
+        data-loading="lazy"
+        async>
+    </script>
+  </div>
+  
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">crab</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">220k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:20</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.0/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

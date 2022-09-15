@@ -1,10 +1,11 @@
 ---
 title: 「90」kubebuilder
-date: 2022/03/29 22:13:29
+date: '2022/03/29 22:13:29'
 tags:
-    - k8s
-    - operator
-    - kubebuilder
+  - k8s
+  - operator
+  - kubebuilder
+abbrlink: 675841d
 ---
 
 

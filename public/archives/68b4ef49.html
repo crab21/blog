@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 5.4.2">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/title.webp">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/title.webp">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//blog.imrcrab.com/css/robofont.css/css?family=STKaiti:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha256-AbA177XfpSnFEvgpYu1jMygiLabzPCJCRIBtR5jGc0k=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.imrcrab.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.13.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="¶前序 hash在日常开发中上镜频率还是比较高，例： 12341、java中的Hashmap...2、Go中的Map...3、分布式的节点分布...3、Redis中的hash ¶好奇点  Redis的hash结构到底是怎么存的呢？ Redis hash如果做到高效的？ Rehash操作，do what? “XX” vs ht「hashtable」?Why?">
+<meta property="og:type" content="article">
+<meta property="og:title" content="「61」redis hash解读">
+<meta property="og:url" content="https://blog.imrcrab.com/archives/68b4ef49.html">
+<meta property="og:site_name" content="迷茫的小螃蟹">
+<meta property="og:description" content="¶前序 hash在日常开发中上镜频率还是比较高，例： 12341、java中的Hashmap...2、Go中的Map...3、分布式的节点分布...3、Redis中的hash ¶好奇点  Redis的hash结构到底是怎么存的呢？ Redis hash如果做到高效的？ Rehash操作，do what? “XX” vs ht「hashtable」?Why?">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210817_094456.png">
+<meta property="og:image" content="https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210817_095231.png">
+<meta property="og:image" content="https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210817_104655.png">
+<meta property="og:image" content="https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210817_115402.png">
+<meta property="article:published_time" content="2021-08-17T04:36:44.000Z">
+<meta property="article:modified_time" content="2021-08-17T04:36:44.000Z">
+<meta property="article:author" content="crab">
+<meta property="article:tag" content="Hash">
+<meta property="article:tag" content="Redis">
+<meta property="article:tag" content="源码">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210817_094456.png">
+
+
+<link rel="canonical" href="https://blog.imrcrab.com/archives/68b4ef49.html">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.imrcrab.com/archives/68b4ef49.html","path":"archives/68b4ef49.html","title":"「61」redis hash解读"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>「61」redis hash解读 | 迷茫的小螃蟹</title>
+  
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">迷茫的小螃蟹</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%89%8D%E5%BA%8F"><span class="nav-number">1.</span> <span class="nav-text">前序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A5%BD%E5%A5%87%E7%82%B9"><span class="nav-number">2.</span> <span class="nav-text">好奇点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hash%E7%BB%93%E6%9E%84%EF%BC%9A"><span class="nav-number">3.</span> <span class="nav-text">hash结构：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#redis%E7%9A%84hash%E4%B8%BA%E4%BD%95%E9%AB%98%E6%95%88%EF%BC%9F"><span class="nav-number">4.</span> <span class="nav-text">redis的hash为何高效？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2%E5%85%B3%E9%94%AE%E7%82%B9"><span class="nav-number">4.1.</span> <span class="nav-text">类型转换关键点</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rehash"><span class="nav-number">5.</span> <span class="nav-text">rehash</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ZIPLIST-VS-HASHTABLE"><span class="nav-number">6.</span> <span class="nav-text">ZIPLIST VS HASHTABLE</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">crab</p>
+  <div class="site-description" itemprop="description">日行一步...</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">66</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">53</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/crab21" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;crab21" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:pywang112@gmail.com" title="E-Mail → mailto:pywang112@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.imrcrab.com/archives/68b4ef49.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="crab">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="迷茫的小螃蟹">
+      <meta itemprop="description" content="日行一步...">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="「61」redis hash解读 | 迷茫的小螃蟹">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          「61」redis hash解读
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-08-17 12:36:44" itemprop="dateCreated datePublished" datetime="2021-08-17T12:36:44+08:00">2021-08-17</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.1k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>1 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h3 id="前序"><a class="header-anchor" href="#前序">¶</a>前序</h3>
+<p>hash在日常开发中上镜频率还是比较高，例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1、java中的Hashmap...</span><br><span class="line">2、Go中的Map...</span><br><span class="line">3、分布式的节点分布...</span><br><span class="line">3、Redis中的hash</span><br></pre></td></tr></table></figure>
+<h3 id="好奇点"><a class="header-anchor" href="#好奇点">¶</a>好奇点</h3>
+<ul>
+<li>Redis的hash结构到底是怎么存的呢？</li>
+<li>Redis hash如果做到高效的？</li>
+<li>Rehash操作，do what?</li>
+<li>“XX” vs ht「hashtable」?Why?</li>
+</ul>
+<span id="more"></span>
+<blockquote>
+<p>一个个来看吧：</p>
+</blockquote>
+<h3 id="hash结构："><a class="header-anchor" href="#hash结构：">¶</a>hash结构：</h3>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> <span class="title class_">dictht</span> &#123;</span><br><span class="line">    dictEntry **table;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">long</span> size;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">long</span> sizemask;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">long</span> used;</span><br><span class="line">&#125; dictht;</span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> <span class="title class_">dict</span> &#123;</span><br><span class="line">    dictType *type;</span><br><span class="line">    <span class="type">void</span> *privdata;</span><br><span class="line">    dictht ht[<span class="number">2</span>];</span><br><span class="line">    <span class="type">long</span> rehashidx; <span class="comment">/* rehashing not in progress if rehashidx == -1 */</span></span><br><span class="line">    <span class="type">int16_t</span> pauserehash; <span class="comment">/* If &gt;0 rehashing is paused (&lt;0 indicates coding error) */</span></span><br><span class="line">&#125; dict;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>用一张图来描述</p>
+</blockquote>
+<p><img src="https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210817_094456.png" alt=""></p>
+<h3 id="redis的hash为何高效？"><a class="header-anchor" href="#redis的hash为何高效？">¶</a>redis的hash为何高效？</h3>
+<blockquote>
+<p>讲道理，不是最高效的，但是适合大众场景。</p>
+</blockquote>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hset hello w <span class="number">1</span></span><br><span class="line">hset hello wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p>这2条命令在redis中的存储方式决定了是否高效。</p>
+<p>其实Redis提供了<a target="_blank" rel="noopener" href="https://github.com/redis/redis/blob/6.2/src/server.h#L701">👉🏻两种存hash编码</a>的结构：</p>
+<p><img src="https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210817_095231.png" alt=""></p>
+<h4 id="类型转换关键点"><a class="header-anchor" href="#类型转换关键点">¶</a>类型转换关键点</h4>
+<ul>
+<li>hash_max_ziplist_value <a target="_blank" rel="noopener" href="https://github.com/redis/redis/blob/6.2/src/t_hash.c#L47">👉🏿 源码判断</a></li>
+<li>hash_max_ziplist_entries <a target="_blank" rel="noopener" href="https://github.com/redis/redis/blob/6.2/src/t_hash.c#L235">👉🏿 源码判断</a></li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">满足以下条件之一的，会将hash的类型从ziplist转换为hashtable。</span><br><span class="line"></span><br><span class="line"><span class="number">1</span>、当hset的value大小超过设置的「hash_max_ziplist_value」，默认<span class="number">512</span>字节. </span><br><span class="line"><span class="number">2</span>、当key的个数超过指定个数：「hash_max_ziplist_entries」，默认<span class="number">64</span>个.</span><br></pre></td></tr></table></figure>
+<h3 id="rehash"><a class="header-anchor" href="#rehash">¶</a>rehash</h3>
+<ul>
+<li>产生原因：</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">负载因子不在一个合理的范围内，简单的说：</span><br><span class="line"><span class="number">1</span>、产生hash冲突</span><br><span class="line"><span class="number">2</span>、单个table节点过长或者分布不均衡。</span><br></pre></td></tr></table></figure>
+<p><img src="https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210817_104655.png" alt=""></p>
+<ul>
+<li>触发的时机</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>、定时任务。</span><br><span class="line"><span class="number">2</span>、对dict的find/<span class="built_in">delete</span>/add等操作时触发。</span><br></pre></td></tr></table></figure>
+<p><img src="https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210817_115402.png" alt=""></p>
+<blockquote>
+<p>具体rehash过程，后续会讲到。</p>
+</blockquote>
+<h3 id="ZIPLIST-VS-HASHTABLE"><a class="header-anchor" href="#ZIPLIST-VS-HASHTABLE">¶</a>ZIPLIST VS HASHTABLE</h3>
+<p>todo 数据采集中…</p>
+<p>理论上分析：</p>
+<p>ZIPLIST:   get操作是 O(N)+1<br>
+HASHTABLE: get操作是 O(1)</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Hash/" rel="tag"># Hash</a>
+              <a href="/tags/Redis/" rel="tag"># Redis</a>
+              <a href="/tags/%E6%BA%90%E7%A0%81/" rel="tag"># 源码</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/archives/8afe733.html" rel="prev" title="「60」wireshark usage">
+                  <i class="fa fa-chevron-left"></i> 「60」wireshark usage
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/archives/f733f408.html" rel="next" title="「62」redis rehash过程">
+                  「62」redis rehash过程 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  
+  <div class="comments">
+    <script src="https://giscus.app/client.js"
+        data-repo="crab21/blog_giscus" 
+        data-repo-id="R_kgDOH05t5g" 
+        data-category="Show and tell"
+        data-category-id="DIC_kwDOH05t5s4CQ2aq"
+        data-mapping="pathname" 
+        data-reactions-enabled="1" 
+        data-emit-metadata="1" 
+        data-theme="light"
+        data-lang="zh-CN"
+        crossorigin="anonymous"
+        data-input-position="bottom"
+        data-loading="lazy"
+        async>
+    </script>
+  </div>
+  
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">crab</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">220k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:20</span>
+  </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.0/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

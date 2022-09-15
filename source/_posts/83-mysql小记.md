@@ -1,9 +1,10 @@
 ---
 title: 「83」mysql小记
-date: 2021/12/30 22:09:37
+date: '2021/12/30 22:09:37'
 tags:
-    - MySQL
-    - 小记
+  - MySQL
+  - 小记
+abbrlink: b09eedc6
 ---
 
 

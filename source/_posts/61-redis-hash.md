@@ -1,11 +1,12 @@
 ---
 title: 「61」redis hash解读
-date: 2021/08/17 12:36:44
-updated: 2021/08/17 12:36:44
+date: '2021/08/17 12:36:44'
+updated: '2021/08/17 12:36:44'
 tags:
-    - Redis
-    - Hash
-    - 源码
+  - Redis
+  - Hash
+  - 源码
+abbrlink: 68b4ef49
 ---
 
 ### 前序

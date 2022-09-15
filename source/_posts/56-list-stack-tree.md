@@ -1,12 +1,13 @@
 ---
 title: 「56」List Stack Tree
-date: 2021/05/28 08:23:00
+date: '2021/05/28 08:23:00'
 updated: '2021/05/28 08:23:17'
 keywords: 'list,linkedlist,doublelinkedlist,tree'
 tags:
   - 算法
   - Day
 mathjax: true
+abbrlink: b0be3190
 ---
 
 算法篇👉🏻[二]

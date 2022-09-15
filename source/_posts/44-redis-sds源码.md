@@ -1,10 +1,11 @@
 ---
 title: 「44」redis-sds源码
-date: 2021/04/12 23:15:43
-updated: 2021/07/26 13:09:17
+date: '2021/04/12 23:15:43'
+updated: '2021/07/26 13:09:17'
 tags:
-    - Redis
-    - SDS
+  - Redis
+  - SDS
+abbrlink: 9989a7c4
 ---
 
 >SDS在redis中也算是用来存储string高效的做法，采用header+string的形式。

@@ -1,10 +1,11 @@
 ---
 title: 「82」openwrt 折腾记
-date: 2021/11/07 18:38:24
+date: '2021/11/07 18:38:24'
 tags:
-    - openwrt
-    - 软路由
-    - 网络
+  - openwrt
+  - 软路由
+  - 网络
+abbrlink: 977b6995
 ---
 
 

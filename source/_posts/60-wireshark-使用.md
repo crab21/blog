@@ -1,5 +1,6 @@
 ---
 title: 「60」wireshark usage
+abbrlink: 8afe733
 date: 2021-07-19 10:43:34
 tags:
 ---
