@@ -362,6 +362,6 @@ int rdbSaveKeyValuePair(rio *rdb, robj *key, robj *val, long long expiretime) {
 ### Todo
 - [x] rdb快速备份原因: fork主进程
 - [ ] 故障「断电」等恢复机制
-- [ ] 主备复制怎么进行的？
+- [ ] cluster复制怎么进行的？
 
 ### End
