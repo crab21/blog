@@ -840,7 +840,7 @@ mermaid:
 # Use Animate.css to animate everything.
 # For more information: https://animate.style
 motion:
-  enable: true
+  enable: false
   async: true
   transition:
     # All available transition variants: https://theme-next.js.org/animate/
@@ -861,7 +861,7 @@ pace:
   # All available themes:
   # big-counter | bounce | barber-shop | center-atom | center-circle | center-radar | center-simple
   # corner-indicator | fill-left | flat-top | flash | loading-bar | mac-osx | material | minimal
-  theme: loading-bar
+  theme: bounce
 
 # Canvas ribbon
 # For more information: https://github.com/hustcc/ribbon.js
