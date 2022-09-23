@@ -349,10 +349,11 @@ flushAppendOnlyFile函数
 
 ### Tips And Tricks
 
-### AOF数据量过大问题
+#### AOF数据量过大问题
 
 ### Todo
 
 - [ ] [aof和rdb多维度比较]
+- [ ] [AOF数据量过大问题]
 
 ### End
