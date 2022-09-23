@@ -341,6 +341,15 @@ flushAppendOnlyFile函数
 ##### 流程图：
 ![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/acsz8-d5ehw.webp)
 
+#### AOF APPEND ONLY数据量过大
+
+>通过源码先看看流程：
+
+![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/2022/redis-rewriteAppendOnlyfile.png)
+
+### Tips And Tricks
+
+### AOF数据量过大问题
 
 ### Todo
 
