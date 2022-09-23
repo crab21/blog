@@ -1,10 +1,11 @@
 ---
 title: Redis断电恢复
 date: '2021/08/28 18:01:32'
-updated: 2022/09/22 21:43:30
+updated: '2022/09/22 21:43:30'
 tags:
-    - Redis
-    - 源码
+  - Redis
+  - 源码
+abbrlink: e9e58399
 ---
 
 
