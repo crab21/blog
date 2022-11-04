@@ -29,7 +29,7 @@ docker && chrome
 
 >so先去搜一把有没有现成的可用？
 
-![](https://github.com/crab21/Images/tree/master/20201110-193745.png)
+![](https://raw.githubusercontent.com/crab21/Images/master/20201110-193745.png)
 
 分析分析吧：
 
@@ -46,7 +46,7 @@ docker && chrome
 
 >看起来可行：
 
-![](https://github.com/crab21/Images/tree/master/20201110-194452.png)
+![](https://raw.githubusercontent.com/crab21/Images/master/20201110-194452.png)
 
 
 这个经过验证总会有一个错误：
@@ -62,7 +62,7 @@ docker && chrome
 
 [点击查看](https://github.com/Zenika/alpine-chrome/blob/master/Dockerfile#L38)
 
-![](https://github.com/crab21/Images/tree/master/20201110-194711.png)
+![](https://raw.githubusercontent.com/crab21/Images/master/20201110-194711.png)
 
 
 ```

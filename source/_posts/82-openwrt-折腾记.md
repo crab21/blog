@@ -20,7 +20,7 @@ abbrlink: 977b6995
 
 具体选择见下图：
 
-![](https://github.com/crab21/Images/tree/master/1161636220122_.pic_hd.jpg)
+![](https://raw.githubusercontent.com/crab21/Images/master/1161636220122_.pic_hd.jpg)
 
 
 ### 配置问题：
@@ -32,7 +32,7 @@ abbrlink: 977b6995
 
 >具体的可以在hub.docker.com里面搜索。
 
-![](https://github.com/crab21/Images/tree/master/clipboard_20211107_065042.png)
+![](https://raw.githubusercontent.com/crab21/Images/master/clipboard_20211107_065042.png)
 
 #### 服务端：
 
@@ -50,7 +50,7 @@ abbrlink: 977b6995
 
 >三步完成：
 
-![](https://github.com/crab21/Images/tree/master/clipboard_20211107_065902.png)
+![](https://raw.githubusercontent.com/crab21/Images/master/clipboard_20211107_065902.png)
 
 
 ##### 具体命令
@@ -76,7 +76,7 @@ docker run -itd --restart=always --network=gogo -m 300m --kernel-memory 310m --n
 
 ### 目前网络图：
 
-![](https://github.com/crab21/Images/tree/master/clipboard_20211107_070906.png)
+![](https://raw.githubusercontent.com/crab21/Images/master/clipboard_20211107_070906.png)
 
 ### 致谢
  * [LEDE](https://github.com/coolsnowwolf/lede)

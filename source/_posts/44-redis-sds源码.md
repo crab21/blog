@@ -32,7 +32,7 @@ abbrlink: 9989a7c4
 
 >⚙️ 4种大小的定义，适配不同的场景需求。
 
-![](https://github.com/crab21/Images/tree/master/clipboard_20210726_112207.png)
+![](https://raw.githubusercontent.com/crab21/Images/master/clipboard_20210726_112207.png)
 
 ### why高效?
 

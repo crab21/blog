@@ -15,7 +15,7 @@ abbrlink: c0e329b8
 ### 前序:
 今天收到了封邮件 Go 1.16 release:
 
-![](https://github.com/crab21/Images/tree/master/clipboard_20210217_094336.webp)
+![](https://raw.githubusercontent.com/crab21/Images/master/clipboard_20210217_094336.webp)
 
 进去了看了看全部的特性,发现有个关于memory  leak「RSS」相关的issues,去看看关于Go的RSS到底是怎么计算的,
 顺带也看看这个老哥为何会问内存泄露的问题.
@@ -33,7 +33,7 @@ abbrlink: c0e329b8
 
 * 描述:
 
-![](https://github.com/crab21/Images/tree/master/clipboard_20210217_095036.png)
+![](https://raw.githubusercontent.com/crab21/Images/master/clipboard_20210217_095036.png)
 
 #### [关于RSS解释](https://github.com/golang/go/issues/40448#issuecomment-666350046)
 

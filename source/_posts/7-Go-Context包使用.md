@@ -96,7 +96,7 @@ Done关闭状态取决于
 
 自己梳理的逻辑执行顺序：
 
-![](https://github.com/crab21/Images/tree/master/20200907-152032.png)
+![](https://raw.githubusercontent.com/crab21/Images/master/20200907-152032.png)
 
 ```
 Deadline/WithTimeout区别：

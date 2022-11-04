@@ -11,7 +11,7 @@ abbrlink: 2dfee217
 
 
 ### 问题是这样的：
-![](https://github.com/crab21/Images/tree/master/clipboard_20210519_125155.png)
+![](https://raw.githubusercontent.com/crab21/Images/master/clipboard_20210519_125155.png)
 
 >求不同的age分组，按照createTime正序「从小到大」排序的前N个。
 
@@ -33,7 +33,7 @@ SELECT
 
 > 按照age分组，createTime正序排序的Top 2数据
 
-![](https://github.com/crab21/Images/tree/master/clipboard_20210519_125510.png)
+![](https://raw.githubusercontent.com/crab21/Images/master/clipboard_20210519_125510.png)
 
 
 ### END

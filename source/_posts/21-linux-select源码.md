@@ -33,7 +33,7 @@ select属于linux系列的文件系统「fs」的范畴，每次的系统调用�
 
 梳理了下，大概整理成了流程图：
 
-![](https://github.com/crab21/Images/tree/master/linux源码-select-1.png)
+![](https://raw.githubusercontent.com/crab21/Images/master/linux源码-select-1.png)
 
 
 ### select切入点

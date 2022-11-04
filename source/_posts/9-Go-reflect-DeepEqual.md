@@ -50,7 +50,7 @@ func main() {
 
 查阅文档之后，发现理解错了：
 
-![](https://github.com/crab21/Images/tree/master/20200918-124746.png)
+![](https://raw.githubusercontent.com/crab21/Images/master/20200918-124746.png)
 
 
 
@@ -135,7 +135,7 @@ func DeepEqual(x, y interface{}) bool {
 ```
 
 再看看详细的deepValueEqual,大致的过程：
-![](https://github.com/crab21/Images/tree/master/20200920-103516@2x.png)
+![](https://raw.githubusercontent.com/crab21/Images/master/20200920-103516@2x.png)
 
 
 >大致分为三个过程：

@@ -25,8 +25,8 @@ tcpdump  -s 0 port 443
 
 tcpdump -vvv -i eth0 
 ```
-![](https://github.com/crab21/Images/tree/master/2022/clipboard_20220203_061422.png)
-![](https://github.com/crab21/Images/tree/master/2022/clipboard_20220203_062657.png)
+![](https://raw.githubusercontent.com/crab21/Images/master/2022/clipboard_20220203_061422.png)
+![](https://raw.githubusercontent.com/crab21/Images/master/2022/clipboard_20220203_062657.png)
 ........
 .......
 .....
@@ -133,7 +133,7 @@ tcpdump: listening on eth0, link-type EN10MB (Ethernet), snapshot length 262144 
 
 >按照tcp中划分的字节位来划分
 
-![](https://github.com/crab21/Images/tree/master/2022/clipboard_20220203_065122.png)
+![](https://raw.githubusercontent.com/crab21/Images/master/2022/clipboard_20220203_065122.png)
 
 #### 导出wireshark包：
 
@@ -143,7 +143,7 @@ tcpdump -i eth0 -w test.cap/test.pcap
 
 导出后可以直接用wireshark打开，查看具体情况：
 
-![](https://github.com/crab21/Images/tree/master/2022/clipboard_20220203_065536.png)
+![](https://raw.githubusercontent.com/crab21/Images/master/2022/clipboard_20220203_065536.png)
 
 ### Reference
 

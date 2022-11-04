@@ -31,11 +31,11 @@ createBoolConfig("appendonly", NULL, MODIFIABLE_CONFIG, server.aof_enabled, 0, N
 
 #### 关于aof_enable使用地方：
 
-![](https://github.com/crab21/Images/tree/master/clipboard_20210318_020243.png)
+![](https://raw.githubusercontent.com/crab21/Images/master/clipboard_20210318_020243.png)
 
 #### 再看下aof_state使用地方：
 
-![](https://github.com/crab21/Images/tree/master/clipboard_20210318_020100.png)
+![](https://raw.githubusercontent.com/crab21/Images/master/clipboard_20210318_020100.png)
 
 ### 主要方向：
 * aof在启动时候加载顺序
@@ -279,7 +279,7 @@ fmterr: /* Format error. */
 
 ##### 流程图：
 
-![](https://github.com/crab21/Images/tree/master/clipboard_20210318_032504.png)
+![](https://raw.githubusercontent.com/crab21/Images/master/clipboard_20210318_032504.png)
 
 #### aof触发流程：
 
@@ -301,10 +301,10 @@ configEnum aof_fsync_enum[] = {
 
 ##### aof_fsync_enum哪里用到了？
 
-![](https://github.com/crab21/Images/tree/master/clipboard_20210318_041746.png)
+![](https://raw.githubusercontent.com/crab21/Images/master/clipboard_20210318_041746.png)
 
 ##### 流程图:
-![](https://github.com/crab21/Images/tree/master/redis-2021-3-18-22-38.png)
+![](https://raw.githubusercontent.com/crab21/Images/master/redis-2021-3-18-22-38.png)
 
 #### aof和RDB混用的情况
 
@@ -320,7 +320,7 @@ createBoolConfig("aof-use-rdb-preamble", NULL, MODIFIABLE_CONFIG, server.aof_use
 
 ##### 流程图:
 
-![](https://github.com/crab21/Images/tree/master/redis-2021-03-21-23-34.png)
+![](https://raw.githubusercontent.com/crab21/Images/master/redis-2021-03-21-23-34.png)
 
 
 
@@ -338,13 +338,13 @@ flushAppendOnlyFile函数
 ```
 
 ##### 流程图：
-![](https://github.com/crab21/Images/tree/master/acsz8-d5ehw.webp)
+![](https://raw.githubusercontent.com/crab21/Images/master/acsz8-d5ehw.webp)
 
 #### AOF APPEND ONLY数据量过大
 
 >通过源码先看看流程：
 
-![](https://github.com/crab21/Images/tree/master/2022/redis-rewriteAppendOnlyfile.png)
+![](https://raw.githubusercontent.com/crab21/Images/master/2022/redis-rewriteAppendOnlyfile.png)
 
 ### Tips And Tricks
 

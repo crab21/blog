@@ -44,11 +44,11 @@ GPM调度算是在Go中比较经典的了，有必要深入学习下。
 ### 设计改变
 
 >以前的设计：
-![](https://github.com/crab21/Images/tree/master/GPM-1.png)
+![](https://raw.githubusercontent.com/crab21/Images/master/GPM-1.png)
 
 >新增Processor
 
- ![](https://github.com/crab21/Images/tree/master/GPM-2.png)
+ ![](https://raw.githubusercontent.com/crab21/Images/master/GPM-2.png)
 
 
  ### 实现计划

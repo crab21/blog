@@ -23,7 +23,7 @@ abbrlink: f733f408
 2、对dict的find/delete/add等操作时触发。
 ```
 <!--more-->
-![](https://github.com/crab21/Images/tree/master/clipboard_20210817_115402.png)
+![](https://raw.githubusercontent.com/crab21/Images/master/clipboard_20210817_115402.png)
 
 
 #### 源码分析：
