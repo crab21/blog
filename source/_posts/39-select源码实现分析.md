@@ -266,7 +266,7 @@ func walkselectcases(cases *Nodes) []*Node {
 ```
 ##### 随机化原因？
 
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210223_052947.png)
+![](https://github.com/crab21/Images/tree/master/clipboard_20210223_052947.png)
 
 * 关于fastrandn后面单独分析吧，还挺有意思的。
 

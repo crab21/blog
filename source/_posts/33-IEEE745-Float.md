@@ -43,11 +43,11 @@ $$ value =  sign * exponent * fraction $$
 
 具体表示:
 
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210206_104959.webp)
+![](https://github.com/crab21/Images/tree/master/clipboard_20210206_104959.webp)
 
 #### 单精度和双精度
 
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210206_110116.png)
+![](https://github.com/crab21/Images/tree/master/clipboard_20210206_110116.png)
 
 
 

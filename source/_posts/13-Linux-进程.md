@@ -52,11 +52,11 @@ ps:[线程：程序执行的最小单位。]
 
 ##### 3态图：
 
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/linux_process_3.1.png)
+![](https://github.com/crab21/Images/tree/master/linux_process_3.1.png)
 
 ##### 5态图：
 
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/linux_p3.png)
+![](https://github.com/crab21/Images/tree/master/linux_p3.png)
 
 ##### 7态图：
 
@@ -65,7 +65,7 @@ ps:[线程：程序执行的最小单位。]
 * 挂起等待状态：表明进程正在等待某一个事件的结束且目前在二级存储器里面。
 
 
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/linux_process_7.png)
+![](https://github.com/crab21/Images/tree/master/linux_process_7.png)
 
 ### 进程间通信
 

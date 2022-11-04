@@ -17,30 +17,30 @@ chan在Go中很常用，平时用的不少，但是总是没用的完整，
 
 ### 结构方面
 
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/Canvas%201.png)
+![](https://github.com/crab21/Images/tree/master/Canvas%201.png)
 
 <!--more-->
 
 ### makechan方面
 
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/makechan.png)
+![](https://github.com/crab21/Images/tree/master/makechan.png)
 
 ### chansend「c<-"aaa"」消息发送
 
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/chansend.png)
+![](https://github.com/crab21/Images/tree/master/chansend.png)
 
 
 ### chanrecv 「<-c」 消息消费
 
 
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/chanrecv.png)
+![](https://github.com/crab21/Images/tree/master/chanrecv.png)
 
 ### closed过程
 
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/closed.png)
+![](https://github.com/crab21/Images/tree/master/closed.png)
 
 ### summary
 
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/summary.png)
+![](https://github.com/crab21/Images/tree/master/summary.png)
 
 ### 待更...

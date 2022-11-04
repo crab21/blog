@@ -57,12 +57,12 @@ reboot
 ```
 apt-cache search linux-image 
 ```
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/2022/clipboard_20220916_012249.png)
+![](https://github.com/crab21/Images/tree/master/2022/clipboard_20220916_012249.png)
 
 
 ## 效果图：
 
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/2022/clipboard_20220916_012132.png)
+![](https://github.com/crab21/Images/tree/master/2022/clipboard_20220916_012132.png)
 
 
 ## 🔚

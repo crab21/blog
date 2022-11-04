@@ -52,7 +52,7 @@ typedef struct dict {
 
 >用一张图来描述
 
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210817_094456.png)
+![](https://github.com/crab21/Images/tree/master/clipboard_20210817_094456.png)
 
 ### redis的hash为何高效？
 
@@ -67,7 +67,7 @@ hset hello wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
 
 其实Redis提供了[👉🏻两种存hash编码](https://github.com/redis/redis/blob/6.2/src/server.h#L701)的结构：
 
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210817_095231.png)
+![](https://github.com/crab21/Images/tree/master/clipboard_20210817_095231.png)
 
 #### 类型转换关键点
 
@@ -94,7 +94,7 @@ hset hello wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
 2、单个table节点过长或者分布不均衡。
 ```
 
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210817_104655.png)
+![](https://github.com/crab21/Images/tree/master/clipboard_20210817_104655.png)
 
 
 * 触发的时机
@@ -104,7 +104,7 @@ hset hello wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
 2、对dict的find/delete/add等操作时触发。
 ```
 
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210817_115402.png)
+![](https://github.com/crab21/Images/tree/master/clipboard_20210817_115402.png)
 >具体rehash过程，后续会讲到。
 
 ### ZIPLIST VS HASHTABLE

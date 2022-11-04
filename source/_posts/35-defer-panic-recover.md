@@ -79,7 +79,7 @@ main.main()
 
 
 
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210217_110058.png)
+![](https://github.com/crab21/Images/tree/master/clipboard_20210217_110058.png)
 
 >从上面的修改可以看出,是没有遍历现有的整个defer链表结构导致的.
 

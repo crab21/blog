@@ -22,7 +22,7 @@ abbrlink: 66b6223a
 
 ### [👋入口](https://github.com/golang/go/blob/release-branch.go1.14/src/runtime/asm_amd64.s#L22)：
 
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210505_094951.png)
+![](https://github.com/crab21/Images/tree/master/clipboard_20210505_094951.png)
 
 
 <!--more-->
@@ -42,21 +42,21 @@ func main() {
 ```
 
 #### 汇编结果
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210506_111747.png)
+![](https://github.com/crab21/Images/tree/master/clipboard_20210506_111747.png)
 
 
 ### 大体流程：
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210506_013950.png)
+![](https://github.com/crab21/Images/tree/master/clipboard_20210506_013950.png)
 
 ### 汇编代码定义：
 
 * 全局：[👉🏻](https://github.com/golang/go/blob/release-branch.go1.14/src/runtime/asm_amd64.s#L236)
 
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210506_112649.png)
+![](https://github.com/crab21/Images/tree/master/clipboard_20210506_112649.png)
 
 * 入口：[👉🏻](https://github.com/golang/go/blob/release-branch.go1.14/src/runtime/asm_amd64.s#L22)
 
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210506_122959.png)
+![](https://github.com/crab21/Images/tree/master/clipboard_20210506_122959.png)
 
 
 ### rt0_go函数：

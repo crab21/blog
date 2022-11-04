@@ -75,14 +75,14 @@ ssh-keygen -t rsa -C "这里换上你的邮箱"
 
 这里用到的是你的 公钥`id_rsa.pub`文件，复制文件里面的内容到github密钥的界面：
 
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/20200902075825.png)
+![](https://github.com/crab21/Images/tree/master/20200902075825.png)
 
 添加SSH完了之后，就绑定了你本机器和github的关联关系，相当于授权成功。
 
 ##### 拓展
 >上述生成密钥时也可以自定义文件名称.此种情况针对你有多个github账号时，提交公钥文件时，找出自定义名称的文件即可。（下图自定义生成文件名称pywang112,则公钥为pywang112.pub，看好你生成的路径哦）
 
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/20200902080130.png)
+![](https://github.com/crab21/Images/tree/master/20200902080130.png)
 
 #### global配置（全局配置）或 local配置（当前仓库配置）
 
@@ -130,7 +130,7 @@ git config --local --unset http.proxy
 #### 配置完成，clone/commit代码
 
 ##### clone仓库代码
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/20200902081306.png)
+![](https://github.com/crab21/Images/tree/master/20200902081306.png)
 
 ```
 git clone https://github.com/crab21/blog.git

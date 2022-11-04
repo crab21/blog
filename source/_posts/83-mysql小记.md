@@ -104,7 +104,7 @@ into_option: {
 #### group by和having
 group by 和having的顺序小问题：
 
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/2022/clipboard_20220129_060235.png)
+![](https://github.com/crab21/Images/tree/master/2022/clipboard_20220129_060235.png)
 
 ```sql
 select id,name,_rowid from test.table_name having  id>2 group by  id; ❎

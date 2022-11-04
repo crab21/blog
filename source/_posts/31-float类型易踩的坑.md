@@ -44,7 +44,7 @@ NAN
 
 [官方解释](https://golang.google.cn/ref/spec#Representability)
 
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210204_030335.png)
+![](https://github.com/crab21/Images/tree/master/clipboard_20210204_030335.png)
 
 
 >简单的说就是 0/0 为负无穷大，所以为 NAN.

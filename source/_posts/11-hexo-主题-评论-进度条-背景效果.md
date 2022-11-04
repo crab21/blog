@@ -16,7 +16,7 @@ abbrlink: e18c94ab
 
 #### 步骤：
 ##### 申请id和secret
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/36f31671-8ada-4cbe-b60b-d1595dd701ee.png)
+![](https://github.com/crab21/Images/tree/master/36f31671-8ada-4cbe-b60b-d1595dd701ee.png)
 
 <!-- more -->
 

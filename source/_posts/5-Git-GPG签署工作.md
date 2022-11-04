@@ -14,7 +14,7 @@ abbrlink: 580377d0
 
  最终效果：如下图所示
 
- ![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/20200902123343.png)
+ ![](https://github.com/crab21/Images/tree/master/20200902123343.png)
 
 ### 安装过程
 
@@ -52,7 +52,7 @@ gpg --full-generate-key
 ```
 
 需要填写的地方：
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/20200902123803.png)
+![](https://github.com/crab21/Images/tree/master/20200902123803.png)
 
 
 #### 查看密钥完整信息
@@ -63,7 +63,7 @@ gpg --list-secret-keys --keyid-format LONG
 
 >secret keys（红圈地方后续用到，留意下）：
 
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/20200902124016.png)
+![](https://github.com/crab21/Images/tree/master/20200902124016.png)
 
 #### 根据secret keys生成PGP
 
@@ -72,13 +72,13 @@ gpg --armor --export  7BB8CF3593CA174C
 ```
 
 生成的PGP结果，后续需要将此结果导入到Github账号的配置信息中
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/20200902124305.png)
+![](https://github.com/crab21/Images/tree/master/20200902124305.png)
 
 #### Github账号中设置
 
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/20200902124443.png)
+![](https://github.com/crab21/Images/tree/master/20200902124443.png)
 
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/20200902124527.png)
+![](https://github.com/crab21/Images/tree/master/20200902124527.png)
 
 
 >将上述生成的PGP填入，点击[Add GPG Key]即可
@@ -96,6 +96,6 @@ gpg --armor --export  7BB8CF3593CA174C
 
 >再次提交commit即可生效。产生如下图的签名效果：
 
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/20200902123343.png)
+![](https://github.com/crab21/Images/tree/master/20200902123343.png)
 
 #### End

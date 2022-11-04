@@ -35,7 +35,7 @@ git version 2.24.3 (Apple Git-128)
 
 >查看使用方法「划重点」：
 
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210309_010044.png)
+![](https://github.com/crab21/Images/tree/master/clipboard_20210309_010044.png)
 
 **图中option地方为可选的配置项**
 
@@ -48,7 +48,7 @@ git version 2.24.3 (Apple Git-128)
 * date
 * commit message
 
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210309_125518.png)
+![](https://github.com/crab21/Images/tree/master/clipboard_20210309_125518.png)
 
 #### git log --s***
 
@@ -77,7 +77,7 @@ $ git log --s
 ##### git log --stat
 
 >可以看到diff的文件信息
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210309_010656.png)
+![](https://github.com/crab21/Images/tree/master/clipboard_20210309_010656.png)
 
 #### git log --pretty=?
 
@@ -96,19 +96,19 @@ short    -- few headers and only subject of messages
 
 ##### git log --pretty=fuller
 
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210309_011529.png)
+![](https://github.com/crab21/Images/tree/master/clipboard_20210309_011529.png)
 
 #### git log --author=?
 
 > git log --author="Alex Brainman"
 
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210309_011728.png)
+![](https://github.com/crab21/Images/tree/master/clipboard_20210309_011728.png)
 
 #### 合并在一起，所有基本信息：
 
 >git log --author="Alex Brainman" --stat --graph --tags --pretty=oneline --decorate
 
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210309_012016.png)
+![](https://github.com/crab21/Images/tree/master/clipboard_20210309_012016.png)
 
 #### 某个文件的log
 
@@ -118,12 +118,12 @@ short    -- few headers and only subject of messages
 git log  --stat --graph --tags --pretty=oneline --decorate src/runtime/
 ```
 
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210309_012342.png)
+![](https://github.com/crab21/Images/tree/master/clipboard_20210309_012342.png)
 
 
 ##### pretty=fuller和pretty=oneline的区别：
 
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210309_012556.png)
+![](https://github.com/crab21/Images/tree/master/clipboard_20210309_012556.png)
 
 #### git log --before=*** --after=***
 
@@ -134,6 +134,6 @@ git log  --stat --graph --tags --pretty=oneline --before="2021-03-09" --after="2
 git log  --stat --graph --tags --pretty=fuller --before="2021-03-09" --after="2020-03-10" --decorate src/runtime/
 ```
 
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210309_013157.png)
+![](https://github.com/crab21/Images/tree/master/clipboard_20210309_013157.png)
 
 ### End

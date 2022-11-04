@@ -29,7 +29,7 @@ abbrlink: 44b34745
 
 * 这里罗列了几个比较重要的过程:
 
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/redis-rdb-1.png)
+![](https://github.com/crab21/Images/tree/master/redis-rdb-1.png)
 
 #### rdbSaveBackground
 ```c++
@@ -338,26 +338,26 @@ int rdbSaveKeyValuePair(rio *rdb, robj *key, robj *val, long long expiretime) {
 
 #### rdbSave usage location:
 
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210316_083902.png)
+![](https://github.com/crab21/Images/tree/master/clipboard_20210316_083902.png)
 
 >关于rdbSaveBackgroud的使用地方:
 
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210316_085205.png)
+![](https://github.com/crab21/Images/tree/master/clipboard_20210316_085205.png)
 
 ### 关于rdbsave和redis如何联系的？
 >写到这里的才慢慢理解这个里面的关系，如果你问我为啥不在前面就列出来关系图呢？
 
 >那我只能说这是一个学习的正常流程，抓住其中的关键点，先看实现，然后再向外扩散，由内而外.
 
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/redis-2021-03-16-13-48-23.png)
+![](https://github.com/crab21/Images/tree/master/redis-2021-03-16-13-48-23.png)
 
 
 **如果区分下redis的上下层面的关系，那就可以大致分为三层：command+底层实现+最底层的IO操作等.**
 
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/redis-2021-03-16-13-58-41.png)
+![](https://github.com/crab21/Images/tree/master/redis-2021-03-16-13-58-41.png)
 
 **再细分下中间的过程**
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/redis-2021-03-16-14-13-35.png)
+![](https://github.com/crab21/Images/tree/master/redis-2021-03-16-14-13-35.png)
 
 ### Todo
 - [x] rdb快速备份原因: fork主进程

@@ -23,7 +23,7 @@ abbrlink: 82f0ffe7
 源码中的定义：[🙌🏽  func getg() *g](https://github.com/golang/go/blob/release-branch.go1.14/src/runtime/stubs.go#L18)
 
 
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210513_113610.png)
+![](https://github.com/crab21/Images/tree/master/clipboard_20210513_113610.png)
 
 
 ### 使用：
@@ -33,11 +33,11 @@ abbrlink: 82f0ffe7
 [👉🏾1.14呈现：](https://github.com/golang/go/blob/release-branch.go1.14/src/cmd/compile/internal/amd64/ssa.go#L895)
 
 
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210513_114619.png)
+![](https://github.com/crab21/Images/tree/master/clipboard_20210513_114619.png)
 
 
 >根据是否使用TLS分两种：
 
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210513_115015.png)
+![](https://github.com/crab21/Images/tree/master/clipboard_20210513_115015.png)
 
 ### END

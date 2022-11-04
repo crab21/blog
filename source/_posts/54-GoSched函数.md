@@ -14,7 +14,7 @@ abbrlink: 10a41c81
 GoSched 干嘛的？ 看看官方说明：
 
 
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210526_051405.png)
+![](https://github.com/crab21/Images/tree/master/clipboard_20210526_051405.png)
 
 >两点：
 * 让出processor
@@ -63,7 +63,7 @@ func readgstatus(gp *g) uint32 {
 
 >atomicstatus变量的作用：
 
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210526_052742.png)
+![](https://github.com/crab21/Images/tree/master/clipboard_20210526_052742.png)
 
 #### 👉🏿 casgstatus
 

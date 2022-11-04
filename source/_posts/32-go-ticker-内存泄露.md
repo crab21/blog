@@ -15,7 +15,7 @@ abbrlink: 53e1932f
 不知道你们有没有经历过这种情况：
 >测试示例图片：
 
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210204_051425.webp)
+![](https://github.com/crab21/Images/tree/master/clipboard_20210204_051425.webp)
 
 <!--more-->
 
@@ -74,7 +74,7 @@ ticker没有stop
 [官方解释](https://github.com/golang/go/blob/master/src/time/tick.go#L62)
 
 #### Ticker不能被回收导致
-![](https://crab-1251738482.cos.ap-guangzhou.myqcloud.com/clipboard_20210204_053201.webp)
+![](https://github.com/crab21/Images/tree/master/clipboard_20210204_053201.webp)
 
 
 #### 为何不能被回收？
