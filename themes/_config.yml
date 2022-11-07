@@ -28,7 +28,7 @@ custom_file_path:
   #bodyEnd: source/_data/body-end.njk
   #variable: source/_data/variables.styl
   #mixin: source/_data/mixins.styl
-  #style: source/_data/styles.styl
+  # style: source/_data/styles.styl
 
 # ---------------------------------------------------------------
 # Scheme Settings
@@ -428,8 +428,9 @@ font:
   enable: true
 
   # Uri of fonts host, e.g. https://fonts.googleapis.com (Default).
-  host: //blog.imrcrab.com/css/robofont.css
-  size: 12px
+  # host: //blog.imrcrab.com/css/robofont.css
+  host: https://fonts.lug.ustc.edu.cn
+  size: 13px
   # Font options:
   # `external: true` will load this font family from `host` above.
   # `family: Times New Roman`. Without any quotes.
@@ -438,30 +439,31 @@ font:
   # Global font settings used for all elements inside <body>.
   global:
     external: true
-    family: STKaiti
+    family: Alegreya Sans
     size: 13px
 
   # Font settings for site title (.site-title).
   title:
     external: true
-    family:
-    size:
+    family: Alegreya Sans 
+    size: 14px
 
   # Font settings for headlines (<h1> to <h6>).
   headings:
     external: true
-    family:
-    size:
+    family: Alegreya Sans
+    size: 13px
 
   # Font settings for posts (.post-body).
   posts:
     external: true
-    family: STKaiti
+    family: Alegreya Sans
+    size: 13px
 
   # Font settings for <code> and code blocks.
   codes:
     external: true
-    family:
+    family: Noto Sans
 
 # ---------------------------------------------------------------
 # SEO Settings
