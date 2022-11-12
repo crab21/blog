@@ -13,5 +13,13 @@ tags:
 
 删除某些字符所在的行：
 ^.*(string1|string2|string3).*\n
+```
 
+### Linux
+
+#### 删除文本中的空行
+```shell
+grep实现:
+
+grep -v '^\s*$' test.txt
 ```
