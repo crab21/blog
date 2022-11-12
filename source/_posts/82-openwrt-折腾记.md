@@ -1,6 +1,7 @@
 ---
 title: 「82」openwrt 折腾记
 date: '2021/11/07 18:38:24'
+updated: '2021/11/07 21:43:30'
 tags:
   - openwrt
   - 软路由
