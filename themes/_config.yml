@@ -463,7 +463,7 @@ font:
   # Font settings for <code> and code blocks.
   codes:
     external: true
-    family: Noto Sans
+    family: Inconsolata
 
 # ---------------------------------------------------------------
 # SEO Settings

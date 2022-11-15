@@ -1,7 +1,10 @@
 ---
-title: 「64」redis基本类型
+title: 「64」Redis基本类型
+abbrlink: f7742c12
 date: 2022-11-15 20:13:26
+updated: '2022/11/15 21:43:30'
 tags:
+    - Redis
 ---
 
 

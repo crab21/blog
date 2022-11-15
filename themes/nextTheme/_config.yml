@@ -463,7 +463,7 @@ font:
   # Font settings for <code> and code blocks.
   codes:
     external: true
-    family: Open Sans
+    family: Inconsolata
     size: 14px
 
 # ---------------------------------------------------------------
