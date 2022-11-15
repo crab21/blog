@@ -2,6 +2,10 @@
 title: 「94」golang GC (garbage collection)
 date: 2022-11-09 09:27:03
 tags:
+    - Go_1.16
+    - Go源码
+    - GC
+    - Go Runtime
 ---
 ## [Garbage Collection](https://en.wikipedia.org/wiki/Garbage_collection_(computer_science))
 
@@ -51,6 +55,18 @@ TS: 如果一个go值的引用写入到另一个要逃逸的go值,则该值也�
 ```
 ### GC Algorithm Phases
 
+![](https://raw.githubusercontent.com/crab21/Images/master/2022/2022-11-13-16-31-58-95655579f243cdd264913aa51b74d0eb-20221113163157-69ab2f.png)
+
+## GC时机
+
+* 1、申请内存时runtime.mallogc会根据堆大小判断. [→ Go](https://github.com/golang/go/blob/dev.boringcrypto.go1.16/src/runtime/malloc.go#L911)
+* 2、手动调用runtime.GC函数 [ → Go](https://github.com/golang/go/blob/dev.boringcrypto.go1.16/src/runtime/mgc.go#L1126)
+* 3、runtime.sysmon定时调用会触发[ → Go](https://github.com/golang/go/blob/dev.boringcrypto.go1.16/src/runtime/proc.go#L5285)
+
+
+>如下图所示:
+
+![](https://raw.githubusercontent.com/crab21/Images/master/2022/2022-11-13-16-26-46-f8b135b8f8ef76ea3942c8c395fe14c2-20221113162645-2ad461.png)
 
 ## Reference
 
@@ -60,3 +76,4 @@ TS: 如果一个go值的引用写入到另一个要逃逸的go值,则该值也�
 * ☞ https://docs.google.com/document/d/1wmjrocXIWTr1JxU-3EQBI6BK6KgtiFArkG47XK73xIQ
 * ☞ https://www.developer.com/languages/tricolor-algorithm-golang/
 * ☞ https://medium.com/a-journey-with-go/go-how-does-the-garbage-collector-mark-the-memory-72cfc12c6976
+* ☞ https://github.com/golang/go/blob/dev.boringcrypto.go1.16
