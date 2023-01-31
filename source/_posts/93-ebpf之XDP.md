@@ -113,10 +113,10 @@ CPU近乎满载(后模拟了下,是cpu软中断占用过高).
 >右中是nload显示的实时带宽信息.
 
 * 单个tcp模拟攻击:
-![](https://raw.githubusercontent.com/crab21/Images/master/2022/2023-01-31-21-34-44-0299d1a325dac7fcca15baea13f30447-20230131213438-cbcdf7.png)
+![](https://raw.githubusercontent.com/crab21/Images/master/2022/2023-02-01-00-37-16-23f522ecaf76a70ceeba2c81accd0b42-1-1-4f84e3.png)
 
 * 两个tcp模拟攻击
-![](https://raw.githubusercontent.com/crab21/Images/master/2022/2023-01-31-21-38-14-4b58c215393bc495b70e59e0922e8803-202301312138106-2d3d50.png)
+![](https://raw.githubusercontent.com/crab21/Images/master/2022/2023-02-01-00-38-09-98a9cabf5c0b54f9f1a307ffcf96a5cf-1-2-bff12b.png)
 
 >重要的两个信息:
 
@@ -129,10 +129,10 @@ CPU近乎满载(后模拟了下,是cpu软中断占用过高).
 
 
 * 单个tcp模拟攻击:
-![](https://raw.githubusercontent.com/crab21/Images/master/2022/2023-01-31-21-47-30-ba4bc588f54e96698e9c93082758d42f-202301312147146-cc6158.png)
+![](https://raw.githubusercontent.com/crab21/Images/master/2022/2023-02-01-00-38-44-bbd5d271793613f99a812c98fe0c4a4f-2-1-e1561d.png)
 
 * 两个tcp模拟攻击
-![](https://raw.githubusercontent.com/crab21/Images/master/2022/2023-01-31-22-37-17-339b51b65f5f84f17fa44770d28fbd0d-202301312237747-ba697e.png)
+![](https://raw.githubusercontent.com/crab21/Images/master/2022/2023-02-01-00-38-49-9a2d13c91dc81f6d9ef3779c33f76811-2-2-b37c75.png)
 
 |  模拟攻击个数/百分比   |  cpu 软中断  |  idle(闲置)  | cpu占用|
 |  ----         | ----               |  ----  | ----  |
