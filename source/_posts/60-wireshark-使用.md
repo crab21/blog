@@ -5,199 +5,67 @@ date: 2021-07-19 10:43:34
 tags:
 ---
 
-![](https://raw.githubusercontent.com/crab21/Images/master/clipboard_20210720_090654.png)
-
 <!--more-->
 
-### [👉🏿wireshark介绍](https://baike.baidu.com/item/Wireshark/10876564)
+## [👉🏿wireshark介绍](https://baike.baidu.com/item/Wireshark/10876564)
 
-![](https://raw.githubusercontent.com/crab21/Images/master/clipboard_20210719_112815.png)
-### Modules
+## Modules
 
-#### [👉👉http](https://www.wireshark.org/docs/dfref/h/http.html)
+### [👉👉HTTP](https://www.wireshark.org/docs/dfref/h/http.html)
 
-##### http.accept
+```
+http.request.method==GET
+http.request.method==POST
+http.response
+http.response.code
+http.request.uri
+http.request.full_uri
+```
 
-![](https://raw.githubusercontent.com/crab21/Images/master/clipboard_20210719_095722.png)
+### [👉👉IP](https://www.wireshark.org/docs/dfref/i/ip.html)
 
-#### http.request.method
->http.request.method==GET
+```
+ip.addr
+ip.host
+ip.proto
+ip.version
+ip.ttl
+```
 
->http.request.method==POST
-
->......
-
-
-![](https://raw.githubusercontent.com/crab21/Images/master/clipboard_20210719_100002.png)
-
-##### http.response
-
-![](https://raw.githubusercontent.com/crab21/Images/master/clipboard_20210719_100229.png)
-
-##### http.response.code
-
-![](https://raw.githubusercontent.com/crab21/Images/master/clipboard_20210719_100414.png)
-
-##### http.request.uri
-
-![](https://raw.githubusercontent.com/crab21/Images/master/clipboard_20210719_100519.png)
-
-##### http.request.full_uri
-
-![](https://raw.githubusercontent.com/crab21/Images/master/clipboard_20210719_100739.png)
+### [👉👉TCP](https://www.wireshark.org/docs/dfref/t/tcp.html)
 
 
-##### other
 
-参考上面的例子，使用其余的字段值。
-
-#### ip
-
-##### ip.addr
->addr:127.0.0.1     http请求    port:8001
-![](https://raw.githubusercontent.com/crab21/Images/master/clipboard_20210719_105408.png)
-
-##### ip.host
-
->官方解释：
-
-![](https://raw.githubusercontent.com/crab21/Images/master/clipboard_20210719_110147.png)
-
->eg：
-![](https://raw.githubusercontent.com/crab21/Images/master/clipboard_20210719_110319.png)
-
-##### ip.proto
-
->[→→→→官方文档：](https://en.wikipedia.org/wiki/List_of_IP_protocol_numbers)
-
-![](https://raw.githubusercontent.com/crab21/Images/master/clipboard_20210719_110553.png)
-
->eg: ICMP
-
-![](https://raw.githubusercontent.com/crab21/Images/master/clipboard_20210719_110643.png)
-
->eg: UDP
-
-![](https://raw.githubusercontent.com/crab21/Images/master/clipboard_20210719_111049.png)
-
-##### ip.version
-
->官方文档
-![](https://raw.githubusercontent.com/crab21/Images/master/clipboard_20210719_113128.png)
-
->eg: IPV4
-
-![](https://raw.githubusercontent.com/crab21/Images/master/clipboard_20210719_113100.png)
-
-##### ip.ttl
-
->eg:
-
-![](https://raw.githubusercontent.com/crab21/Images/master/clipboard_20210719_113728.png)
-
-#### tcp
-
-##### tcp.dstport
-
->eg: 9026
-![](https://raw.githubusercontent.com/crab21/Images/master/clipboard_20210719_114812.png)
-
-##### tcp.port
-
->eg: 9026
-
-![](https://raw.githubusercontent.com/crab21/Images/master/clipboard_20210719_114949.png)
-
-##### tcp.stream
-
->eg: ==0
-![](https://raw.githubusercontent.com/crab21/Images/master/clipboard_20210720_120621.png)
-
-#### tls
-
-##### tls.alert_message
->[👉🏻👉🏻官方参考值](https://datatracker.ietf.org/doc/html/rfc5246#appendix-A.3)
-
-![](https://raw.githubusercontent.com/crab21/Images/master/clipboard_20210720_051727.png)
-
->eg:
-
-![](https://raw.githubusercontent.com/crab21/Images/master/clipboard_20210720_052127.png)
-
-##### tls.compress_certificate.algorithm
-
->[👉🏻👉🏻官方参考值](https://datatracker.ietf.org/doc/html/rfc5246#section-7.4.1.4.1)
-
-![](https://raw.githubusercontent.com/crab21/Images/master/clipboard_20210720_051250.png)
+```
+tcp.dstport
+tcp.port
+tcp.stream
+tls.alert_message
+tls.compress_certificate.algorithm
+```
 
 
->eg:
+### [👉👉TLS](https://www.wireshark.org/docs/dfref/t/tls.html)
 
-![](https://raw.githubusercontent.com/crab21/Images/master/clipboard_20210720_050807.png)
+* [👉🏻👉🏻tls.alert_message](https://datatracker.ietf.org/doc/html/rfc5246#appendix-A.3)
 
+* [👉🏻👉🏻tls.compress_certificate.algorithm](https://datatracker.ietf.org/doc/html/rfc5246#section-7.4.1.4.1)
 
-##### tls.handshake.version
-
->[👉🏿👉🏿官方参考](https://tlsfingerprint.io/top/versions)
+* [👉🏿👉🏿tls.handshake.version](https://tlsfingerprint.io/top/versions)
 
 ![](https://raw.githubusercontent.com/crab21/Images/master/clipboard_20210720_052921.png)
 
-### Import/Export package
+### [👉👉JSON](https://www.wireshark.org/docs/dfref/j/json.html)
 
->导入和导出方法异曲同工
+> 当Content-Type: application/json  时候可以查询相应的key或者value
 
-#### export
-
-##### 方法一：
-
-![](https://raw.githubusercontent.com/crab21/Images/master/clipboard_20210719_101005.png)
-
-##### 方法二：
-
-![](https://raw.githubusercontent.com/crab21/Images/master/clipboard_20210719_101111.png)
-
-#### import
-
-##### 方法一：
-![](https://raw.githubusercontent.com/crab21/Images/master/clipboard_20210719_101232.png)
-
-##### 方法二：
-
-![](https://raw.githubusercontent.com/crab21/Images/master/clipboard_20210719_101322.png)
+```
+json.key contains "xxxx"
+json.value.string contains "xxxxxxxxxxxxxx"
+```
 
 
-### Preferences
-
-#### Resolve IP to {domain name}
-
->勾选此选项
-
-![](https://raw.githubusercontent.com/crab21/Images/master/clipboard_20210721_074453.png)
-
-> eg:
-
-![](https://raw.githubusercontent.com/crab21/Images/master/clipboard_20210721_075010.png)
-
-#### Follow TCP stream
-
->方式一：
-
-![](https://raw.githubusercontent.com/crab21/Images/master/clipboard_20210721_075630.png)
-
->方式二：
-
-![](https://raw.githubusercontent.com/crab21/Images/master/clipboard_20210721_075943.png)
-
->任选一个 eg: TCP stream「http stream方式相同，不再演示」
-
-![](https://raw.githubusercontent.com/crab21/Images/master/clipboard_20210721_080616.png)
-
-
-### Others
-
-
-
-#### "TCP segment of reassembled PDU"
+## "TCP segment of reassembled PDU"
 
 ![](https://raw.githubusercontent.com/crab21/Images/master/clipboard_20210720_040500.png)
 
@@ -206,7 +74,18 @@ tags:
 >关于这个问题，抓包看看，ack是一样的，当前的next sequence number是下一个的sequence number.
 ![](https://raw.githubusercontent.com/crab21/Images/master/clipboard_20210720_041222.png)
 
-### Reference
+
+## 文档搜索
+
+```
+https://www.wireshark.org/docs/dfref/i/ip.html
+
+https://www.wireshark.org/docs/dfref/首字母/模块名称.html
+```
+
+![](https://raw.githubusercontent.com/crab21/Images/master/2023/2023-03-21-22-24-33-ba663d3325437c7db78b614a272736a1-202303212224542-bfcff9.png)
+
+## Reference
 
 * [☞ wireshark官网](https://www.wireshark.org/)
 
