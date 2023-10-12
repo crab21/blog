@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 5.4.2">
+<link rel="preconnect" href="https://fonts.lug.ustc.edu.cn" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/title.webp">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/title.webp">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.lug.ustc.edu.cn/css?family=Alegreya+Sans:300,300italic,400,400italic,700,700italic%7CInconsolata:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha256-AbA177XfpSnFEvgpYu1jMygiLabzPCJCRIBtR5jGc0k=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/blue/pace-theme-bounce.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.imrcrab.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.13.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":false,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":-1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="一转眼就2023了,好多文章都在2022没有发出来,成为了Drafts… 最近在搞Linux(瞎搞)的iptables防火墙,有一次被tcp attack了,当时想着iptables怎么都够了,结果没有想到的是: CPU近乎满载(后模拟了下,是cpu软中断占用过高). 还有一次被dns udp投毒了恶心到了, 开门见山吧,cpu 软中断问题,是这次致命的,用替代的方案ebpf可以比较好的解决(不能">
+<meta property="og:type" content="article">
+<meta property="og:title" content="「93」ebpf之XDP">
+<meta property="og:url" content="https://blog.imrcrab.com/archives/110bb26b.html">
+<meta property="og:site_name" content="迷茫的小螃蟹">
+<meta property="og:description" content="一转眼就2023了,好多文章都在2022没有发出来,成为了Drafts… 最近在搞Linux(瞎搞)的iptables防火墙,有一次被tcp attack了,当时想着iptables怎么都够了,结果没有想到的是: CPU近乎满载(后模拟了下,是cpu软中断占用过高). 还有一次被dns udp投毒了恶心到了, 开门见山吧,cpu 软中断问题,是这次致命的,用替代的方案ebpf可以比较好的解决(不能">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/crab21/Images/master/2022/2023-01-31-23-16-16-0e8276bf40a642b19e21f118389b0e3d-202301312316500-6bd787.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/crab21/Images/master/2022/2023-02-01-00-37-16-23f522ecaf76a70ceeba2c81accd0b42-1-1-4f84e3.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/crab21/Images/master/2022/2023-02-01-00-38-09-98a9cabf5c0b54f9f1a307ffcf96a5cf-1-2-bff12b.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/crab21/Images/master/2022/2023-02-01-00-38-44-bbd5d271793613f99a812c98fe0c4a4f-2-1-e1561d.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/crab21/Images/master/2022/2023-02-01-00-38-49-9a2d13c91dc81f6d9ef3779c33f76811-2-2-b37c75.png">
+<meta property="article:published_time" content="2023-01-31T20:33:40.000Z">
+<meta property="article:modified_time" content="2023-10-12T06:53:53.515Z">
+<meta property="article:author" content="crab">
+<meta property="article:tag" content="源码">
+<meta property="article:tag" content="linux">
+<meta property="article:tag" content="ebpf">
+<meta property="article:tag" content="XDP">
+<meta property="article:tag" content="rust">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/crab21/Images/master/2022/2023-01-31-23-16-16-0e8276bf40a642b19e21f118389b0e3d-202301312316500-6bd787.png">
+
+
+<link rel="canonical" href="https://blog.imrcrab.com/archives/110bb26b.html">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.imrcrab.com/archives/110bb26b.html","path":"archives/110bb26b.html","title":"「93」ebpf之XDP"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>「93」ebpf之XDP | 迷茫的小螃蟹</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">迷茫的小螃蟹</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#iptables%E5%88%86%E6%9E%90"><span class="nav-number">1.</span> <span class="nav-text">iptables分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%98%E5%8A%BF"><span class="nav-number">1.1.</span> <span class="nav-text">优势:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9F%AD%E6%9D%BF"><span class="nav-number">1.2.</span> <span class="nav-text">短板</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ebpf-%E6%9B%BF%E4%BB%A3-iptables"><span class="nav-number">2.</span> <span class="nav-text">ebpf 替代 iptables</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8B%E7%BB%8D-%E4%B8%8D%E7%BF%BB%E8%AF%91-%E8%87%AA%E5%B7%B1%E9%A3%9F%E7%94%A8%E2%80%94-ebpf%E5%AE%98%E7%BD%91"><span class="nav-number">2.1.</span> <span class="nav-text">介绍(不翻译,自己食用—&gt;ebpf官网):</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%98%E5%8A%BF-v2"><span class="nav-number">2.2.</span> <span class="nav-text">优势:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%89%8D%E6%9C%9F%E5%8D%A1%E7%82%B9"><span class="nav-number">2.3.</span> <span class="nav-text">前期卡点:</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E5%8F%91%E6%B5%81%E7%A8%8B"><span class="nav-number">3.</span> <span class="nav-text">开发流程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E5%8F%91%E8%AF%AD%E8%A8%80"><span class="nav-number">3.1.</span> <span class="nav-text">开发语言:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A8%E8%8D%90%E5%BA%93"><span class="nav-number">3.2.</span> <span class="nav-text">推荐库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E5%8F%91%E6%A8%A1%E7%89%88"><span class="nav-number">3.3.</span> <span class="nav-text">开发模版:</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%A7%E8%83%BD%E5%AF%B9%E6%AF%94-%E7%BB%88%E6%80%81"><span class="nav-number">4.</span> <span class="nav-text">性能对比(终态)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E6%96%B9%E6%B3%95"><span class="nav-number">4.1.</span> <span class="nav-text">测试方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E5%90%AFiptables-%E5%85%B3%E9%97%ADebpf"><span class="nav-number">4.2.</span> <span class="nav-text">开启iptables,关闭ebpf</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%97%ADiptables-%E5%BC%80%E5%90%AFebpf"><span class="nav-number">4.3.</span> <span class="nav-text">关闭iptables,开启ebpf</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA"><span class="nav-number">4.4.</span> <span class="nav-text">结论</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">5.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">crab</p>
+  <div class="site-description" itemprop="description">日行一步...</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">68</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">58</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/crab21" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;crab21" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:pywang112@gmail.com" title="E-Mail → mailto:pywang112@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="返回顶部">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.imrcrab.com/archives/110bb26b.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="crab">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="迷茫的小螃蟹">
+      <meta itemprop="description" content="日行一步...">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="「93」ebpf之XDP | 迷茫的小螃蟹">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          「93」ebpf之XDP
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2023-01-31 20:33:40" itemprop="dateCreated datePublished" datetime="2023-01-31T20:33:40+00:00">2023-01-31</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-10-12 06:53:53" itemprop="dateModified" datetime="2023-10-12T06:53:53+00:00">2023-10-12</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.6k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>1 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>一转眼就2023了,好多文章都在2022没有发出来,成为了Drafts…</p>
+<p>最近在搞Linux(瞎搞)的iptables防火墙,有一次被tcp attack了,当时想着iptables怎么都够了,结果没有想到的是:<br>
+CPU近乎满载(后模拟了下,是cpu软中断占用过高).</p>
+<p>还有一次被dns udp投毒了恶心到了,</p>
+<p>开门见山吧,cpu 软中断问题,是这次致命的,用替代的方案ebpf可以比较好的解决(不能完全避免).</p>
+<span id="more"></span>
+<h2 id="iptables分析"><a class="header-anchor" href="#iptables分析">¶</a>iptables分析</h2>
+<h3 id="优势"><a class="header-anchor" href="#优势">¶</a>优势:</h3>
+<ul>
+<li>简洁</li>
+<li>易用</li>
+<li>规则可查</li>
+<li>可随处google/baidu</li>
+</ul>
+<h3 id="短板"><a class="header-anchor" href="#短板">¶</a>短板</h3>
+<p>(如果你是iptables的raw/bpf级别的用户,就别往下看了,你已经巅峰[疯]了).</p>
+<ul>
+<li>更新规则需要重新reload ALL,更新后加载成本太高过高(尤其是过w的规则).</li>
+<li>匹配效率O(n),线性的.</li>
+</ul>
+<h2 id="ebpf-替代-iptables"><a class="header-anchor" href="#ebpf-替代-iptables">¶</a>ebpf 替代 iptables</h2>
+<h3 id="介绍-不翻译-自己食用—-ebpf官网"><a class="header-anchor" href="#介绍-不翻译-自己食用—-ebpf官网">¶</a>介绍(不翻译,自己食用—&gt;<a target="_blank" rel="noopener" href="https://ebpf.io/">ebpf官网</a>):</h3>
+<blockquote>
+<p>简单的说,code被JIT编译成字节码,通过挂载的方式,挂到内核指定区域.</p>
+</blockquote>
+<blockquote>
+<p>结构图:<br>
+<img data-src="https://raw.githubusercontent.com/crab21/Images/master/2022/2023-01-31-23-16-16-0e8276bf40a642b19e21f118389b0e3d-202301312316500-6bd787.png" alt=""></p>
+</blockquote>
+<h3 id="优势-v2"><a class="header-anchor" href="#优势-v2">¶</a>优势:</h3>
+<ul>
+<li>性能好</li>
+<li>安全+方便</li>
+<li>可编程/定制化</li>
+<li>可追踪能力(probe).</li>
+</ul>
+<h3 id="前期卡点"><a class="header-anchor" href="#前期卡点">¶</a>前期卡点:</h3>
+<ul>
+<li>需要开发者有一定的编程能力</li>
+<li>对内核需要一定了解(推荐两个著作)
+<ul>
+<li><a target="_blank" rel="noopener" href="https://book.douban.com/subject/2287506/">深入理解LINUX内核(第三版)</a></li>
+<li><a target="_blank" rel="noopener" href="https://book.douban.com/subject/4843567/">深入Linux内核架构</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="开发流程"><a class="header-anchor" href="#开发流程">¶</a>开发流程</h2>
+<h3 id="开发语言"><a class="header-anchor" href="#开发语言">¶</a>开发语言:</h3>
+<blockquote>
+<p>支持ebpf的即可[rust/go/c/c++等], 这里用的是rust实现.</p>
+</blockquote>
+<h3 id="推荐库"><a class="header-anchor" href="#推荐库">¶</a>推荐库</h3>
+<blockquote>
+<p>随便哪一个皆可.</p>
+</blockquote>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/aya-rs/aya">aya</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/foniod/redbpf">readbpf</a></li>
+</ul>
+<h3 id="开发模版"><a class="header-anchor" href="#开发模版">¶</a>开发模版:</h3>
+<p>按教程版来,一个简单的bpf程序没什么问题,开发过程就不讲了,完全看理解了(网络模型/linux内核/IO模型/三态).</p>
+<blockquote>
+<p>https://aya-rs.dev/book/</p>
+</blockquote>
+<h2 id="性能对比-终态"><a class="header-anchor" href="#性能对比-终态">¶</a>性能对比(终态)</h2>
+<p>这次实现功能比较多:</p>
+<ul>
+<li>防ddos</li>
+<li>防syn flood</li>
+<li>禁用icmp</li>
+<li>white ip</li>
+<li>disable udp/tcp/arp等</li>
+<li>开放指定端口</li>
+<li>dns防投毒</li>
+<li>mac地址可校验</li>
+<li>指纹学习匹配,防sliding window attack(需要跑一段时间学习指纹)</li>
+<li>等等(还在继续添加中)</li>
+</ul>
+<blockquote>
+<p>这里通过: 1、开启iptables 2、开启ebpf 3、关闭所有防护(没意义,裸奔挨打的状态)<br>
+主要比较前两种.</p>
+</blockquote>
+<h3 id="测试方法"><a class="header-anchor" href="#测试方法">¶</a>测试方法</h3>
+<ul>
+<li>开启iptables,关闭ebpf,两个服务器(A、B)对C服务器进行hping3模拟.</li>
+<li>关闭iptables,开启ebpf,两个服务器(A、B)对C服务器进行hping3模拟.</li>
+</ul>
+<blockquote>
+<p>主要观察cpu各个状态.</p>
+</blockquote>
+<h3 id="开启iptables-关闭ebpf"><a class="header-anchor" href="#开启iptables-关闭ebpf">¶</a>开启iptables,关闭ebpf</h3>
+<blockquote>
+<p>左上用mpstat显示的cpu和IO等信息.<br>
+右上是iptables仅开放2022(ssh端口),其余所有都drop掉.<br>
+右中是nload显示的实时带宽信息.</p>
+</blockquote>
+<ul>
+<li>
+<p>单个tcp模拟攻击:<br>
+<img data-src="https://raw.githubusercontent.com/crab21/Images/master/2022/2023-02-01-00-37-16-23f522ecaf76a70ceeba2c81accd0b42-1-1-4f84e3.png" alt=""></p>
+</li>
+<li>
+<p>两个tcp模拟攻击<br>
+<img data-src="https://raw.githubusercontent.com/crab21/Images/master/2022/2023-02-01-00-38-09-98a9cabf5c0b54f9f1a307ffcf96a5cf-1-2-bff12b.png" alt=""></p>
+</li>
+</ul>
+<blockquote>
+<p>重要的两个信息:</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>attack/percent</th>
+<th>cpu 软中断</th>
+<th>idle(闲置)</th>
+<th>cpu占用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>单个</td>
+<td>5.9%</td>
+<td>78%</td>
+<td>19%</td>
+</tr>
+<tr>
+<td>两个</td>
+<td>14%</td>
+<td>68%</td>
+<td>32%</td>
+</tr>
+</tbody>
+</table>
+<h3 id="关闭iptables-开启ebpf"><a class="header-anchor" href="#关闭iptables-开启ebpf">¶</a>关闭iptables,开启ebpf</h3>
+<ul>
+<li>
+<p>单个tcp模拟攻击:<br>
+<img data-src="https://raw.githubusercontent.com/crab21/Images/master/2022/2023-02-01-00-38-44-bbd5d271793613f99a812c98fe0c4a4f-2-1-e1561d.png" alt=""></p>
+</li>
+<li>
+<p>两个tcp模拟攻击<br>
+<img data-src="https://raw.githubusercontent.com/crab21/Images/master/2022/2023-02-01-00-38-49-9a2d13c91dc81f6d9ef3779c33f76811-2-2-b37c75.png" alt=""></p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>模拟攻击个数/百分比</th>
+<th>cpu 软中断</th>
+<th>idle(闲置)</th>
+<th>cpu占用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>单个</td>
+<td>1.08%</td>
+<td>87%</td>
+<td>15%</td>
+</tr>
+<tr>
+<td>两个</td>
+<td>1.16%</td>
+<td>88%</td>
+<td>17%</td>
+</tr>
+</tbody>
+</table>
+<h3 id="结论"><a class="header-anchor" href="#结论">¶</a>结论</h3>
+<p>可以看到随着模拟攻击server越来越多,被攻击的服务器cpu占用越来越高,中断占用也越来越高,</p>
+<p>最后肯定会崩了.</p>
+<p>当然ebpf还有很多用处,可以参考学习<a target="_blank" rel="noopener" href="https://arthurchiao.art/blog/bpf-advanced-notes-2-zh/#2-bpf_map_type_percpu_array">bpf进阶笔记</a>和<a target="_blank" rel="noopener" href="https://ebpf.io/applications">ebpf官网例子</a>.</p>
+<p>路漫漫其修远兮,</p>
+<h2 id="Reference"><a class="header-anchor" href="#Reference">¶</a>Reference</h2>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.kernel.org/doc/htmldocs/kernel-hacking/basics-softirqs.html">soft interrupt</a></li>
+<li><a target="_blank" rel="noopener" href="https://ebpf.io/">ebpf官方</a></li>
+<li><a target="_blank" rel="noopener" href="https://aya-rs.dev/book/aya/aya-tool/#portability-and-different-kernel-versions">aya-rust</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.techempower.com/benchmarks/#section=data-r21">HTTP SERVER天梯排行榜</a></li>
+<li><a target="_blank" rel="noopener" href="https://wsgzao.github.io/post/mpstat/">mpstat使用</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/iovisor/bcc/blob/master/docs/reference_guide.md">bcc手册</a></li>
+<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/6993853593476399140">hping3</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.litreily.top/2018/02/22/ddos-attack/">DDos 攻击</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.iovisor.org/technology/xdp">iovisor: XDP</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/poloyy/p/13435519.html">cpu软中断</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.rfc-editor.org/rfc/rfc1323">RFC: timestamps</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.rfc-editor.org/rfc/rfc1337.html">RFC: time_wait</a></li>
+<li><a target="_blank" rel="noopener" href="https://cshihong.github.io/2019/05/14/%E7%BD%91%E7%BB%9C%E5%B1%82-TCP-UDP-%E6%94%BB%E5%87%BB%E4%B8%8E%E9%98%B2%E5%BE%A1%E5%8E%9F%E7%90%86/">tcp/udp攻防</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.cloudflare.com/zh-cn/how-to-drop-10-million-packets-zh-cn/">Cloudflare每秒丢1000w个包</a></li>
+<li><a target="_blank" rel="noopener" href="https://rexrock.github.io/post/af_xdp1/">博客: AF_XDP</a></li>
+<li><a target="_blank" rel="noopener" href="https://arthurchiao.art/blog/bpf-advanced-notes-2-zh/#2-bpf_map_type_percpu_array">博客: BPF进阶笔记</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/DavadDi/bpf_study">Github: bpf学习</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/shaneutt/ebpf-rust-udp-loadbalancer-demo">Github: lb-demo</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/torvalds/linux/blob/master/include/uapi/linux/bpf.h?spm=a2c6h.12873639.article-detail.9.6f07275atwbfFQ&amp;file=bpf.h">Linux源码: bpf</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/torvalds/linux/blob/22b8077d0fcec86c6ed0e0fce9f7e7e5a4c2d56a/samples/bpf/xdp_sample.bpf.h#L19">Linux源码: xdp_sample</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/torvalds/linux/blob/22b8077d0fcec86c6ed0e0fce9f7e7e5a4c2d56a/include/uapi/linux/in.h#L37">Linux源码: uapi/linux/in.h</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+      
+
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%BA%90%E7%A0%81/" rel="tag"># 源码</a>
+              <a href="/tags/linux/" rel="tag"># linux</a>
+              <a href="/tags/ebpf/" rel="tag"># ebpf</a>
+              <a href="/tags/XDP/" rel="tag"># XDP</a>
+              <a href="/tags/rust/" rel="tag"># rust</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/archives/f7742c12.html" rel="prev" title="「64」Redis基本类型">
+                  <i class="fa fa-chevron-left"></i> 「64」Redis基本类型
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  
+  <div class="comments">
+    <script src="https://giscus.app/client.js"
+        data-repo="crab21/blog_giscus" 
+        data-repo-id="R_kgDOH05t5g" 
+        data-category="Show and tell"
+        data-category-id="DIC_kwDOH05t5s4CQ2aq"
+        data-mapping="pathname" 
+        data-reactions-enabled="1" 
+        data-emit-metadata="1" 
+        data-theme="light"
+        data-lang="zh-CN"
+        crossorigin="anonymous"
+        data-input-position="bottom"
+        data-loading="lazy"
+        async>
+    </script>
+  </div>
+  
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">crab</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">227k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:26</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+  <script src="/js/third-party/pace.js"></script>
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/quicklink/2.3.0/quicklink.umd.js" integrity="sha256-yvJQOINiH9fWemHn0vCA5lsHWJaHs6/ZmO+1Ft04SvM=" crossorigin="anonymous"></script>
+  <script class="next-config" data-name="quicklink" type="application/json">{"enable":true,"home":true,"archive":true,"delay":true,"timeout":1000,"priority":true,"url":"https://blog.imrcrab.com/archives/110bb26b.html"}</script>
+  <script src="/js/third-party/quicklink.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 5.4.2">
+<link rel="preconnect" href="https://fonts.lug.ustc.edu.cn" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/title.webp">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/title.webp">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="https://fonts.lug.ustc.edu.cn/css?family=Alegreya+Sans:300,300italic,400,400italic,700,700italic%7CInconsolata:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha256-AbA177XfpSnFEvgpYu1jMygiLabzPCJCRIBtR5jGc0k=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/blue/pace-theme-bounce.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.imrcrab.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.13.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":true,"style":"mac"},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":false,"async":true,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":-1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="¶前序  平常coding时，偶尔会查看计算机的具体执行过程，那最基本的就是汇编了，了解汇编是调试过程中必不可少的，尤其是一些细节的处理方面.Go的汇编是Plan 9(贝尔实验室的产物)，和汇编很类似。  ¶如何得到汇编结果？  官网文档 Google  ¶3种方式：  第一种">
+<meta property="og:type" content="article">
+<meta property="og:title" content="「15」Plan9 汇编小记">
+<meta property="og:url" content="https://blog.imrcrab.com/archives/2ce846ed.html">
+<meta property="og:site_name" content="迷茫的小螃蟹">
+<meta property="og:description" content="¶前序  平常coding时，偶尔会查看计算机的具体执行过程，那最基本的就是汇编了，了解汇编是调试过程中必不可少的，尤其是一些细节的处理方面.Go的汇编是Plan 9(贝尔实验室的产物)，和汇编很类似。  ¶如何得到汇编结果？  官网文档 Google  ¶3种方式：  第一种">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-10-09T13:47:39.000Z">
+<meta property="article:modified_time" content="2022-02-03T00:07:39.000Z">
+<meta property="article:author" content="crab">
+<meta property="article:tag" content="Go">
+<meta property="article:tag" content="Day">
+<meta property="article:tag" content="Plan9">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://blog.imrcrab.com/archives/2ce846ed.html">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://blog.imrcrab.com/archives/2ce846ed.html","path":"archives/2ce846ed.html","title":"「15」Plan9 汇编小记"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>「15」Plan9 汇编小记 | 迷茫的小螃蟹</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">迷茫的小螃蟹</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%89%8D%E5%BA%8F"><span class="nav-number">1.</span> <span class="nav-text">前序</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%BE%97%E5%88%B0%E6%B1%87%E7%BC%96%E7%BB%93%E6%9E%9C%EF%BC%9F"><span class="nav-number">2.</span> <span class="nav-text">如何得到汇编结果？</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#3%E7%A7%8D%E6%96%B9%E5%BC%8F%EF%BC%9A"><span class="nav-number">2.1.</span> <span class="nav-text">3种方式：</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E5%AF%84%E5%AD%98%E5%99%A8"><span class="nav-number">3.</span> <span class="nav-text">常用寄存器</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#AX-BX-CX-DX-BP-SI-SP-IP"><span class="nav-number">3.1.</span> <span class="nav-text">AX BX CX DX BP SI SP IP</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4%E4%B8%AA%E4%BC%AA%E5%AF%84%E5%AD%98%E5%99%A8"><span class="nav-number">3.2.</span> <span class="nav-text">4个伪寄存器:</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#MOV"><span class="nav-number">3.3.</span> <span class="nav-text">MOV</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#LEA%E5%92%8CMOV"><span class="nav-number">4.</span> <span class="nav-text">LEA和MOV</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Reference"><span class="nav-number">5.</span> <span class="nav-text">Reference</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E2%80%A6"><span class="nav-number">6.</span> <span class="nav-text">持续更新…</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">crab</p>
+  <div class="site-description" itemprop="description">日行一步...</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">68</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">58</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/crab21" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;crab21" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:pywang112@gmail.com" title="E-Mail → mailto:pywang112@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="返回顶部">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.imrcrab.com/archives/2ce846ed.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="crab">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="迷茫的小螃蟹">
+      <meta itemprop="description" content="日行一步...">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="「15」Plan9 汇编小记 | 迷茫的小螃蟹">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          「15」Plan9 汇编小记
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-10-09 13:47:39" itemprop="dateCreated datePublished" datetime="2020-10-09T13:47:39+00:00">2020-10-09</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2022-02-03 00:07:39" itemprop="dateModified" datetime="2022-02-03T00:07:39+00:00">2022-02-03</time>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.4k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>1 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h4 id="前序"><a class="header-anchor" href="#前序">¶</a>前序</h4>
+<blockquote>
+<p>平常coding时，偶尔会查看计算机的具体执行过程，那最基本的就是汇编了，了解汇编是调试过程中必不可少的，尤其是一些细节的处理方面.Go的汇编是Plan 9(贝尔实验室的产物)，和汇编很类似。</p>
+</blockquote>
+<h4 id="如何得到汇编结果？"><a class="header-anchor" href="#如何得到汇编结果？">¶</a>如何得到汇编结果？</h4>
+<ul>
+<li>官网文档</li>
+<li>Google</li>
+</ul>
+<h5 id="3种方式："><a class="header-anchor" href="#3种方式：">¶</a>3种方式：</h5>
+<blockquote>
+<p>第一种</p>
+</blockquote>
+<span id="more"></span>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">go</span> tool compile -N -l -S ***.<span class="keyword">go</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>第二种</p>
+</blockquote>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>、先编译：</span><br><span class="line">    <span class="keyword">go</span> tool compile -N -l ***.<span class="keyword">go</span></span><br><span class="line"><span class="number">2</span>、再反编译：</span><br><span class="line">    <span class="keyword">go</span> tool objdump ***.o</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>第三种</p>
+</blockquote>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">go</span> build -gcflags -S ***.<span class="keyword">go</span></span><br></pre></td></tr></table></figure>
+<h4 id="常用寄存器"><a class="header-anchor" href="#常用寄存器">¶</a>常用寄存器</h4>
+<blockquote>
+<p>plan9 指令格式:  指令 源操作数 目标操作数</p>
+</blockquote>
+<h5 id="AX-BX-CX-DX-BP-SI-SP-IP"><a class="header-anchor" href="#AX-BX-CX-DX-BP-SI-SP-IP">¶</a>AX BX CX DX BP SI SP IP</h5>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">寄存器</th>
+<th style="text-align:left">16位</th>
+<th style="text-align:left">32位</th>
+<th style="text-align:left">64位</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">累加寄存器</td>
+<td style="text-align:left">AX</td>
+<td style="text-align:left">EAX</td>
+<td style="text-align:left">RAX</td>
+</tr>
+<tr>
+<td style="text-align:left">基址寄存器</td>
+<td style="text-align:left">BX</td>
+<td style="text-align:left">EBX</td>
+<td style="text-align:left">RBX</td>
+</tr>
+<tr>
+<td style="text-align:left">计数寄存器</td>
+<td style="text-align:left">CX</td>
+<td style="text-align:left">ECX</td>
+<td style="text-align:left">RCX</td>
+</tr>
+<tr>
+<td style="text-align:left">数据寄存器</td>
+<td style="text-align:left">DX</td>
+<td style="text-align:left">EDX</td>
+<td style="text-align:left">RDX</td>
+</tr>
+<tr>
+<td style="text-align:left">堆栈基指针</td>
+<td style="text-align:left">BP</td>
+<td style="text-align:left">EBP</td>
+<td style="text-align:left">RBP</td>
+</tr>
+<tr>
+<td style="text-align:left">变址寄存器</td>
+<td style="text-align:left">SI</td>
+<td style="text-align:left">ESI</td>
+<td style="text-align:left">RSI</td>
+</tr>
+<tr>
+<td style="text-align:left">堆栈顶指针</td>
+<td style="text-align:left">SP</td>
+<td style="text-align:left">ESP</td>
+<td style="text-align:left">RSP</td>
+</tr>
+<tr>
+<td style="text-align:left">指令寄存器</td>
+<td style="text-align:left">IP</td>
+<td style="text-align:left">EIP</td>
+<td style="text-align:left">RIP</td>
+</tr>
+</tbody>
+</table>
+<h5 id="4个伪寄存器"><a class="header-anchor" href="#4个伪寄存器">¶</a>4个伪寄存器:</h5>
+<ul>
+<li>FP: 指向栈底位置,一般用来引用函数的输入参数,用于函数参数的访问「frame pointer」</li>
+<li>PC: 程序计数器,用于分支与跳转.「program counter」</li>
+<li>SB: 函数声明和全局变量.「static base pointer」</li>
+<li>SP: 指向当前栈帧的局部变量的开始位置「栈顶位置」,用于局部变量的引用.</li>
+</ul>
+<p>更新：</p>
+<ul>
+<li>SB Static base pointer: global symbols. 全局静态基指针，程序地址空间的开始地址。所有用户定义的符号都可以作为偏移量写入伪寄存器 FP（参数和局部变量）和 SB（全局变量）。SB 伪寄存器可以被认为是内存的起始位置 0x0，例如 runtime.newobject(SB) 就是函数 runtime.newobject 位于内存中的地址。</li>
+<li>SP Stack pointer: the highest address within the local stack frame. 栈顶，指向当前栈帧的开始位置。使用形如 symbol+offset(SP) 的方式，引用函数的局部变量，例如 a+8(SP) 指相对于 SP，offset 为 +8 的地址，假如 SP 指向 0x000f0, 那么 a+8(SP) 指向 0x000f8。a 是 symbol，变量名称，用于提升代码可读性。</li>
+<li>FP Frame pointer: arguments and locals. 类似 SP，实际使用非常少。</li>
+<li>PC Program counter: jumps and branches. 存放 CPU 下一个执行指令的位置地址，PC 是一个抽象的概念，在 x86 上，通过 CS 段寄存器和 IP 寄存器共同计算出指令的地址，也就是PC的值。具体使用示例JMP 2(PC) 以当前指令为基础，向后跳转 2 行</li>
+<li>TLS thread local storage 存放了当前正在执行的 g 的结构体。例如 0(TLS) 表示 g.stack.lo，8(TLS) 表示 g.stack.hi</li>
+</ul>
+<h5 id="MOV"><a class="header-anchor" href="#MOV">¶</a>MOV</h5>
+<blockquote>
+<p>movb（8位）、movw（16位）、movl（32位）、movq（64位）</p>
+</blockquote>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MOVSS: 移动单精度浮点数</span><br></pre></td></tr></table></figure>
+<h4 id="LEA和MOV"><a class="header-anchor" href="#LEA和MOV">¶</a>LEA和MOV</h4>
+<p>LEA：操作地址<br>
+MOV：操作数据</p>
+<p>例子：<br>
+LEAQ 8(SP), SI // argv 把 8(SP)地址放入 SI 寄存器中<br>
+MOVQ 0(SP), DI // argc 把0(SP)内容放入 DI 寄存器中</p>
+<h4 id="Reference"><a class="header-anchor" href="#Reference">¶</a>Reference</h4>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://blog.thinkhp.site/plan9/#%E6%9F%A5%E7%9C%8B%E6%B1%87%E7%BC%96%E4%BB%A3%E7%A0%81%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E6%B3%95">☞ Plan 9汇编常见</a></li>
+<li><a target="_blank" rel="noopener" href="https://c9x.me/x86/html/file_module_x86_id_205.html">☞ MOVSS</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.felixcloutier.com/x86/index.html">☞ Intel汇编指令查询</a></li>
+<li><a target="_blank" rel="noopener" href="https://plan9.io/sources/contrib/ericvh/go-plan9/src/pkg/runtime/slice.c">☞ Plan9查询</a></li>
+<li><a target="_blank" rel="noopener" href="http://68k.hax.com/">☞ 指令查询</a></li>
+<li><a target="_blank" rel="noopener" href="https://9p.io/sys/doc/">☞ plan9 doc</a></li>
+</ul>
+<h4 id="持续更新…"><a class="header-anchor" href="#持续更新…">¶</a>持续更新…</h4>
+
+    </div>
+
+    
+    
+    
+      
+
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Go/" rel="tag"># Go</a>
+              <a href="/tags/Day/" rel="tag"># Day</a>
+              <a href="/tags/Plan9/" rel="tag"># Plan9</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/archives/ae4aba0d.html" rel="prev" title="「14」hexo-安装&插件">
+                  <i class="fa fa-chevron-left"></i> 「14」hexo-安装&插件
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/archives/425d5e80.html" rel="next" title="「16」go源码words归纳">
+                  「16」go源码words归纳 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    
+  
+  <div class="comments">
+    <script src="https://giscus.app/client.js"
+        data-repo="crab21/blog_giscus" 
+        data-repo-id="R_kgDOH05t5g" 
+        data-category="Show and tell"
+        data-category-id="DIC_kwDOH05t5s4CQ2aq"
+        data-mapping="pathname" 
+        data-reactions-enabled="1" 
+        data-emit-metadata="1" 
+        data-theme="light"
+        data-lang="zh-CN"
+        crossorigin="anonymous"
+        data-input-position="bottom"
+        data-loading="lazy"
+        async>
+    </script>
+  </div>
+  
+  
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">crab</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">227k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:26</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous"></script>
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+  <script src="/js/third-party/fancybox.js"></script>
+
+  <script src="/js/third-party/pace.js"></script>
+
+  
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">true</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"all","js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js","integrity":"sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/quicklink/2.3.0/quicklink.umd.js" integrity="sha256-yvJQOINiH9fWemHn0vCA5lsHWJaHs6/ZmO+1Ft04SvM=" crossorigin="anonymous"></script>
+  <script class="next-config" data-name="quicklink" type="application/json">{"enable":true,"home":true,"archive":true,"delay":true,"timeout":1000,"priority":true,"url":"https://blog.imrcrab.com/archives/2ce846ed.html"}</script>
+  <script src="/js/third-party/quicklink.js"></script>
+
+</body>
+</html>
